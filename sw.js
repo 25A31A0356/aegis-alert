@@ -1,9 +1,10 @@
 /**
  * AegisAlert Offline Service Worker (PWA)
  * Enables 100% offline operation when mobile towers or internet cables fail.
+ * Caches all 4 Stakeholder Portals, Audio Oscillators, and Vernacular Dictionaries.
  */
 
-const CACHE_NAME = "aegis-alert-v2.5";
+const CACHE_NAME = "aegis-alert-v4.5-national";
 const ASSETS_TO_CACHE = [
   "./",
   "./index.html",
@@ -17,13 +18,16 @@ const ASSETS_TO_CACHE = [
   "./src/transmission/radio_protocol.js",
   "./src/hardware_sim/audio_synthesizer.js",
   "./src/hardware_sim/beacon_node.js",
-  "./src/ui/map_controller.js"
+  "./src/ui/map_controller.js",
+  "./src/roles/citizen_view.js",
+  "./src/roles/responder_view.js",
+  "./src/roles/shelter_view.js"
 ];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log("[Aegis SW] Caching offline emergency survival assets...");
+      console.log("[Aegis SW] Caching 100% of Pan-India offline emergency survival assets...");
       return cache.addAll(ASSETS_TO_CACHE).catch(err => console.warn("Asset caching error:", err));
     })
   );
@@ -54,7 +58,6 @@ self.addEventListener("fetch", (event) => {
         return cachedResponse;
       }
       return fetch(event.request).catch(() => {
-        // If offline and request is HTML, return cached index
         if (event.request.headers.get("accept")?.includes("text/html")) {
           return caches.match("./index.html");
         }
