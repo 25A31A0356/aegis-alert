@@ -1,7 +1,9 @@
 /**
- * AegisAlert First Responder & NDRF Tactical Operations Console
- * Tailored for NDRF 1st Battalion (Guwahati) & 12th Battalion (Arunachal Pradesh)
- * Specialized in Riverine Brahmaputra Flood Rescue & Himalayan Mountain Debris Flows
+ * AegisAlert National First Responder & Armed Forces Tactical Command
+ * Integrates:
+ * 1. National Disaster Response Force (NDRF 16 Battalions nationwide)
+ * 2. Tri-Services HADR: Indian Army, Navy, Air Force (IAF Mi-17/Chinook), and Coast Guard
+ * 3. State Disaster Response Forces (SDRF) of all 28 States & 8 UTs
  */
 
 export class ResponderView {
@@ -9,39 +11,55 @@ export class ResponderView {
     this.container = document.getElementById(containerId);
     this.sosQueue = [
       {
-        id: "SOS-AS-1042",
+        id: "SOS-NAT-01",
         name: "Kamalabari Ferry Ghat Cluster",
-        location: "Majuli River Island, Assam",
+        location: "Majuli Island, Assam (Eastern Theater)",
         coordinates: [26.9450, 94.2100],
         triageScore: 98,
         priority: "CRITICAL",
-        peopleTrapped: 8,
-        category: "Embankment Breach / Island Isolation",
-        time: "3 mins ago",
+        peopleTrapped: 18,
+        category: "Major River Embankment Breach",
+        forcesRequired: "NDRF 1st Bn + IAF Tezpur Air Base",
+        time: "2 mins ago",
         status: "DISPATCHED"
       },
       {
-        id: "SOS-SK-2019",
-        name: "Chungthang Hydel Quarters",
-        location: "Teesta Basin, Sikkim (GLOF Surge)",
-        coordinates: [27.6040, 88.6470],
-        triageScore: 94,
+        id: "SOS-NAT-02",
+        name: "Mandakini River Valley Pilgrim Camp",
+        location: "Kedarnath Route, Uttarakhand (Northern Theater)",
+        coordinates: [30.7310, 78.4410],
+        triageScore: 95,
         priority: "CRITICAL",
-        peopleTrapped: 5,
-        category: "Glacial Surge Dam Washout",
-        time: "11 mins ago",
+        peopleTrapped: 24,
+        category: "Cloudburst Debris Flow / Highway Cutoff",
+        forcesRequired: "Indian Army Central Command + SDRF",
+        time: "8 mins ago",
         status: "EN_ROUTE"
       },
       {
-        id: "SOS-ML-3041",
-        name: "Mawsynram Valley Hamlet",
-        location: "East Khasi Hills, Meghalaya",
-        coordinates: [25.3050, 91.5850],
-        triageScore: 82,
+        id: "SOS-NAT-03",
+        name: "Arakhakuda Coastal Fishing Hamlet",
+        location: "Chilika / Puri Coast, Odisha (Southern Theater)",
+        coordinates: [19.7983, 85.8249],
+        triageScore: 91,
+        priority: "CRITICAL",
+        peopleTrapped: 32,
+        category: "4.2m Storm Surge Cyclone Inundation",
+        forcesRequired: "Indian Coast Guard + NDRF 3rd Bn",
+        time: "15 mins ago",
+        status: "DISPATCHED"
+      },
+      {
+        id: "SOS-NAT-04",
+        name: "Mithi River Low Causeway",
+        location: "Kurla / Bandra, Mumbai (Western Theater)",
+        coordinates: [19.0760, 72.8777],
+        triageScore: 84,
         priority: "HIGH",
-        peopleTrapped: 14,
-        category: "Landslide Cutoff on NH-6",
-        time: "22 mins ago",
+        peopleTrapped: 45,
+        category: "High-Tide Estuary Backflow",
+        forcesRequired: "NDRF 5th Bn (Pune) + Mumbai Fire Brigade",
+        time: "20 mins ago",
         status: "PENDING"
       }
     ];
@@ -61,31 +79,31 @@ export class ResponderView {
     this.container.innerHTML = `
       <div class="responder-shell">
         
-        <!-- Responder Metrics Strip -->
+        <!-- National Defense & HADR Metrics Strip -->
         <div class="responder-kpi-bar">
           <div class="kpi-block">
-            <span>ACTIVE RESCUE TICKETS</span>
-            <strong style="color:#ef4444;">${this.sosQueue.length} Active</strong>
+            <span>PAN-INDIA ACTIVE TICKETS</span>
+            <strong style="color:#ef4444;">${this.sosQueue.length} Incidents</strong>
           </div>
           <div class="kpi-block">
-            <span>CITIZENS NEEDING RESCUE</span>
+            <span>CITIZENS UNDER RESCUE</span>
             <strong style="color:#f59e0b;">${totalTrapped} Souls</strong>
           </div>
           <div class="kpi-block">
-            <span>CRITICAL TRIAGE SCORE (90+)</span>
+            <span>CRITICAL NATIONAL TRIAGE (90+)</span>
             <strong style="color:#ef4444;">${criticalCount} High Risk</strong>
           </div>
           <div class="kpi-block">
-            <span>NDRF BATTALIONS ACTIVE</span>
-            <strong style="color:#10b981;">1st Bn (Guwahati) & 12th Bn (Itanagar)</strong>
+            <span>ARMED FORCES & NDRF MOBILIZED</span>
+            <strong style="color:#10b981;">16 NDRF Bns • IAF Air Command</strong>
           </div>
         </div>
 
         <!-- Live Triage Ticket Queue -->
         <div class="sos-ticket-list">
           <div class="ticket-list-header">
-            <h4>🚨 North East Emergency Distress Queue (Sorted by AI Triage Vulnerability)</h4>
-            <span style="font-size:0.75rem; color:#94a3b8;">ISRO NESAC GPS Coordinates</span>
+            <h4>🚨 National Emergency Operations Center (NEOC) Triage Queue</h4>
+            <span style="font-size:0.75rem; color:#94a3b8;">Real-Time GPS & Satellite Coordinates</span>
           </div>
 
           <div class="tickets-container">
@@ -97,15 +115,16 @@ export class ResponderView {
                     <strong class="ticket-name">${item.name}</strong>
                   </div>
                   <div class="ticket-triage-badge">
-                    <span>TRIAGE SCORE:</span>
-                    <strong>${item.triageScore}/100</strong>
+                    <span>NATIONAL TRIAGE:</span>
+                    <strong>${item.triageScore}/100 [CRITICAL]</strong>
                   </div>
                 </div>
 
                 <div class="ticket-mid-row">
                   <div class="ticket-meta-col">
                     <div>📍 <strong>${item.location}</strong> (${item.coordinates[0].toFixed(4)}°N, ${item.coordinates[1].toFixed(4)}°E)</div>
-                    <div>⚠️ Hazard: <span style="color:#f87171;">${item.category}</span></div>
+                    <div>⚠️ Threat: <span style="color:#f87171;">${item.category}</span></div>
+                    <div>🎖️ Tasked Forces: <span style="color:#38bdf8; font-weight:600;">${item.forcesRequired}</span></div>
                     <div>👥 Trapped: <strong>${item.peopleTrapped} Citizens</strong> • Reported: <em>${item.time}</em></div>
                   </div>
                   <div class="ticket-status-col">
@@ -114,14 +133,17 @@ export class ResponderView {
                 </div>
 
                 <div class="ticket-actions-row">
+                  <button class="btn-ticket-action btn-iaf-airlift" data-id="${item.id}">
+                    🚁 Authorize IAF Helicopter Sortie
+                  </button>
                   <button class="btn-ticket-action btn-dispatch-boat" data-id="${item.id}">
-                    🚤 Dispatch Inflatable Zodiac (1st Bn)
+                    🚤 Dispatch NDRF Zodiac Boat
+                  </button>
+                  <button class="btn-ticket-action btn-army-eng" data-id="${item.id}">
+                    🎖️ Deploy Army Engineers (Bridge)
                   </button>
                   <button class="btn-ticket-action btn-mark-evacuated" data-id="${item.id}">
-                    ✅ Mark Evacuated to Highland
-                  </button>
-                  <button class="btn-ticket-action btn-drone-recon" data-id="${item.id}">
-                    🛸 Task NESAC Satellite / Drone Recon
+                    ✅ Mark Evacuated / Safe
                   </button>
                 </div>
               </div>
@@ -142,7 +164,18 @@ export class ResponderView {
         const ticket = this.sosQueue.find(s => s.id === id);
         if (ticket) {
           ticket.status = "SAVED";
-          ticket.name += " (Safely Relocated)";
+          ticket.name += " (Successfully Relocated to Camp)";
+          this.render();
+        }
+      });
+    });
+
+    this.container.querySelectorAll(".btn-iaf-airlift").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        const id = e.target.getAttribute("data-id");
+        const ticket = this.sosQueue.find(s => s.id === id);
+        if (ticket) {
+          ticket.status = "IAF_AIRLIFT_AIRBORNE";
           this.render();
         }
       });
@@ -153,7 +186,7 @@ export class ResponderView {
         const id = e.target.getAttribute("data-id");
         const ticket = this.sosQueue.find(s => s.id === id);
         if (ticket) {
-          ticket.status = "BOAT_EN_ROUTE";
+          ticket.status = "NDRF_BOAT_EN_ROUTE";
           this.render();
         }
       });

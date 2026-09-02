@@ -1,128 +1,139 @@
 /**
- * AegisAlert System Configuration & Disaster Knowledge Base
- * MDoNER (Ministry of Development of North Eastern Region) & National SIH Edition
- * Ingests: NESAC (ISRO), CWC Brahmaputra Board, IMD RMC Guwahati, and NCS
+ * AegisAlert National Disaster Knowledge Base & Pan-India Theaters
+ * National Emergency Operations Centre (NEOC) - Ministry of Home Affairs (MHA) & NDMA
+ * Coordinates across all 28 States, 8 UTs, and 7 Central Ministries
  */
 
 export const CONFIG = {
-  SYSTEM_NAME: "AegisAlert",
-  SYSTEM_SUBTITLE: "Autonomous Multi-Hazard Early Warning System for North Eastern Region & India",
-  VERSION: "3.0.0-MDONER-SIH",
-  TARGET_MINISTRY: "Ministry of Development of North Eastern Region (MDoNER) & NDMA",
-  SATELLITE_PARTNER: "ISRO / NESAC (North Eastern Space Applications Centre, Meghalaya)",
-  DEFAULT_MAP_CENTER: [26.2006, 92.9376], // Center of North East India (Assam/Meghalaya)
-  DEFAULT_ZOOM: 7,
+  SYSTEM_NAME: "AegisAlert National",
+  SYSTEM_SUBTITLE: "Apex Multi-Ministry Disaster Early Warning & Life-Saving Command Grid of India",
+  VERSION: "4.0.0-NATIONAL-APEX",
+  APEX_BODY: "National Disaster Management Authority (NDMA) & Ministry of Home Affairs (MHA)",
+  OPERATIONAL_HQ: "National Emergency Operations Centre (NEOC), New Delhi",
+  DEFAULT_MAP_CENTER: [21.7679, 78.8718], // Exact Geographic Center of India
+  DEFAULT_ZOOM: 5,
 
-  ALERT_LEVELS: {
-    GREEN: { code: 0, label: "NORMAL / WATCH", color: "#10b981", action: "Routine satellite and gauge telemetry monitoring." },
-    YELLOW: { code: 1, label: "ADVISORY / BE AWARE", color: "#facc15", action: "Keep emergency transistor radio on. Prepare grab-bag." },
-    ORANGE: { code: 2, label: "WARNING / BE PREPARED", color: "#f97316", action: "Evacuate riverbanks & landslide slopes. Move livestock." },
-    RED: { code: 3, label: "EMERGENCY / EVACUATE NOW", color: "#ef4444", action: "IMMEDIATE EVACUATION! Flash flood / GLOF / Landslide imminent." }
-  },
+  // Pan-India Central Ministries Integration
+  INTEGRATED_MINISTRIES: [
+    { code: "MHA", name: "Ministry of Home Affairs", role: "National Disaster Response Force (NDRF 16 Battalions)" },
+    { code: "MoD", name: "Ministry of Defence", role: "Tri-Services HADR (Indian Army, Navy, IAF Helicopters, Coast Guard)" },
+    { code: "MoES", name: "Ministry of Earth Sciences", role: "IMD Pan-India Doppler Radars & National Seismology (NCS)" },
+    { code: "JalShakti", name: "Ministry of Jal Shakti", role: "Central Water Commission (CWC) & National Dam Safety Authority" },
+    { code: "DoT", name: "Dept. of Telecommunications", role: "Pan-India Cell Broadcast System (CBS) & C-DOT SACHET Gateway" },
+    { code: "MDoNER", name: "Ministry of Development of NE Region", role: "Inter-State North Eastern Council & ISRO NESAC Satellite" },
+    { code: "MoHFW", name: "Ministry of Health & Family Welfare", role: "National Emergency Medical & Trauma Logistics" }
+  ],
 
-  // High-Impact North East & National Scenarios
+  // 4 Pan-India Theaters Covering the Entire Nation
   SCENARIOS: [
     {
       id: "assam_brahmaputra_surge",
-      title: "Brahmaputra Basin Flood & Majuli Island Cutoff (Assam)",
+      theater: "EASTERN & NORTH-EASTERN THEATER",
+      title: "Brahmaputra Basin Flood & Embankment Breach (Assam / NE)",
       type: "FLASH_FLOOD",
-      coordinates: [26.9535, 94.2037],
-      zoom: 10,
-      ministryConcern: "MDoNER, Brahmaputra Board & Assam SDMA",
+      coordinates: [26.6528, 92.7926],
+      zoom: 8,
+      leadMinistry: "MHA (NDMA) + MDoNER + Ministry of Jal Shakti",
       telemetry: {
-        rainfall1h: 48.5,
-        rainfall24h: 215.0,
-        riverLevel: 86.8, // meters
+        rainfall1h: 52.0,
+        rainfall24h: 245.0,
+        riverLevel: 86.8,
         riverDangerMark: 85.5,
-        damCapacity: 93.5,
-        windSpeed: 32
+        damCapacity: 94.0,
+        windSpeed: 38
       },
       preJudgement: {
         riskLevel: "RED",
         predictedBreachTimeMin: 35,
-        floodWaveSpeedKmh: 18,
-        recommendedAction: "Embankment breach alert at Kamalabari. Dispatch NDRF 1st Battalion (Guwahati) zodiac boats. Evacuate 14 riverine chaporis to elevated highlands.",
-        impactedPopulation: 78500,
-        safeShelter: "Garmur Elevated Multi-Purpose Relief Complex, Majuli (+28m Elevation)"
+        floodWaveSpeedKmh: 20,
+        recommendedAction: "National Executive Committee (NEC) alert: Task IAF Eastern Air Command (Mi-17s) from Tezpur. Pre-position NDRF 1st & 12th Battalions with 40 inflatable zodiacs.",
+        impactedPopulation: 142000,
+        safeShelter: "Garmur Elevated Multi-Purpose Highland Complex (+28m Elevation)"
       }
     },
     {
-      id: "sikkim_glof_surge",
-      title: "Sikkim Teesta Basin Glacial Lake Outburst Flood (GLOF)",
+      id: "himalayan_cloudburst_surge",
+      theater: "NORTHERN HIMALAYAN THEATER",
+      title: "Himalayan Cloudburst & Flash Flood (Kedarnath / Uttarkashi / HP)",
       type: "FLASH_FLOOD",
-      coordinates: [27.7025, 88.6138],
-      zoom: 10,
-      ministryConcern: "MDoNER, MoES & Sikkim SDMA",
+      coordinates: [30.7268, 78.4354],
+      zoom: 9,
+      leadMinistry: "MHA (NDMA) + MoD (Indian Army Central Command) + MoES",
       telemetry: {
-        rainfall1h: 62.0,
-        rainfall24h: 280.0,
-        lakeWaterHeightM: 42.0,
-        moraineDamBreachPct: 75,
-        teestaRiverLevel: 104.2,
-        riverDangerMark: 98.0
+        rainfall1h: 88.0, // Severe cloudburst
+        rainfall24h: 340.0,
+        riverLevel: 44.5,
+        riverDangerMark: 41.0,
+        damCapacity: 91.2,
+        windSpeed: 45
       },
       preJudgement: {
         riskLevel: "RED",
-        predictedBreachTimeMin: 25,
-        floodWaveSpeedKmh: 45,
-        recommendedAction: "South Lhonak Moraine Dam failure detected by NESAC satellite. Sound Chungthang and Mangan sirens immediately. Evacuate downstream NH-10 corridor.",
-        impactedPopulation: 42000,
-        safeShelter: "Mangan District Administrative Stadium Relief Camp (+120m Elevation)"
+        predictedBreachTimeMin: 20,
+        floodWaveSpeedKmh: 42,
+        recommendedAction: "Activate Op Sadbhavana: Task Indian Army Corps of Engineers (Bailey Bridge erection). Divert Char Dham pilgrim traffic to designated high-altitude camps.",
+        impactedPopulation: 68000,
+        safeShelter: "Uttarkashi Elevated Sports Complex & Administrative Safe Ground"
       }
     },
     {
-      id: "meghalaya_cloudburst_landslide",
-      title: "Mawsynram Cloudburst & National Highway 6 Cutoff (Meghalaya)",
-      type: "LANDSLIDE",
-      coordinates: [25.2986, 91.5822],
-      zoom: 10,
-      ministryConcern: "MDoNER, BRO & Meghalaya SDMA",
+      id: "bay_of_bengal_super_cyclone",
+      theater: "SOUTHERN & EASTERN COASTAL THEATER",
+      title: "Bay of Bengal Severe Super Cyclone (Puri Coast to Andhra)",
+      type: "CYCLONE",
+      coordinates: [19.8135, 85.8312],
+      zoom: 8,
+      leadMinistry: "MHA (NDMA) + Indian Navy (Eastern Fleet) + Indian Coast Guard",
       telemetry: {
-        rainfall1h: 84.0, // mm/hr extreme rainfall
-        rainfall24h: 420.0,
-        soilSaturationPct: 98.4,
-        slopeAngleDeg: 42
+        rainfall1h: 65.0,
+        rainfall24h: 380.0,
+        centralPressure: 948, // hPa severe depression
+        windSpeed: 175, // km/h sustained
+        stormSurgeHeight: 4.2
+      },
+      preJudgement: {
+        riskLevel: "RED",
+        predictedBreachTimeMin: 60,
+        floodWaveSpeedKmh: 55,
+        recommendedAction: "Issue National Cell Broadcast warning to all 6 coastal districts. Mobilize Indian Coast Guard offshore patrol vessels for fisherman safety. Evacuate low-lying coastal belts.",
+        impactedPopulation: 260000,
+        safeShelter: "Puri Multi-Purpose Cyclone Shelter Network (#01 to #24)"
+      }
+    },
+    {
+      id: "western_ghats_mumbai_inundation",
+      theater: "WESTERN PENINSULAR THEATER",
+      title: "Western Ghats Intense Cloudburst & Urban Estuary Surge (Mumbai / Konkan)",
+      type: "FLASH_FLOOD",
+      coordinates: [18.9220, 72.8347],
+      zoom: 9,
+      leadMinistry: "MHA (NDMA) + Ministry of Railways + Maharashtra SDMA",
+      telemetry: {
+        rainfall1h: 92.0,
+        rainfall24h: 390.0,
+        riverLevel: 6.8,
+        riverDangerMark: 5.2,
+        highTideMeter: 4.85,
+        damCapacity: 98.2
       },
       preJudgement: {
         riskLevel: "RED",
         predictedBreachTimeMin: 15,
-        floodWaveSpeedKmh: 30,
-        recommendedAction: "Multiple debris flows detected along Shillong-Silchar highway. Border Roads Organisation (BRO) tasked for emergency clearance. Halt commercial traffic.",
-        impactedPopulation: 29000,
-        safeShelter: "Cherrapunji Community Hall & Elevated Safe Shelter"
-      }
-    },
-    {
-      id: "arunachal_seismic_rupture",
-      title: "Main Central Thrust Himalayan Seismic Event (Arunachal Pradesh)",
-      type: "EARTHQUAKE",
-      coordinates: [28.2180, 94.7278],
-      zoom: 9,
-      ministryConcern: "MDoNER, NCS & Arunachal Pradesh SDMA",
-      telemetry: {
-        magnitude: 6.8,
-        depthKm: 10,
-        peakGroundAccel: "0.45g",
-        pWaveArrivalSec: 0,
-        sWaveArrivalSec: 18
-      },
-      preJudgement: {
-        riskLevel: "RED",
-        predictedBreachTimeMin: 0,
-        floodWaveSpeedKmh: 0,
-        recommendedAction: "Major earthquake in West Siang sector. Mobilize NDRF 12th Battalion (Itanagar). Inspect Upper Siang hydel dams for structural fissures.",
-        impactedPopulation: 54000,
-        safeShelter: "Aalo General Ground Open Relief Center"
+        floodWaveSpeedKmh: 28,
+        recommendedAction: "High-tide sync flash flood alert: Close railway low causeways. Regulate Khadakwasla & Tansa dam discharges. Pre-position NDRF 5th Battalion (Pune).",
+        impactedPopulation: 310000,
+        safeShelter: "Bandra Elevated Disaster Evacuation Center"
       }
     }
   ],
 
-  // Deployed Autonomous Nodes across North East India
+  // Pan-India Network of Autonomous Alert Stations
   DEPLOYED_BEACONS: [
-    { id: "BEACON-AS-01", name: "Majuli Island Ferry Ghat", lat: 26.9450, lng: 94.2100, status: "ONLINE", battery: 98, solarW: 48, signal: "NESAC_SAT_OK" },
-    { id: "BEACON-AS-02", name: "Kaziranga Forest Outpost", lat: 26.5775, lng: 93.1711, status: "ONLINE", battery: 94, solarW: 50, signal: "LORA_MESH_OK" },
-    { id: "BEACON-SK-01", name: "Chungthang Teesta Bridge", lat: 27.6040, lng: 88.6470, status: "ONLINE", battery: 91, solarW: 42, signal: "NESAC_SAT_OK" },
-    { id: "BEACON-ML-01", name: "Mawsynram Ridge Mast", lat: 25.3050, lng: 91.5850, status: "ONLINE", battery: 96, solarW: 45, signal: "LORA_MESH_OK" },
-    { id: "BEACON-AR-01", name: "Pasighat Siang Riverbank", lat: 28.0667, lng: 95.3333, status: "ONLINE", battery: 100, solarW: 52, signal: "NESAC_SAT_OK" }
+    { id: "BEACON-NE-01", name: "Majuli Ferry Ghat Mast (Assam)", lat: 26.9450, lng: 94.2100, status: "ONLINE", battery: 98, theater: "EASTERN" },
+    { id: "BEACON-SK-01", name: "Chungthang Teesta Mast (Sikkim)", lat: 27.6040, lng: 88.6470, status: "ONLINE", battery: 94, theater: "EASTERN" },
+    { id: "BEACON-UK-01", name: "Uttarkashi Town Mast (Uttarakhand)", lat: 30.7310, lng: 78.4410, status: "ONLINE", battery: 92, theater: "NORTHERN" },
+    { id: "BEACON-OD-01", name: "Puri Coastal Lightpost (Odisha)", lat: 19.7983, lng: 85.8249, status: "ONLINE", battery: 99, theater: "SOUTHERN" },
+    { id: "BEACON-MH-01", name: "Mumbai Estuary Mast (Maharashtra)", lat: 19.0760, lng: 72.8777, status: "ONLINE", battery: 96, theater: "WESTERN" },
+    { id: "BEACON-KL-01", name: "Wayanad Valley Mast (Kerala)", lat: 11.5540, lng: 76.1265, status: "ONLINE", battery: 97, theater: "SOUTHERN" }
   ]
 };
