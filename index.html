@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AegisAlert | Cyber-Physical Zero-Internet Disaster Early Warning System</title>
+  <meta name="description" content="Autonomous Cyber-Physical Disaster Early Warning & Life-Saving System for Smart India Hackathon. Operates with Zero Internet and Zero Cellular Coverage.">
+
+  <!-- Leaflet Tactical GIS Map CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  
+  <!-- Custom Application Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Tactical Navigation & Telemetry Bar -->
+  <header class="header-bar">
+    <div class="brand-section">
+      <div class="brand-badge">🛡️</div>
+      <div class="brand-text">
+        <h1>AEGISALERT <span class="brand-tag">SIH NATIONAL EDITION</span></h1>
+        <p>Autonomous Cyber-Physical Disaster Early Warning & Life-Saving Platform</p>
+      </div>
+    </div>
+
+    <div class="system-status-pills">
+      <div class="status-chip" title="Direct satellite downlink and Sub-GHz radio propagation">
+        <span class="indicator-dot"></span>
+        <span>RF: 868.1 MHz LoRa & NavIC S-Band</span>
+      </div>
+      <div class="status-chip" id="live-feed-status">
+        <span class="indicator-dot"></span>
+        <span>IMD / CWC / NCS Real-Time Telemetry</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Dual-Console Layout -->
+  <main class="main-layout">
+
+    <!-- ====================================================================
+         LEFT COLUMN: National Command War Room & Ingestion Engine
+         ==================================================================== -->
+    <section class="war-room-col">
+
+      <!-- Scenario Selector & Live Ingestion Bar -->
+      <div class="panel-card accent-top">
+        <div class="scenario-bar">
+          <div class="selector-group">
+            <label for="scenario-select" class="selector-label">CRISIS SCENARIO:</label>
+            <select id="scenario-select" class="styled-select">
+              <option value="wayanad_flash_flood">🌊 Wayanad Cloudburst & Dam Overflow (Kerala)</option>
+              <option value="assam_brahmaputra_surge">🌊 Brahmaputra River Inundation (Tezpur, Assam)</option>
+              <option value="odisha_super_cyclone">🌀 Bay of Bengal Super Cyclone Landfall (Puri, Odisha)</option>
+              <option value="himalayan_seismic_event">⚡ Main Boundary Thrust Seismic Event (Uttarkashi)</option>
+            </select>
+          </div>
+          <div class="live-feed-banner">
+            <span>DATA SOURCE: <strong style="color:var(--accent-blue);">GOVT OF INDIA REAL-TIME INGESTION</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Predictive Risk Meter & Telemetry Overview -->
+      <div class="panel-card">
+        <div class="card-header">
+          <span class="card-title">
+            <span class="card-title-icon">📊</span>
+            Predictive Hazard Index & Damage-Prevention Pre-Judgment
+          </span>
+          <span id="scenario-title" style="font-size: 0.8rem; font-weight: 700; color: var(--accent-blue);">Wayanad Cloudburst (Kerala)</span>
+        </div>
+
+        <div class="risk-overview-grid">
+          <div class="risk-gauge-box">
+            <span class="risk-label-sub">Hazard Threat Score</span>
+            <div id="risk-score-value" class="risk-score-big">92/100</div>
+            <div id="risk-level-badge" class="risk-badge" style="background-color: var(--accent-red);">CODE RED</div>
+            <div class="meter-track">
+              <div id="risk-meter-bar" class="meter-fill"></div>
+            </div>
+          </div>
+
+          <div class="telemetry-right">
+            <!-- 4-Cell Telemetry Grid -->
+            <div class="telemetry-metrics-grid">
+              <div class="metric-cell">
+                <span class="metric-cell-label">Rainfall Rate</span>
+                <div id="val-rain" class="metric-cell-val">68.4 mm/hr</div>
+              </div>
+              <div class="metric-cell">
+                <span class="metric-cell-label">River Gauge</span>
+                <div id="val-river" class="metric-cell-val">19.8 m (Danger)</div>
+              </div>
+              <div class="metric-cell">
+                <span class="metric-cell-label">Dam Storage</span>
+                <div id="val-dam" class="metric-cell-val">94.2% Capacity</div>
+              </div>
+              <div class="metric-cell">
+                <span class="metric-cell-label">Wind / Shock</span>
+                <div id="val-wind" class="metric-cell-val">42 km/h</div>
+              </div>
+            </div>
+
+            <!-- Pre-Judgment Damage Prevention Box -->
+            <div class="prediction-box">
+              <div class="prediction-header">
+                <span>⏱️ PRE-JUDGMENT:</span>
+                <span id="val-breach-time">~40 Minutes Until Embankment Breach</span>
+                <span>• At-Risk: <strong id="val-population">34,200 Citizens</strong></span>
+              </div>
+              <div id="val-prevention-action" class="prediction-body">
+                Mandatory release of 20,000 cusecs from Banasura Sagar Dam. Evacuate Meppadi and Chooralmala riverbanks within 30 minutes.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tactical GIS India Command Map -->
+      <div class="panel-card">
+        <div class="card-header">
+          <span class="card-title">
+            <span class="card-title-icon">🗺️</span>
+            Geospatial Hazard Geofencing & Deployed AegisBeacon Network
+          </span>
+          <span style="font-size:0.75rem; color:var(--text-muted);">Satellite Terrain Base • Turf Geofencing</span>
+        </div>
+
+        <div class="gis-map-wrapper">
+          <div id="gis-map"></div>
+          <div class="map-floating-legend">
+            <div class="legend-row">
+              <div class="legend-box" style="background:#ef4444; opacity:0.6;"></div>
+              <span>Red Hazard Zone (Immediate Evacuation)</span>
+            </div>
+            <div class="legend-row">
+              <div class="legend-box" style="background:#10b981;"></div>
+              <span>Deployed AegisBeacon (Zero-Internet Pole)</span>
+            </div>
+            <div class="legend-row">
+              <div class="legend-box" style="background:#38bdf8;"></div>
+              <span>Designated High-Ground Relief Center</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Standard Operating Procedures (SOPs) -->
+      <div class="panel-card">
+        <div class="card-header">
+          <span class="card-title">
+            <span class="card-title-icon">📋</span>
+            District Collector Damage-Prevention Action Protocols (SOPs)
+          </span>
+          <span style="font-size:0.75rem; color:var(--accent-amber);">NDMA Standard Guidelines</span>
+        </div>
+        <ul id="sop-list" class="sop-list">
+          <!-- Dynamically populated by risk_engine.js -->
+        </ul>
+      </div>
+
+    </section>
+
+    <!-- ====================================================================
+         RIGHT COLUMN: Virtual Autonomous Physical AegisBeacon Unit
+         ==================================================================== -->
+    <section class="hardware-col">
+
+      <!-- Physical Mast Hardware Simulator Panel -->
+      <div class="hardware-visualizer-box">
+        <div class="hw-header-bar">
+          <div class="hw-title">
+            <span>📡</span>
+            <div>
+              <div>AEGISBEACON POLE #01</div>
+              <div style="font-size:0.72rem; color:var(--text-secondary); font-weight:400;">Meppadi Riverfront Mast (Offline Field Unit)</div>
+            </div>
+          </div>
+          <span id="hw-status-pill" class="status-pill standby">STANDBY</span>
+        </div>
+
+        <!-- Physical Assembly Diagram -->
+        <div class="physical-mast-diagram">
+
+          <!-- 360° Rotating Strobe Light -->
+          <div class="strobe-assembly">
+            <div id="hw-strobe-lamp" class="strobe-lamp idle-amber" title="360° Visual Alert for deaf individuals or night storms"></div>
+            <div class="strobe-caption">360° High-Intensity Optical Strobe Array</div>
+          </div>
+
+          <!-- 120dB Directional Acoustic Horn -->
+          <div class="acoustic-horn-unit">
+            <div class="horn-icon">📢</div>
+            <div id="hw-siren-indicator" class="indicator-box">
+              🔈 Siren: Standby (120dB Acoustic Horn)
+            </div>
+          </div>
+
+          <!-- Alphanumeric High-Contrast LED Ticker -->
+          <div class="led-matrix-wrapper">
+            <div id="hw-led-ticker" class="led-ticker-text">
+              SYSTEM NORMAL • AEGIS SUB-GHZ LISTENING • SOLAR BATTERY OPTIMAL
+            </div>
+          </div>
+
+          <!-- Node Telemetry & Power Management Display -->
+          <div class="hw-telemetry-row">
+            <div class="hw-telemetry-cell">
+              <span>Battery Storage</span>
+              <strong id="hw-battery-pct">96% (LiFePO4)</strong>
+            </div>
+            <div class="hw-telemetry-cell">
+              <span>Solar Input</span>
+              <strong id="hw-solar-watts">42.5W Solar</strong>
+            </div>
+            <div class="hw-telemetry-cell">
+              <span>Sub-GHz Signal</span>
+              <strong style="color:var(--accent-green);">-78 dBm (LoRa)</strong>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Blackout & Grid Simulator Controls -->
+        <div class="test-controls-group">
+          <button id="toggle-grid-power" class="btn-toggle-switch" title="Simulate total electricity grid failure">
+            ⚡ Grid Power: BLACKOUT (CUT)
+          </button>
+          <button id="toggle-cellular" class="btn-toggle-switch" title="Simulate cellular tower collapse">
+            📶 Cell Tower: DESTROYED (0 BARS)
+          </button>
+          <button id="toggle-mute" class="btn-toggle-switch" title="Toggle siren sound for presentation">
+            🔊 Audio: LIVE (120dB SIREN)
+          </button>
+        </div>
+
+        <!-- Main Action Buttons -->
+        <div class="action-buttons-box" style="margin-top: 20px;">
+          <button id="btn-broadcast-zero-signal" class="btn-hero-broadcast">
+            <span>🛰️</span>
+            <span>TRANSMIT ZERO-SIGNAL BROADCAST</span>
+          </button>
+
+          <div class="sub-actions-row">
+            <button id="btn-silence" class="btn-secondary">
+              <span>🔇</span> Silence Siren
+            </button>
+            <button id="btn-inspect-packet" class="btn-secondary">
+              <span>📦</span> Inspect 32-Byte Packet
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Transmission Terminal Log -->
+      <div class="panel-card">
+        <div class="card-header">
+          <span class="card-title">
+            <span class="card-title-icon">💻</span>
+            Radio Frequency Telemetry & Broadcast Log
+          </span>
+          <span style="font-size:0.75rem; color:var(--accent-blue);">868.1 MHz Terminal</span>
+        </div>
+        <div id="transmission-log" class="transmission-console">
+          <div class="log-entry">
+            <span class="log-time">[BOOT]</span> AegisAlert Sub-GHz Airwave Daemon initialized on 868.1 MHz.
+          </div>
+          <div class="log-entry">
+            <span class="log-time">[BOOT]</span> ISRO NavIC S-Band messaging receiver online. Zero-Internet ready.
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ====================================================================
+       MODAL: 32-Byte Compact Radio Packet Inspector
+       ==================================================================== -->
+  <div id="packet-modal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><span>📦</span> 32-Byte Zero-Internet Radio Frame Specification</h3>
+        <button id="modal-close" class="close-btn">&times;</button>
+      </div>
+
+      <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 12px;">
+        Transmitted over 868.1 MHz LoRa airwaves and NavIC S-Band satellite messaging. Guaranteed delivery without telecom networks or internet.
+      </p>
+
+      <div class="raw-hex-box" id="packet-hex-display">
+        AE 61 01 01 03 00 65 00 11 D4 A8 00 48 A3 A0 0F 01 02 66 D5 10 20 05 43 41 4D 50 30 31 20 4A 9B
+      </div>
+
+      <table class="packet-table">
+        <thead>
+          <tr>
+            <th>Offset (Bytes)</th>
+            <th>Field Name</th>
+            <th>Hex Value</th>
+            <th>Decoded Description</th>
+          </tr>
+        </thead>
+        <tbody id="packet-breakdown-rows">
+          <!-- Dynamically populated by app.js -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Leaflet Tactical GIS Map JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  
+  <!-- Master Application Script -->
+  <script type="module" src="src/app.js"></script>
+
+</body>
+</html>
