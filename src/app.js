@@ -84,14 +84,22 @@ class AegisApp {
   }
 
   handleStatePillClick(stateCode) {
-    if (stateCode === "AS" || stateCode === "SK") {
+    if (stateCode === "AS") {
       this.loadScenario("assam_brahmaputra_surge");
-    } else if (stateCode === "UK" || stateCode === "HP") {
-      this.loadScenario("himalayan_cloudburst_surge");
-    } else if (stateCode === "OD" || stateCode === "AP" || stateCode === "WB") {
+    } else if (stateCode === "KL") {
+      this.loadScenario("wayanad_mountain_landslide");
+    } else if (stateCode === "UK") {
+      this.loadScenario("kedarnath_intense_cloudburst");
+    } else if (stateCode === "OD" || stateCode === "AP") {
       this.loadScenario("bay_of_bengal_super_cyclone");
-    } else if (stateCode === "MH" || stateCode === "KL" || stateCode === "GJ") {
-      this.loadScenario("western_ghats_mumbai_inundation");
+    } else if (stateCode === "WB") {
+      this.loadScenario("bengal_violent_tornado");
+    } else if (stateCode === "RJ" || stateCode === "DL") {
+      this.loadScenario("rajasthan_extreme_heatwave");
+    } else if (stateCode === "HP") {
+      this.loadScenario("himalayan_seismic_rupture");
+    } else {
+      this.loadScenario("assam_brahmaputra_surge");
     }
   }
 
@@ -315,15 +323,79 @@ class AegisApp {
     }
 
     const tel = scenario.telemetry;
-    const rainEl = document.getElementById("val-rain");
-    const riverEl = document.getElementById("val-river");
-    const damEl = document.getElementById("val-dam");
-    const windEl = document.getElementById("val-wind");
+    const lbl1 = document.getElementById("lbl-metric-1");
+    const val1 = document.getElementById("val-metric-1");
+    const lbl2 = document.getElementById("lbl-metric-2");
+    const val2 = document.getElementById("val-metric-2");
+    const lbl3 = document.getElementById("lbl-metric-3");
+    const val3 = document.getElementById("val-metric-3");
+    const lbl4 = document.getElementById("lbl-metric-4");
+    const val4 = document.getElementById("val-metric-4");
 
-    if (rainEl) rainEl.textContent = tel.rainfall1h !== undefined ? `${tel.rainfall1h} mm/hr (${tel.rainfall24h}mm / 24h)` : "N/A";
-    if (riverEl) riverEl.textContent = tel.riverLevel !== undefined ? `${tel.riverLevel} m (Danger: ${tel.riverDangerMark}m)` : (tel.highTideMeter ? `${tel.highTideMeter}m High Tide` : "Normal");
-    if (damEl) damEl.textContent = tel.damCapacity !== undefined ? `${tel.damCapacity} %` : "Monitored";
-    if (windEl) windEl.textContent = tel.windSpeed !== undefined ? `${tel.windSpeed} km/h` : "Calm";
+    if (scenario.type === "LANDSLIDE") {
+      if (lbl1) lbl1.textContent = "72h Rain Accumulation";
+      if (val1) val1.textContent = `${tel.rainfall72h} mm [Saturation]`;
+      if (lbl2) lbl2.textContent = "Mountain Slope Gradient";
+      if (val2) val2.textContent = `${tel.slopeAngle}° Steep Incline`;
+      if (lbl3) lbl3.textContent = "Sub-Surface Pore Pressure";
+      if (val3) val3.textContent = `${tel.porePressureKPa} kPa [Critical]`;
+      if (lbl4) lbl4.textContent = "Debris Mudflow Velocity";
+      if (val4) val4.textContent = "45 km/h";
+    } else if (scenario.type === "CLOUDBURST") {
+      if (lbl1) lbl1.textContent = "Precipitation Core Rate";
+      if (val1) val1.textContent = `${tel.rainfall1h} mm/hr [Torrent]`;
+      if (lbl2) lbl2.textContent = "15-Min Flash Influx";
+      if (val2) val2.textContent = `${tel.rainfall15m} mm`;
+      if (lbl3) lbl3.textContent = "Mountain Runoff Velocity";
+      if (val3) val3.textContent = `${tel.flashSurgeVelocityKmh} km/h`;
+      if (lbl4) lbl4.textContent = "Valley Squall Wind";
+      if (val4) val4.textContent = `${tel.windSpeed} km/h`;
+    } else if (scenario.type === "CYCLONE") {
+      if (lbl1) lbl1.textContent = "Destructive Toofan Wind";
+      if (val1) val1.textContent = `${tel.windSpeed} km/h [Category 5]`;
+      if (lbl2) lbl2.textContent = "Central Barometric Eye";
+      if (val2) val2.textContent = `${tel.centralPressure} hPa (Deep)`;
+      if (lbl3) lbl3.textContent = "Coastal Storm Surge";
+      if (val3) val3.textContent = `${tel.stormSurgeHeight} m Tide`;
+      if (lbl4) lbl4.textContent = "24h Accumulated Rain";
+      if (val4) val4.textContent = `${tel.rainfall24h} mm`;
+    } else if (scenario.type === "TORNADO") {
+      if (lbl1) lbl1.textContent = "Vortex Funnel Wind";
+      if (val1) val1.textContent = `${tel.vortexWindSpeed} km/h [Tornado]`;
+      if (lbl2) lbl2.textContent = "Doppler Hook Echo";
+      if (val2) val2.textContent = `${tel.radarReflectivityDbz} dBZ [Severe]`;
+      if (lbl3) lbl3.textContent = "Lightning Strike Density";
+      if (val3) val3.textContent = `${tel.lightningFlashesPerMin} flashes/min`;
+      if (lbl4) lbl4.textContent = "Eye Pressure Drop";
+      if (val4) val4.textContent = `${tel.centralPressure} hPa`;
+    } else if (scenario.type === "HEATWAVE") {
+      if (lbl1) lbl1.textContent = "Peak Scorching Heat (Loo)";
+      if (val1) val1.textContent = `${tel.temperatureMax} °C [Scorching]`;
+      if (lbl2) lbl2.textContent = "Climate Departure";
+      if (val2) val2.textContent = `+${(tel.temperatureMax - tel.normalClimateTemp).toFixed(1)} °C Above Normal`;
+      if (lbl3) lbl3.textContent = "Relative Humidity";
+      if (val3) val3.textContent = `${tel.relativeHumidity} % (Dry Heat)`;
+      if (lbl4) lbl4.textContent = "Thermal Stress (WBGT)";
+      if (val4) val4.textContent = "54.2 °C [Heatstroke]";
+    } else if (scenario.type === "EARTHQUAKE") {
+      if (lbl1) lbl1.textContent = "Richter Magnitude";
+      if (val1) val1.textContent = `M${tel.magnitude} Severe`;
+      if (lbl2) lbl2.textContent = "Focal Hypocenter Depth";
+      if (val2) val2.textContent = `${tel.depthKm} km (Shallow)`;
+      if (lbl3) lbl3.textContent = "Surface Shaking";
+      if (val3) val3.textContent = "MMI VIII (Destructive)";
+      if (lbl4) lbl4.textContent = "Tectonic Fault Zone";
+      if (val4) val4.textContent = "Main Central Thrust";
+    } else {
+      if (lbl1) lbl1.textContent = "Live Rain Rate";
+      if (val1) val1.textContent = `${tel.rainfall1h !== undefined ? tel.rainfall1h + " mm/hr" : "N/A"}`;
+      if (lbl2) lbl2.textContent = "River Gauge (CWC)";
+      if (val2) val2.textContent = `${tel.riverLevel !== undefined ? tel.riverLevel + " m (Danger: " + tel.riverDangerMark + "m)" : "Normal"}`;
+      if (lbl3) lbl3.textContent = "Dam Safety (NDSA)";
+      if (val3) val3.textContent = `${tel.damCapacity !== undefined ? tel.damCapacity + " %" : "Monitored"}`;
+      if (lbl4) lbl4.textContent = "Surface Wind";
+      if (val4) val4.textContent = `${tel.windSpeed !== undefined ? tel.windSpeed + " km/h" : "Calm"}`;
+    }
 
     const popEl = document.getElementById("val-population");
     const breachEl = document.getElementById("val-breach-time");

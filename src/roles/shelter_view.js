@@ -15,28 +15,53 @@ export class ShelterView {
         occupied: 742,
         waterLiters: 28000,
         foodRationDays: 7,
-        doctorOnDuty: "Dr. Bhupen Hazarika (Medical Officer, Assam Health)",
+        doctorOnDuty: "Dr. Bhupen Hazarika (Assam Health)",
         bloodUnits: { "O-": 8, "A+": 24, "B+": 32, "AB+": 12 },
         status: "OPEN_RECEIVING"
       },
       {
-        id: "CAMP-SIKKIM-02",
-        name: "Mangan District Administrative Safe Shelter",
-        location: "Mangan Hill Ridge, Sikkim (+120m Elevation Above Teesta)",
-        capacity: 650,
-        occupied: 380,
-        waterLiters: 14500,
-        foodRationDays: 6,
-        doctorOnDuty: "Dr. Tenzing Norbu (Senior Surgeon, STNM Gangtok)",
-        bloodUnits: { "O-": 6, "A+": 16, "B+": 20, "AB+": 8 },
+        id: "CAMP-KL-02",
+        name: "Meppadi Elevated Landslide Trauma Camp",
+        location: "Wayanad Hills, Kerala (+45m Elevation)",
+        capacity: 900,
+        occupied: 620,
+        waterLiters: 22000,
+        foodRationDays: 8,
+        doctorOnDuty: "Dr. Radhakrishnan (Kerala Health / Trauma Lead)",
+        bloodUnits: { "O-": 12, "A+": 28, "B+": 35, "AB+": 14 },
+        status: "OPEN_RECEIVING"
+      },
+      {
+        id: "CAMP-RJ-03",
+        name: "Bikaner 24/7 Air-Cooled Hydration Complex",
+        location: "Bikaner City Central, Rajasthan (Heatwave Shelter)",
+        capacity: 1500,
+        occupied: 1040,
+        waterLiters: 65000,
+        foodRationDays: 10,
+        doctorOnDuty: "Dr. Arvind Rathore (Heatstroke & Critical Care)",
+        bloodUnits: { "O-": 14, "A+": 30, "B+": 40, "AB+": 18 },
+        status: "OPEN_RECEIVING"
+      },
+      {
+        id: "CAMP-OD-04",
+        name: "Puri Concrete Multi-Purpose Cyclone Shelter #04",
+        location: "Puri Coastal Ridge, Odisha (+15m Elevated Concrete)",
+        capacity: 1800,
+        occupied: 1350,
+        waterLiters: 45000,
+        foodRationDays: 12,
+        doctorOnDuty: "Dr. Manas Mohapatra (Odisha Health)",
+        bloodUnits: { "O-": 10, "A+": 36, "B+": 44, "AB+": 16 },
         status: "OPEN_RECEIVING"
       }
     ];
 
     this.missingRegistry = [
       { id: "REG-AS-01", name: "Pranab Saikia", age: 52, family: "Wife Anamika, Son Deep", status: "SAFELY_CHECKED_IN", shelter: "Garmur Highland Camp, Majuli" },
-      { id: "REG-SK-02", name: "Sonam Lepcha", age: 68, family: "Looking for grandson Tashi", status: "MEDICAL_TREATMENT", shelter: "Mangan Administrative Camp, Sikkim" },
-      { id: "REG-ML-03", name: "Mary Lyngdoh", age: 29, family: "Separated at Shillong-Silchar NH-6 landslide", status: "SAFELY_CHECKED_IN", shelter: "Cherrapunji Safe Shelter" }
+      { id: "REG-KL-02", name: "Shaji Varghese", age: 44, family: "Looking for daughter Ananya", status: "MEDICAL_TREATMENT", shelter: "Meppadi Landslide Camp, Wayanad" },
+      { id: "REG-RJ-03", name: "Kailash Chand", age: 67, family: "Recovered from severe heat exhaustion", status: "SAFELY_CHECKED_IN", shelter: "Bikaner Hydration Complex, Rajasthan" },
+      { id: "REG-OD-04", name: "Pabitra Jena", age: 38, family: "Evacuated from coastal fishing boat", status: "SAFELY_CHECKED_IN", shelter: "Puri Cyclone Shelter #04, Odisha" }
     ];
   }
 

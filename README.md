@@ -46,12 +46,17 @@ Natural disasters do not respect state borders or departmental jurisdictions. To
 
 ---
 
-## 🗺️ 4 Pan-India Disaster Theaters
+## 🌪️ 7 Comprehensive Pan-India Multi-Hazards Covered
 
-1. **🌊 Eastern & North-Eastern Theater:** Brahmaputra Basin & Majuli Island embankment breach forecasting (*Assam / Sikkim GLOF / Bengal*).
-2. **⛰️ Northern Himalayan Theater:** Cloudbursts, flash surges, and Char Dham highway blockages (*Uttarakhand / Himachal Pradesh / J&K*).
-3. **🌀 Southern & Eastern Coastal Theater:** Bay of Bengal & Arabian Sea super cyclones with storm surge inundation (*Puri to Andhra and Tamil Nadu*).
-4. **🌊 Western Peninsular Theater:** Western Ghats cloudbursts and high-tide urban estuary flash flooding (*Mumbai & Konkan*).
+AegisAlert is not just a flood system; it is an **All-Hazard Disaster Prevention & Early Warning Grid**:
+
+1. **🌊 Floods & Embankment Breaches:** Real-time CWC hydrographs, 5,300-dam storage tracking, and automated embankment breach countdowns (*Brahmaputra & Ganga Basins*).
+2. **⛰️ Mountain Landslides & Debris Mudflows:** Multi-day 72h soil saturation thresholds, slope shear stress angles, and subsurface pore-water pressure models (*Wayanad, Kerala & Kedarnath, Uttarakhand*).
+3. **⛈️ Extreme Cloudbursts & Heavy Rain:** Real-time nowcasting of violent precipitation cores (>100 mm/hr) and instantaneous flash surge runoff (*Himalayan gorges & Mumbai urban estuaries*).
+4. **🌀 Severe Cyclones & Toofans:** 185 km/h gale wind tracking, deep barometric eye pressure, and coastal storm surge inundation models (*Bay of Bengal & Arabian Sea*).
+5. **🌪️ Tornados & Destructive Squalls (Kalbaishakhi):** Doppler hook echo detection (71 dBZ), 195 km/h vortex funnels, and lightning flash density alerts (*Eastern Gangetic Plains & Odisha*).
+6. **☀️ Extreme Heatwaves & Thermal Emergencies (Loo):** Real-time monitoring of 49.4°C heat domes, Wet Bulb Globe Temperature (WBGT) heat stress indices, and automated deployment of 24/7 air-cooled hydration centers (*Rajasthan, Vidarbha & Delhi NCR*).
+7. **⚡ Earthquakes & Seismic Fault Ruptures:** Ingestion of live USGS/NCS seismic feeds (M7.1+ fault ruptures), automated gas main cutoffs, and USAR canine dispatch.
 
 ---
 

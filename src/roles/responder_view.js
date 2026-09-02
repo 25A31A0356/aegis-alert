@@ -61,6 +61,45 @@ export class ResponderView {
         forcesRequired: "NDRF 5th Bn (Pune) + Mumbai Fire Brigade",
         time: "20 mins ago",
         status: "PENDING"
+      },
+      {
+        id: "SOS-NAT-05",
+        name: "Chooralmala Tea Plantation Ridge",
+        location: "Wayanad, Kerala (Southern Ghats)",
+        coordinates: [11.5540, 76.1265],
+        triageScore: 99,
+        priority: "CRITICAL",
+        peopleTrapped: 28,
+        category: "Massive Slope Failure & Mudflow (Landslide)",
+        forcesRequired: "NDRF 4th Bn + Army Madras Regt (Canines & Excavators)",
+        time: "4 mins ago",
+        status: "DISPATCHED"
+      },
+      {
+        id: "SOS-NAT-06",
+        name: "Burdwan Rural High School Compound",
+        location: "Purba Bardhaman, West Bengal",
+        coordinates: [23.2324, 87.8615],
+        triageScore: 92,
+        priority: "CRITICAL",
+        peopleTrapped: 16,
+        category: "Kalbaishakhi Tornado Squall & Tin Roof Collapse",
+        forcesRequired: "West Bengal SDRF + Civil Defense",
+        time: "12 mins ago",
+        status: "EN_ROUTE"
+      },
+      {
+        id: "SOS-NAT-07",
+        name: "Bikaner Rural Brick Kiln Cluster",
+        location: "Thar Desert Outskirts, Rajasthan",
+        coordinates: [28.0229, 73.3119],
+        triageScore: 88,
+        priority: "HIGH",
+        peopleTrapped: 35,
+        category: "49.4°C Extreme Heatwave / Severe Heatstroke Cluster",
+        forcesRequired: "District Health Emergency Mobile Unit + Water Tankers",
+        time: "18 mins ago",
+        status: "DISPATCHED"
       }
     ];
   }
