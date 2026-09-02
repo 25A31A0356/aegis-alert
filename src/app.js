@@ -58,8 +58,17 @@ class AegisApp {
     // 8. Trigger Parallel Ingestion from Global & National APIs
     await this.syncMultiPlatformTelemetry();
 
+    // 9. Initial Media Wire & Verified Govt Social Feed
+    this.renderMediaBulletins();
+
     // Auto-refresh live streams every 45 seconds
     setInterval(() => this.syncMultiPlatformTelemetry(), 45000);
+
+    // Dynamic Media & Verified Social updates from time to time (every 18 seconds)
+    setInterval(() => {
+      this.feeds.pushNextMediaBulletin();
+      this.renderMediaBulletins();
+    }, 18000);
   }
 
   /**
@@ -149,6 +158,24 @@ class AegisApp {
     const btnBroadcast = document.getElementById("btn-broadcast-zero-signal");
     if (btnBroadcast) {
       btnBroadcast.addEventListener("click", () => this.handleBroadcast());
+    }
+
+    // 4b. Targeted Offline Siren Button (Red Zone Only)
+    const btnTargetedSiren = document.getElementById("btn-targeted-red-siren");
+    if (btnTargetedSiren) {
+      btnTargetedSiren.addEventListener("click", () => this.handleTargetedOfflineSiren());
+    }
+
+    // 4c. Push Official PIB Media Fact-Check Button
+    const btnPushMedia = document.getElementById("btn-push-media-bulletin");
+    if (btnPushMedia) {
+      btnPushMedia.addEventListener("click", () => {
+        const next = this.feeds.pushNextMediaBulletin();
+        if (next) {
+          this.logTransmission(`📢 DISPATCHED OFFICIAL PRESS BULLETIN: ${next.title}`);
+          this.renderMediaBulletins();
+        }
+      });
     }
 
     // 5. Silence Siren Button
@@ -305,6 +332,41 @@ class AegisApp {
       this.logTransmission(`🚨 120dB National Siren ENGAGED. 360° Optical Strobes ACTIVATED.`);
       this.logTransmission(`📢 Multilingual Spoken Voice Broadcast starting in ${I18N[this.currentLang].name}.`);
     }, 450);
+  }
+
+  handleTargetedOfflineSiren() {
+    if (!this.lastEncodedPacket) return;
+
+    const currentScenario = this.feeds.activeScenario;
+    this.logTransmission(`🎯 INITIATING TARGETED OFFLINE SIREN (RED ZONE POLYGON ONLY)...`);
+    this.logTransmission(`📡 Sub-GHz Airwave Frame (868 MHz): Target Geofence Zone [${currentScenario.theater.toUpperCase()}]`);
+    this.logTransmission(`🔐 Overriding 120dB Remote Siren on Autonomous Beacon Masts within 16.0km.`);
+    this.logTransmission(`⚡ Zero-Internet Command: [NODE_ADDR: 0x7E4A -> SIREN_FORCE_ENGAGE]`);
+
+    this.mapCtrl.animateRadioBroadcast(currentScenario.coordinates, 18);
+
+    setTimeout(() => {
+      this.hardwareNode.receiveRadioPacket(this.lastEncodedPacket.buffer);
+      this.logTransmission(`✅ 4 Autonomous Warning Masts inside RED ZONE confirmed receipt via LoRa Mesh.`);
+      this.logTransmission(`📢 120dB Acoustic Horns sounding in Red Hazard Sector. Outside sectors remain silent.`);
+    }, 400);
+  }
+
+  renderMediaBulletins() {
+    const container = document.getElementById("media-bulletins-stream");
+    if (!container) return;
+
+    const bulletins = this.feeds.mediaBulletins;
+    container.innerHTML = bulletins.map(b => `
+      <div class="media-bulletin-card badge-${b.urgency.toLowerCase()}">
+        <div class="bulletin-header">
+          <span class="source-badge ${b.badgeClass}">${b.source}</span>
+          <span class="bulletin-time">${b.timestamp}</span>
+        </div>
+        <strong class="bulletin-title">${b.title}</strong>
+        <p class="bulletin-body">${b.body}</p>
+      </div>
+    `).join("");
   }
 
   renderWarRoom(scenario, risk) {

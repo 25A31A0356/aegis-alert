@@ -3,12 +3,14 @@
  * Integrates:
  * 1. National Disaster Response Force (NDRF 16 Battalions nationwide)
  * 2. Tri-Services HADR: Indian Army, Navy, Air Force (IAF Mi-17/Chinook), and Coast Guard
- * 3. State Disaster Response Forces (SDRF) of all 28 States & 8 UTs
+ * 3. Government Rescue Teams Availability & Deployment Board
  */
 
 export class ResponderView {
   constructor(containerId) {
     this.container = document.getElementById(containerId);
+    
+    // Live Multi-Hazard Rescue Tickets
     this.sosQueue = [
       {
         id: "SOS-NAT-01",
@@ -44,7 +46,7 @@ export class ResponderView {
         triageScore: 91,
         priority: "CRITICAL",
         peopleTrapped: 32,
-        category: "4.2m Storm Surge Cyclone Inundation",
+        category: "4.8m Storm Surge Cyclone Inundation",
         forcesRequired: "Indian Coast Guard + NDRF 3rd Bn",
         time: "15 mins ago",
         status: "DISPATCHED"
@@ -102,6 +104,70 @@ export class ResponderView {
         status: "DISPATCHED"
       }
     ];
+
+    // Government & Armed Forces Rescue Availability & Deployment Grid
+    this.govtRescueTeams = [
+      {
+        id: "TEAM-NDRF-01",
+        agency: "NDRF 1st Battalion (Guwahati)",
+        base: "Patgaon, Assam",
+        personnel: 180,
+        equipment: "40 Inflatable Zodiacs, Deep Divers, OBM Engines",
+        status: "DEPLOYED",
+        dispatchTarget: "Majuli Island (Brahmaputra Flood)",
+        dispatchTime: "04:30 AM"
+      },
+      {
+        id: "TEAM-ARMY-02",
+        agency: "Indian Army Corps of Engineers",
+        base: "Pangode Military Station",
+        personnel: 240,
+        equipment: "120ft Bailey Bridge, 6 JCBs, Canine Search Squad",
+        status: "EN_ROUTE",
+        dispatchTarget: "Chooralmala Gorge (Wayanad Landslide)",
+        dispatchTime: "05:15 AM"
+      },
+      {
+        id: "TEAM-IAF-03",
+        agency: "Indian Air Force (Eastern Air Command)",
+        base: "Tezpur Airbase",
+        personnel: 24,
+        equipment: "4x Mi-17V5 Medium Choppers, Winch Rescue Gear",
+        status: "AIRBORNE",
+        dispatchTarget: "Airlifting Stranded Riverine Villagers",
+        dispatchTime: "06:00 AM"
+      },
+      {
+        id: "TEAM-ICG-04",
+        agency: "Indian Coast Guard (Eastern Seaboard)",
+        base: "Paradip Port, Odisha",
+        personnel: 95,
+        equipment: "ICGS Varaha Patrol Vessel, 8 Gemini Boats",
+        status: "DEPLOYED",
+        dispatchTarget: "Puri Coastline (Cyclone Toofan)",
+        dispatchTime: "03:45 AM"
+      },
+      {
+        id: "TEAM-BRO-05",
+        agency: "Border Roads Organisation (BRO)",
+        base: "Joshimath / Rishikesh Base",
+        personnel: 110,
+        equipment: "Hydraulic Rock Breakers, Heavy Bulldozers",
+        status: "ACTIVE_CLEARING",
+        dispatchTarget: "NH-58 Landslide Corridor",
+        dispatchTime: "02:15 AM"
+      },
+      {
+        id: "TEAM-NDRF-06",
+        agency: "NDRF 5th Battalion (Reserve)",
+        base: "Sudumbare, Pune",
+        personnel: 120,
+        equipment: "Urban Search & Rescue (USAR), Acoustic Life Detectors",
+        status: "STANDBY_READY",
+        dispatchTarget: "Available for Immediate National Airlift",
+        dispatchTime: "N/A"
+      }
+    ];
   }
 
   addSOS(sosItem) {
@@ -114,6 +180,7 @@ export class ResponderView {
 
     const totalTrapped = this.sosQueue.reduce((acc, curr) => acc + (curr.status !== "SAVED" ? curr.peopleTrapped : 0), 0);
     const criticalCount = this.sosQueue.filter(s => s.priority === "CRITICAL" && s.status !== "SAVED").length;
+    const deployedTeamsCount = this.govtRescueTeams.filter(t => t.status !== "STANDBY_READY").length;
 
     this.container.innerHTML = `
       <div class="responder-shell">
@@ -129,24 +196,72 @@ export class ResponderView {
             <strong style="color:#f59e0b;">${totalTrapped} Souls</strong>
           </div>
           <div class="kpi-block">
+            <span>GOVT TEAMS DISPATCHED</span>
+            <strong style="color:#10b981;">${deployedTeamsCount} Active (${this.govtRescueTeams.length - deployedTeamsCount} Standby)</strong>
+          </div>
+          <div class="kpi-block">
             <span>CRITICAL NATIONAL TRIAGE (90+)</span>
             <strong style="color:#ef4444;">${criticalCount} High Risk</strong>
           </div>
-          <div class="kpi-block">
-            <span>ARMED FORCES & NDRF MOBILIZED</span>
-            <strong style="color:#10b981;">16 NDRF Bns • IAF Air Command</strong>
+        </div>
+
+        <!-- Government Rescue & Armed Forces Deployment Board -->
+        <div class="panel-card" style="margin-bottom: 20px; background: rgba(15, 23, 42, 0.7);">
+          <div class="card-header">
+            <span class="card-title">
+              <span class="card-title-icon">🎖️</span>
+              Government Rescue & Military Forces Deployment Status Board
+            </span>
+            <span style="font-size:0.75rem; color:#38bdf8;">Tri-Services HADR Coordination</span>
+          </div>
+
+          <div class="teams-table-wrapper" style="overflow-x:auto;">
+            <table class="teams-deploy-table">
+              <thead>
+                <tr>
+                  <th>Battalion / Agency</th>
+                  <th>Base Station</th>
+                  <th>Strength</th>
+                  <th>Specialized Equipment</th>
+                  <th>Dispatch Status</th>
+                  <th>Assigned Mission Sector</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${this.govtRescueTeams.map(team => `
+                  <tr>
+                    <td><strong>${team.agency}</strong><br/><code style="font-size:0.7rem; color:#64748b;">${team.id}</code></td>
+                    <td>${team.base}</td>
+                    <td><strong>${team.personnel}</strong> Troops</td>
+                    <td style="font-size:0.75rem; color:#cbd5e1;">${team.equipment}</td>
+                    <td>
+                      <span class="team-status-pill status-${team.status.toLowerCase()}">${team.status.replace(/_/g, ' ')}</span>
+                    </td>
+                    <td style="font-size:0.78rem; color:#38bdf8;">${team.dispatchTarget}</td>
+                    <td>
+                      ${team.status === 'STANDBY_READY' ? `
+                        <button class="btn-team-toggle btn-deploy-team" data-id="${team.id}">🚀 Deploy to Red Zone</button>
+                      ` : `
+                        <button class="btn-team-toggle btn-recall-team" data-id="${team.id}">↩️ Recall / Stand Down</button>
+                      `}
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
           </div>
         </div>
 
         <!-- Live Triage Ticket Queue -->
         <div class="sos-ticket-list">
           <div class="ticket-list-header">
-            <h4>🚨 National Emergency Operations Center (NEOC) Triage Queue</h4>
-            <span style="font-size:0.75rem; color:#94a3b8;">Real-Time GPS & Satellite Coordinates</span>
+            <h4>🚨 National Emergency Operations Center (NEOC) Distress Queue (AI Triage Prioritized)</h4>
+            <span style="font-size:0.75rem; color:#94a3b8;">Real-Time Multi-Hazard Rescue Tickets</span>
           </div>
 
           <div class="tickets-container">
-            ${this.sosQueue.map((item, idx) => `
+            ${this.sosQueue.map(item => `
               <div class="sos-ticket-card priority-${item.priority.toLowerCase()}">
                 <div class="ticket-top-row">
                   <div class="ticket-id-box">
@@ -162,7 +277,7 @@ export class ResponderView {
                 <div class="ticket-mid-row">
                   <div class="ticket-meta-col">
                     <div>📍 <strong>${item.location}</strong> (${item.coordinates[0].toFixed(4)}°N, ${item.coordinates[1].toFixed(4)}°E)</div>
-                    <div>⚠️ Threat: <span style="color:#f87171;">${item.category}</span></div>
+                    <div>⚠️ Threat Category: <span style="color:#f87171;">${item.category}</span></div>
                     <div>🎖️ Tasked Forces: <span style="color:#38bdf8; font-weight:600;">${item.forcesRequired}</span></div>
                     <div>👥 Trapped: <strong>${item.peopleTrapped} Citizens</strong> • Reported: <em>${item.time}</em></div>
                   </div>
@@ -176,7 +291,7 @@ export class ResponderView {
                     🚁 Authorize IAF Helicopter Sortie
                   </button>
                   <button class="btn-ticket-action btn-dispatch-boat" data-id="${item.id}">
-                    🚤 Dispatch NDRF Zodiac Boat
+                    🚤 Dispatch Inflatable Zodiac Boat
                   </button>
                   <button class="btn-ticket-action btn-army-eng" data-id="${item.id}">
                     🎖️ Deploy Army Engineers (Bridge)
@@ -197,6 +312,7 @@ export class ResponderView {
   }
 
   bindEvents() {
+    // Ticket actions
     this.container.querySelectorAll(".btn-mark-evacuated").forEach(btn => {
       btn.addEventListener("click", (e) => {
         const id = e.target.getAttribute("data-id");
@@ -226,6 +342,32 @@ export class ResponderView {
         const ticket = this.sosQueue.find(s => s.id === id);
         if (ticket) {
           ticket.status = "NDRF_BOAT_EN_ROUTE";
+          this.render();
+        }
+      });
+    });
+
+    // Govt Teams Deploy/Recall actions
+    this.container.querySelectorAll(".btn-deploy-team").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        const id = e.target.getAttribute("data-id");
+        const team = this.govtRescueTeams.find(t => t.id === id);
+        if (team) {
+          team.status = "DEPLOYED";
+          team.dispatchTarget = "Red Zone Urgent Reinforcement";
+          team.dispatchTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          this.render();
+        }
+      });
+    });
+
+    this.container.querySelectorAll(".btn-recall-team").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        const id = e.target.getAttribute("data-id");
+        const team = this.govtRescueTeams.find(t => t.id === id);
+        if (team) {
+          team.status = "STANDBY_READY";
+          team.dispatchTarget = "Re-assigned to Base Station";
           this.render();
         }
       });

@@ -392,6 +392,28 @@
             </div>
           </div>
         </div>
+
+        <!-- Media Intelligence & Government Verified Social Sentiment Radar -->
+        <div class="panel-card" style="margin-bottom: 20px;">
+          <div class="card-header">
+            <span class="card-title">
+              <span class="card-title-icon">📰</span>
+              Media Intelligence & Govt Verified Social Sentiment Radar
+            </span>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <span class="pulse-news-indicator">● LIVE MEDIA WIRE</span>
+              <button id="btn-push-media-bulletin" class="btn-action-small" title="Push official fact-check to national press wire">
+                📢 Dispatch Official PIB Fact-Check
+              </button>
+            </div>
+          </div>
+          <p style="font-size:0.78rem; color:var(--text-secondary); margin-bottom:12px;">
+            Real-time feed gathered from national news outlets, All India Radio (Akashvani), DD News, and official Government of India (PIB) fact-checks to prevent public panic:
+          </p>
+          <div id="media-bulletins-stream" class="media-bulletins-grid">
+            <!-- Dynamically populated by OfficialFeeds and App -->
+          </div>
+        </div>
       </div>
 
       <!-- TAB 2: Citizen Survival Hub (Offline PWA) -->
@@ -488,6 +510,11 @@
           <button id="btn-broadcast-zero-signal" class="btn-hero-broadcast">
             <span>🛰️</span>
             <span>TRANSMIT PAN-INDIA AIRWAVE BROADCAST</span>
+          </button>
+
+          <button id="btn-targeted-red-siren" class="btn-hero-broadcast btn-targeted-siren-override" style="margin-top: 10px; background: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 100%); border-color: #ef4444;" title="Sends sub-GHz radio pulse specifically targeting autonomous siren masts within the Red Hazard Polygon">
+            <span>🚨</span>
+            <span>TRANSMIT TARGETED OFFLINE SIREN (RED ZONE ONLY)</span>
           </button>
 
           <div class="sub-actions-row">

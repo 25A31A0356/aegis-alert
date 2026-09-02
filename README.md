@@ -146,3 +146,33 @@ AegisAlert National does not merely compete with existing disaster apps; it acts
 | **Indian Railways Kavach Sentry** | Ingests live CWC 5,300-dam releases and cloudburst surges to automatically warn of railway bridge submergence. |
 | **100+ Smart City ICCCs** | Direct API overrides for municipal drainage sumps and urban traffic flyover closures during cloudbursts. |
 | **State SDMA Portals** | Overcomes interstate data deadlocks by providing a unified, real-time national operational picture. |
+
+---
+
+## 📢 Targeted Offline Siren Trigger (Red Zone Polygon Only)
+
+AegisAlert National includes a **Targeted Offline Siren Dispatcher**:
+- **Zero-Internet Sub-GHz Airwaves:** Rather than relying on cellular networks that collapse during storms, the system transmits an addressed 32-byte binary radio frame directly over **868 MHz LoRa / ISRO NavIC**.
+- **Geofenced Node Addressing:** The command targets *only* the autonomous warning masts located inside the active Red Hazard Polygon (NODE_ADDR: 0x7E4A).
+- **Physical Mast Overrides:** Masts within the red zone immediately engage their **120dB acoustic directional horns** and **360° rotating optical strobes**, while masts in safe buffer zones remain quiet to prevent panic.
+
+---
+
+## 🎖️ Government Rescue & Armed Forces Deployment Board
+
+A live tactical tracking board integrated directly into the First Responder Command (Tab 3):
+- **NDRF 1st & 4th Battalions:** Real-time tracking of 180+ troops, 40 inflatable Gemini/Zodiac boats, and OBM engines.
+- **Indian Army Corps of Engineers:** 240 troops equipped with 120-foot Bailey bridge sets, canine search units, and JCB excavators.
+- **Indian Air Force (IAF):** Mi-17V5 medium-lift helicopters actively conducting winch rescues and food drops.
+- **Indian Coast Guard & BRO:** Offshore patrol vessels (ICGS Varaha) and heavy hydraulic rock-breakers.
+- **Interactive Command Actions:** Incident Commanders can click **[Deploy to Red Zone]** or **[Recall / Stand Down]** to re-assign reserve battalions dynamically.
+
+---
+
+## 📰 Media Intelligence & Government Verified Social Sentiment Radar
+
+During disasters, fake news and viral social media rumors often trigger deadly stampedes. AegisAlert National integrates a **Real-Time Fact-Checked Media Wire**:
+- **PIB Fact Check (Govt of India):** Real-time debunking of viral hoaxes (e.g. false dam collapse claims).
+- **DD News & All India Radio (AIR Akashvani):** Live crisis coverage and national highway clearance bulletins.
+- **NDMA Official Social Radar:** Real-time advisories streamed directly to the public.
+- **Dynamic Auto-Refresh:** The news wire automatically streams fresh bulletins from time to time, keeping the operations room informed of ground and social media developments.

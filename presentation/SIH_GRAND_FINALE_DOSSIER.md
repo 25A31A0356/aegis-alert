@@ -145,3 +145,30 @@ AegisAlert National is designed as the **Supreme Apex Disaster Interoperability 
 3. **Indian Railways Kavach & Bridge Sentinels:** Ingests live CWC dam releases and cloudburst surges to automatically flag railway track washouts.
 4. **100+ Smart City ICCCs:** Integrates directly with municipal drainage sumps and urban traffic flyover closures.
 5. **State SDMAs:** Solves the interstate boundary deadlock by synchronizing upstream reservoir releases with downstream state evacuation corridors on a unified national standard (ITU-T CAP X.1303).
+
+---
+
+### Q16: How does the system send offline siren alerts specifically to a targeted red area without internet?
+**Answer:**  
+We engineered **Targeted Geofenced Sub-GHz Beacon Addressing**:
+1. **Zero-Internet Physical Airwaves:** The NEOC transmits an emergency 32-byte radio packet over **868 MHz / 433 MHz LoRa and ISRO NavIC satellite links**.
+2. **Polygon Node Addressing:** The binary frame encodes the active red polygon zone ID (0x7E4A). Only autonomous masts whose hardware GPS falls within this red boundary decode the packet and trigger their **120dB acoustic horns** and **360° optical strobes**.
+3. **Outside Immunity:** Warning masts in green/safe sectors receive the packet, verify their coordinates lie outside the hazard polygon, and remain in standby mode, preventing unwarranted panic in unaffected districts.
+
+---
+
+### Q17: How does the government monitor and verify the availability and dispatch status of all rescue teams?
+**Answer:**  
+AegisAlert National features a dedicated **Inter-Agency Armed Forces & NDRF Deployment Board**:
+1. **Tri-Services & Paramilitary Visibility:** Consolidates live status from NDRF, Indian Army (Corps of Engineers), Indian Air Force (IAF Mi-17s), Indian Coast Guard, and Border Roads Organisation (BRO).
+2. **Granular Readiness Metrics:** Displays troop strength, specialized equipment (Zodiacs, Bailey bridges, canine units, rock-breakers), dispatch targets, and departure timestamps.
+3. **Dynamic Re-Tasking:** The Incident Commander can deploy reserve units to active red zones or recall units with a single click.
+
+---
+
+### Q18: How does the platform counter rumors and integrate media/social intelligence?
+**Answer:**  
+We created the **Media Intelligence & Verified Social Sentiment Radar**:
+1. **Official PIB Fact Check Integration:** Ingests and displays real-time debunks of viral social media rumors (e.g., verifying that a dam is safely discharging rather than breached).
+2. **National Broadcaster Feed:** Synchronizes news flashes from DD News and All India Radio (Akashvani).
+3. **Dynamic Broadcast Ticker:** Automatically refreshes time to time, allowing government authorities to push official press statements directly to citizen devices and media outlets.
