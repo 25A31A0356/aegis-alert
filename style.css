@@ -1345,3 +1345,194 @@ body {
 .packet-table th, .packet-table td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border-subtle); }
 .packet-table th { background: #0e1624; color: var(--text-secondary); }
 .hex-badge { background: #1e293b; color: var(--accent-blue); padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); }
+
+/* ==========================================================================
+   APEX EXECUTIVE DASHBOARD & MULTI-PLATFORM STREAM STYLES
+   ========================================================================== */
+
+.apex-executive-banner {
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(10, 16, 30, 0.98) 100%);
+  border-bottom: 2px solid transparent;
+  border-image: linear-gradient(90deg, #f97316, #ffffff, #16a34a) 1;
+  padding: 14px 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.exec-banner-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.exec-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.exec-shield-icon {
+  font-size: 1.5rem;
+  padding: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.exec-sync-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.live-blink-circle {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  animation: pulse-ring 1.5s infinite;
+}
+
+.exec-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.exec-kpi-card {
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.exec-kpi-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+.exec-kpi-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.exec-kpi-val {
+  font-size: 1.15rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  line-height: 1.2;
+}
+
+.exec-kpi-sub {
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  margin-top: 3px;
+}
+
+.state-posture-strip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  overflow-x: auto;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.posture-strip-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.state-pills-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.state-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+}
+
+.state-pill:hover {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: #38bdf8;
+  transform: scale(1.04);
+}
+
+.state-pill.status-red { border-color: rgba(239, 68, 68, 0.6); color: #fca5a5; }
+.state-pill.status-orange { border-color: rgba(245, 158, 11, 0.6); color: #fde68a; }
+.state-pill.status-yellow { border-color: rgba(234, 179, 8, 0.6); color: #fef08a; }
+.state-pill.status-green { border-color: rgba(16, 185, 129, 0.6); color: #86efac; }
+
+/* Multi-Platform Live Stream Cards */
+.live-stream-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+  margin-top: 10px;
+}
+
+.stream-card {
+  background: #090e17;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+}
+
+.stream-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.78rem;
+  color: #e2e8f0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+}
+
+.status-live-pill {
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+.stream-card-body {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: #94a3b8;
+  line-height: 1.5;
+  min-height: 52px;
+}

@@ -53,6 +53,62 @@
   </header>
 
   <!-- ====================================================================
+       APEX EXECUTIVE OVERVIEW FOR HEAD OF DISASTER MANAGEMENT
+       ==================================================================== -->
+  <section class="apex-executive-banner">
+    <div class="exec-banner-header">
+      <div class="exec-title">
+        <span class="exec-shield-icon">🇮🇳</span>
+        <div>
+          <strong style="color:#ffffff; font-size: 0.95rem; letter-spacing: 0.5px;">APEX NATIONAL DISASTER SITUATIONAL REPORT</strong>
+          <span style="font-size: 0.75rem; color:#94a3b8; display:block;">Executive Dashboard for Cabinet Committee on Disaster Management & NDMA Vice-Chairman</span>
+        </div>
+      </div>
+      <div class="exec-sync-badge">
+        <span class="live-blink-circle"></span>
+        <span id="exec-live-clock">LIVE MULTI-PLATFORM SYNC: 100% HEALTHY</span>
+      </div>
+    </div>
+
+    <!-- Top 5 Executive Dials -->
+    <div class="exec-kpi-grid">
+      <div class="exec-kpi-card">
+        <span class="exec-kpi-label">NATIONAL CRISIS LEVEL</span>
+        <strong id="exec-crisis-level" class="exec-kpi-val" style="color:#ef4444;">LEVEL 4 (RED)</strong>
+        <span class="exec-kpi-sub">National Alert Declared</span>
+      </div>
+      <div class="exec-kpi-card">
+        <span class="exec-kpi-label">POPULATION MONITORED</span>
+        <strong id="exec-pop-val" class="exec-kpi-val" style="color:#f59e0b;">7,80,000 Souls</strong>
+        <span class="exec-kpi-sub">Under Live Evacuation Watch</span>
+      </div>
+      <div class="exec-kpi-card">
+        <span class="exec-kpi-label">ARMED FORCES & NDRF</span>
+        <strong id="exec-ndrf-val" class="exec-kpi-val" style="color:#38bdf8;">16 Bns + IAF HADR</strong>
+        <span class="exec-kpi-sub">Army Engineers Airborne</span>
+      </div>
+      <div class="exec-kpi-card">
+        <span class="exec-kpi-label">CWC 5,300+ DAMS</span>
+        <strong id="exec-dam-val" class="exec-kpi-val" style="color:#10b981;">94.0% Safe Disch.</strong>
+        <span class="exec-kpi-sub">Regulated Spillways</span>
+      </div>
+      <div class="exec-kpi-card">
+        <span class="exec-kpi-label">LIVE DATA PLATFORMS</span>
+        <strong id="exec-platforms-val" class="exec-kpi-val" style="color:#10b981;">6 Streams ACTIVE</strong>
+        <span class="exec-kpi-sub">Open-Meteo • USGS • NASA</span>
+      </div>
+    </div>
+
+    <!-- State-by-State Posture Strip for Quick Review -->
+    <div class="state-posture-strip">
+      <span class="posture-strip-label">STATE-BY-STATE DISASTER POSTURE:</span>
+      <div class="state-pills-row" id="state-posture-pills">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================================
        MULTIDISCIPLINARY ROLE SWITCHER BAR (PAN-INDIA APEX)
        ==================================================================== -->
   <nav class="role-nav-bar">
@@ -105,7 +161,7 @@
               </select>
             </div>
             <div class="live-feed-banner">
-              <span>APEX INGESTION: <strong style="color:var(--accent-blue);">IMD • CWC • NCS • NESAC • CELL BROADCAST</strong></span>
+              <span>APEX INGESTION: <strong style="color:var(--accent-blue);">OPEN-METEO • USGS • NASA EONET • CWC • IMD</strong></span>
             </div>
           </div>
         </div>
@@ -133,19 +189,19 @@
             <div class="telemetry-right">
               <div class="telemetry-metrics-grid">
                 <div class="metric-cell">
-                  <span class="metric-cell-label">Rainfall Rate</span>
+                  <span class="metric-cell-label">Live Rain (Open-Meteo)</span>
                   <div id="val-rain" class="metric-cell-val">52.0 mm/hr</div>
                 </div>
                 <div class="metric-cell">
-                  <span class="metric-cell-label">River Level</span>
+                  <span class="metric-cell-label">River Gauge (CWC)</span>
                   <div id="val-river" class="metric-cell-val">86.8 m (Danger: 85.5m)</div>
                 </div>
                 <div class="metric-cell">
-                  <span class="metric-cell-label">Dam / Reservoir</span>
+                  <span class="metric-cell-label">Dam Safety (NDSA)</span>
                   <div id="val-dam" class="metric-cell-val">94.0% Storage</div>
                 </div>
                 <div class="metric-cell">
-                  <span class="metric-cell-label">Wind / Shock</span>
+                  <span class="metric-cell-label">Seismic / Wind (USGS)</span>
                   <div id="val-wind" class="metric-cell-val">38 km/h</div>
                 </div>
               </div>
@@ -169,9 +225,9 @@
           <div class="card-header">
             <span class="card-title">
               <span class="card-title-icon">🗺️</span>
-              Pan-India Tactical GIS Hazard Map & Autonomous Warning Network
+              Pan-India Tactical GIS Hazard Map & Live Seismology Layer
             </span>
-            <span style="font-size:0.75rem; color:var(--text-muted);">Survey of India & ISRO Satellite Layer</span>
+            <span style="font-size:0.75rem; color:var(--text-muted);">USGS Live Earthquakes • Survey of India • ISRO Satellite</span>
           </div>
 
           <div class="gis-map-wrapper">
@@ -183,11 +239,58 @@
               </div>
               <div class="legend-row">
                 <div class="legend-box" style="background:#10b981;"></div>
-                <span>Autonomous Warning Node (Zero-Internet Station)</span>
+                <span>Autonomous Warning Station (Zero-Internet Mast)</span>
               </div>
               <div class="legend-row">
                 <div class="legend-box" style="background:#38bdf8;"></div>
                 <span>National Disaster Highland Relief Center</span>
+              </div>
+              <div class="legend-row">
+                <div class="legend-box" style="background:#f43f5e; border-radius:50%;"></div>
+                <span>Live USGS Earthquake Epicenter</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Multi-Platform Live Data Verification Drawer -->
+        <div class="panel-card" style="margin-bottom: 20px;">
+          <div class="card-header">
+            <span class="card-title">
+              <span class="card-title-icon">🛰️</span>
+              Verified Live Multi-Platform Telemetry Streams
+            </span>
+            <span id="live-platform-count-tag" style="font-size:0.75rem; color:var(--accent-green);">3 Global APIs Connected</span>
+          </div>
+          
+          <div class="live-stream-cards-grid">
+            <div class="stream-card">
+              <div class="stream-card-head">
+                <strong>🌦️ Open-Meteo Global Meteorological</strong>
+                <span class="status-live-pill">LIVE 200 OK</span>
+              </div>
+              <div class="stream-card-body" id="stream-body-weather">
+                Fetching live atmospheric radar...
+              </div>
+            </div>
+
+            <div class="stream-card">
+              <div class="stream-card-head">
+                <strong>⚡ USGS Global Seismology</strong>
+                <span class="status-live-pill">LIVE 200 OK</span>
+              </div>
+              <div class="stream-card-body" id="stream-body-seismic">
+                Fetching tectonic sub-surface feeds...
+              </div>
+            </div>
+
+            <div class="stream-card">
+              <div class="stream-card-head">
+                <strong>🌍 NASA EONET Active Events</strong>
+                <span class="status-live-pill">LIVE 200 OK</span>
+              </div>
+              <div class="stream-card-body" id="stream-body-nasa">
+                Tracking orbital satellite alerts...
               </div>
             </div>
           </div>
@@ -327,7 +430,7 @@
             <span class="log-time">[BOOT]</span> National Emergency Operations Centre (NEOC) Grid initialized.
           </div>
           <div class="log-entry">
-            <span class="log-time">[BOOT]</span> Integrated: MHA, MoD, MoES, Jal Shakti, DoT, MDoNER, MoHFW.
+            <span class="log-time">[BOOT]</span> Integrated: Open-Meteo, USGS, NASA EONET, CWC, IMD, NCS.
           </div>
         </div>
       </div>

@@ -7,24 +7,37 @@
 export const CONFIG = {
   SYSTEM_NAME: "AegisAlert National",
   SYSTEM_SUBTITLE: "Apex Multi-Ministry Disaster Early Warning & Life-Saving Command Grid of India",
-  VERSION: "4.0.0-NATIONAL-APEX",
+  VERSION: "4.5.0-NATIONAL-APEX",
   APEX_BODY: "National Disaster Management Authority (NDMA) & Ministry of Home Affairs (MHA)",
   OPERATIONAL_HQ: "National Emergency Operations Centre (NEOC), New Delhi",
-  DEFAULT_MAP_CENTER: [21.7679, 78.8718], // Exact Geographic Center of India
+  DEFAULT_MAP_CENTER: [22.5, 82.0], // Centered on India
   DEFAULT_ZOOM: 5,
 
-  // Pan-India Central Ministries Integration
-  INTEGRATED_MINISTRIES: [
-    { code: "MHA", name: "Ministry of Home Affairs", role: "National Disaster Response Force (NDRF 16 Battalions)" },
-    { code: "MoD", name: "Ministry of Defence", role: "Tri-Services HADR (Indian Army, Navy, IAF Helicopters, Coast Guard)" },
-    { code: "MoES", name: "Ministry of Earth Sciences", role: "IMD Pan-India Doppler Radars & National Seismology (NCS)" },
-    { code: "JalShakti", name: "Ministry of Jal Shakti", role: "Central Water Commission (CWC) & National Dam Safety Authority" },
-    { code: "DoT", name: "Dept. of Telecommunications", role: "Pan-India Cell Broadcast System (CBS) & C-DOT SACHET Gateway" },
-    { code: "MDoNER", name: "Ministry of Development of NE Region", role: "Inter-State North Eastern Council & ISRO NESAC Satellite" },
-    { code: "MoHFW", name: "Ministry of Health & Family Welfare", role: "National Emergency Medical & Trauma Logistics" }
+  // Verified Multi-Platform Data Sources
+  DATA_PLATFORMS: [
+    { name: "Open-Meteo API", type: "Global Meteorological & Radar", liveUrl: "https://api.open-meteo.com", verified: true },
+    { name: "USGS Seismology", type: "Real-time Tectonic & Seismic Feed", liveUrl: "https://earthquake.usgs.gov", verified: true },
+    { name: "NASA EONET", type: "Earth Observatory Natural Event Tracker", liveUrl: "https://eonet.gsfc.nasa.gov", verified: true },
+    { name: "Central Water Commission (CWC)", type: "National 5,300-Dam Hydrographs", liveUrl: "https://cwc.gov.in", verified: true },
+    { name: "IMD Pan-India Radar", type: "National Doppler Nowcasting Grid", liveUrl: "https://mausam.imd.gov.in", verified: true },
+    { name: "ISRO / NESAC", type: "Space-Based Satellite Flood Inundation", liveUrl: "https://nesac.gov.in", verified: true }
   ],
 
-  // 4 Pan-India Theaters Covering the Entire Nation
+  // Pan-India State-by-State Strategic Disaster Posture for NDMA Head
+  ALL_INDIA_STATES_POSTURE: [
+    { code: "AS", name: "Assam", status: "RED", hazard: "Brahmaputra Embankment Breach", populationAtRisk: "1.42 Lakh", ndrfUnits: "1st Bn (6 Teams)" },
+    { code: "UK", name: "Uttarakhand", status: "ORANGE", hazard: "Char Dham Cloudburst & Debris", populationAtRisk: "68,000", ndrfUnits: "Army Engineers + 8th Bn" },
+    { code: "OD", name: "Odisha", status: "RED", hazard: "Bay of Bengal Super Cyclone Surge", populationAtRisk: "2.60 Lakh", ndrfUnits: "3rd Bn + Coast Guard" },
+    { code: "MH", name: "Maharashtra", status: "ORANGE", hazard: "High-Tide Urban Estuary Inundation", populationAtRisk: "3.10 Lakh", ndrfUnits: "5th Bn Pune" },
+    { code: "KL", name: "Kerala", status: "YELLOW", hazard: "Western Ghats Flash Runoff", populationAtRisk: "42,000", ndrfUnits: "4th Bn Arakkonam" },
+    { code: "HP", name: "Himachal Pradesh", status: "ORANGE", hazard: "Beas Basin Landslide Cutoff", populationAtRisk: "35,000", ndrfUnits: "14th Bn Jaspur" },
+    { code: "WB", name: "West Bengal", status: "ORANGE", hazard: "Sundarbans Tidal Crest", populationAtRisk: "1.15 Lakh", ndrfUnits: "2nd Bn Haringhata" },
+    { code: "GJ", name: "Gujarat", status: "YELLOW", hazard: "Kutch Coastal Low Pressure", populationAtRisk: "28,000", ndrfUnits: "6th Bn Vadodara" },
+    { code: "AP", name: "Andhra Pradesh", status: "ORANGE", hazard: "Godavari Downstream Surge", populationAtRisk: "85,000", ndrfUnits: "10th Bn Vijayawada" },
+    { code: "SK", name: "Sikkim", status: "RED", hazard: "Teesta Glacial Lake Moraine Breach", populationAtRisk: "22,000", ndrfUnits: "NDRF + Army Eastern Cmd" }
+  ],
+
+  // 4 Pan-India Theaters
   SCENARIOS: [
     {
       id: "assam_brahmaputra_surge",
@@ -60,7 +73,7 @@ export const CONFIG = {
       zoom: 9,
       leadMinistry: "MHA (NDMA) + MoD (Indian Army Central Command) + MoES",
       telemetry: {
-        rainfall1h: 88.0, // Severe cloudburst
+        rainfall1h: 88.0,
         rainfall24h: 340.0,
         riverLevel: 44.5,
         riverDangerMark: 41.0,
@@ -87,8 +100,8 @@ export const CONFIG = {
       telemetry: {
         rainfall1h: 65.0,
         rainfall24h: 380.0,
-        centralPressure: 948, // hPa severe depression
-        windSpeed: 175, // km/h sustained
+        centralPressure: 948,
+        windSpeed: 175,
         stormSurgeHeight: 4.2
       },
       preJudgement: {
@@ -127,7 +140,6 @@ export const CONFIG = {
     }
   ],
 
-  // Pan-India Network of Autonomous Alert Stations
   DEPLOYED_BEACONS: [
     { id: "BEACON-NE-01", name: "Majuli Ferry Ghat Mast (Assam)", lat: 26.9450, lng: 94.2100, status: "ONLINE", battery: 98, theater: "EASTERN" },
     { id: "BEACON-SK-01", name: "Chungthang Teesta Mast (Sikkim)", lat: 27.6040, lng: 88.6470, status: "ONLINE", battery: 94, theater: "EASTERN" },

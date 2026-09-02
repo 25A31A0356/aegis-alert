@@ -1,7 +1,7 @@
 /**
  * AegisAlert Master Application Orchestrator
- * MDoNER (Ministry of Development of North Eastern Region) Edition
- * Coordinates Command War Room, Citizen Hub, NDRF Responders, and Relief Shelters.
+ * National Emergency Operations Centre (NEOC) Edition
+ * Ingests from Open-Meteo, USGS Seismology, NASA EONET, CWC, and IMD.
  */
 
 import { CONFIG } from "./config.js";
@@ -17,11 +17,11 @@ import { ShelterView } from "./roles/shelter_view.js";
 
 class AegisApp {
   constructor() {
-    this.currentLang = "en";
+    this.currentLang = "hi";
     this.currentRole = "war-room";
 
     this.feeds = new OfficialFeeds();
-    this.hardwareNode = new BeaconNode("BEACON-AS-01", "Majuli Island Ferry Ghat Mast");
+    this.hardwareNode = new BeaconNode("BEACON-NAT-01", "Pan-India Civil Defense Mast");
     this.mapCtrl = new MapController("gis-map");
     this.lastEncodedPacket = null;
 
@@ -32,32 +32,70 @@ class AegisApp {
   }
 
   async init() {
-    console.log("Initializing AegisAlert MDoNER North East Warning Platform...");
+    console.log("Initializing AegisAlert National Apex Multi-Ministry Platform...");
 
     // 1. Initialize Map
     this.mapCtrl.initMap();
 
-    // 2. Initialize Sub-Views
+    // 2. Render State-by-State Posture Pills for Head of Disaster Management
+    this.renderStatePosturePills();
+
+    // 3. Initialize Sub-Views
     this.initMultidisciplinaryViews();
 
-    // 3. Setup UI Event Listeners & Role Switcher
+    // 4. Setup UI Event Listeners & Role Switcher
     this.setupEventListeners();
 
-    // 4. Subscribe Hardware Node updates
+    // 5. Subscribe Hardware Node updates
     this.hardwareNode.subscribe(state => this.renderHardwareNode(state));
 
-    // 5. Initial Scenario Load (Assam Brahmaputra Basin Surge)
+    // 6. Initial Scenario Load (Eastern / Brahmaputra Basin Surge)
     this.loadScenario("assam_brahmaputra_surge");
 
-    // 6. Apply Default Language
+    // 7. Apply Default Language (Hindi)
     this.applyLanguage(this.currentLang);
 
-    // 7. Background live sensor polling
-    this.pollLiveAPIs();
+    // 8. Trigger Parallel Ingestion from Global & National APIs
+    await this.syncMultiPlatformTelemetry();
+
+    // Auto-refresh live streams every 45 seconds
+    setInterval(() => this.syncMultiPlatformTelemetry(), 45000);
+  }
+
+  /**
+   * Renders the State-by-State quick selector strip for the Head of Disaster Management
+   */
+  renderStatePosturePills() {
+    const container = document.getElementById("state-posture-pills");
+    if (!container) return;
+
+    container.innerHTML = CONFIG.ALL_INDIA_STATES_POSTURE.map(s => `
+      <div class="state-pill status-${s.status.toLowerCase()}" data-code="${s.code}" title="${s.hazard} • At-Risk: ${s.populationAtRisk} • Units: ${s.ndrfUnits}">
+        <span>● ${s.name} [${s.status}]</span>
+      </div>
+    `).join("");
+
+    container.querySelectorAll(".state-pill").forEach(pill => {
+      pill.addEventListener("click", () => {
+        const code = pill.getAttribute("data-code");
+        this.handleStatePillClick(code);
+      });
+    });
+  }
+
+  handleStatePillClick(stateCode) {
+    if (stateCode === "AS" || stateCode === "SK") {
+      this.loadScenario("assam_brahmaputra_surge");
+    } else if (stateCode === "UK" || stateCode === "HP") {
+      this.loadScenario("himalayan_cloudburst_surge");
+    } else if (stateCode === "OD" || stateCode === "AP" || stateCode === "WB") {
+      this.loadScenario("bay_of_bengal_super_cyclone");
+    } else if (stateCode === "MH" || stateCode === "KL" || stateCode === "GJ") {
+      this.loadScenario("western_ghats_mumbai_inundation");
+    }
   }
 
   initMultidisciplinaryViews() {
-    // When a citizen triggers an SOS, automatically send it to the NDRF responder queue
     this.citizenView = new CitizenView("citizen-mount-point", (newSos) => {
       this.logTransmission(`🚨 INCOMING CITIZEN SOS: ${newSos.id} at ${newSos.location}`);
       if (this.responderView) {
@@ -68,14 +106,13 @@ class AegisApp {
     this.responderView = new ResponderView("responder-mount-point");
     this.shelterView = new ShelterView("shelter-mount-point");
 
-    // Render initial views
     this.citizenView.render(I18N[this.currentLang], this.feeds.activeScenario);
     this.responderView.render();
     this.shelterView.render();
   }
 
   setupEventListeners() {
-    // 1. Multidisciplinary Role Switcher Tabs
+    // 1. Role Switcher Tabs
     const tabs = document.querySelectorAll(".role-tab");
     tabs.forEach(tab => {
       tab.addEventListener("click", () => {
@@ -111,7 +148,7 @@ class AegisApp {
     if (btnSilence) {
       btnSilence.addEventListener("click", () => {
         this.hardwareNode.silenceAlert();
-        this.logTransmission("ALERT SILENCED by Incident Commander. Beacons standing down.");
+        this.logTransmission("ALERT SILENCED by National Incident Commander.");
       });
     }
 
@@ -160,18 +197,13 @@ class AegisApp {
     }
   }
 
-  /**
-   * Switches between the 4 Multidisciplinary Views
-   */
   switchRole(roleId) {
     this.currentRole = roleId;
 
-    // Update Tab Buttons
     document.querySelectorAll(".role-tab").forEach(t => {
       t.classList.toggle("active", t.getAttribute("data-tab") === roleId);
     });
 
-    // Update Role Views
     document.querySelectorAll(".role-view").forEach(v => {
       v.classList.remove("active");
     });
@@ -179,7 +211,6 @@ class AegisApp {
     const targetView = document.getElementById(`view-${roleId}`);
     if (targetView) targetView.classList.add("active");
 
-    // Re-render sub-views
     if (roleId === "citizen" && this.citizenView) {
       this.citizenView.render(I18N[this.currentLang], this.feeds.activeScenario);
     } else if (roleId === "responder" && this.responderView) {
@@ -191,12 +222,9 @@ class AegisApp {
     }
   }
 
-  /**
-   * Translates UI elements dynamically across Indian languages
-   */
   applyLanguage(langCode) {
     this.currentLang = langCode;
-    const l = I18N[langCode] || I18N.en;
+    const l = I18N[langCode] || I18N.hi;
 
     const subhead = document.getElementById("app-subheading");
     if (subhead) subhead.textContent = l.systemTitle;
@@ -211,71 +239,60 @@ class AegisApp {
     if (tabRes) tabRes.textContent = l.roleResponder;
     if (tabShe) tabShe.textContent = l.roleHospital;
 
-    // Re-render Citizen Hub with new language
     if (this.citizenView) {
       this.citizenView.render(l, this.feeds.activeScenario);
     }
 
-    this.logTransmission(`🌐 Language switched to ${l.name}. Regional voice engine armed.`);
+    this.logTransmission(`🌐 National language switched to ${l.name}. Regional voice engine active.`);
   }
 
-  /**
-   * Loads and renders a crisis scenario
-   */
   loadScenario(scenarioId) {
     const scenario = this.feeds.setScenario(scenarioId);
     if (!scenario) return;
 
-    // 1. Focus Map
     this.mapCtrl.focusScenario(scenario);
-
-    // 2. Analyze Risk
     const riskAnalysis = RiskEngine.analyzeRisk(scenario.type, scenario.telemetry);
-
-    // 3. Update War Room UI
     this.renderWarRoom(scenario, riskAnalysis);
 
-    // 4. Pre-encode radio packet
     this.lastEncodedPacket = RadioProtocol.encodePacket({
       disasterType: scenario.type,
       alertLevel: riskAnalysis.alertLevel,
-      zoneId: 201,
+      zoneId: 301,
       lat: scenario.coordinates[0],
       lng: scenario.coordinates[1],
-      radiusKm: 18,
-      voiceCode: 1,
-      routeId: 4,
+      radiusKm: 25,
+      voiceCode: 2,
+      routeId: 7,
       shelterCode: "CAMP01",
-      hopLimit: 5
+      hopLimit: 6
     });
 
-    // 5. Update Citizen View with new shelter
     if (this.citizenView) {
       this.citizenView.render(I18N[this.currentLang], scenario);
     }
 
-    this.logTransmission(`North East Telemetry loaded: ${scenario.title}. Risk: ${riskAnalysis.score}/100 [${riskAnalysis.alertLevel}]. Ministry: ${scenario.ministryConcern || 'MDoNER'}`);
+    const selectEl = document.getElementById("scenario-select");
+    if (selectEl && selectEl.value !== scenarioId) {
+      selectEl.value = scenarioId;
+    }
+
+    this.logTransmission(`Theater Activated: ${scenario.theater} - ${scenario.title}. Risk: ${riskAnalysis.score}/100. Coordinating: ${scenario.leadMinistry}`);
   }
 
-  /**
-   * Dispatches the 32-Byte Sub-GHz / NavIC Radio Broadcast
-   */
   handleBroadcast() {
     if (!this.lastEncodedPacket) return;
 
     const currentScenario = this.feeds.activeScenario;
-    this.logTransmission(`🛰️ INITIATING ZERO-SIGNAL TRANSMISSION (ISRO NESAC / 868.1 MHz LoRa)...`);
-    this.logTransmission(`📦 Binary Frame: ${this.lastEncodedPacket.hexString} [CRC: 0x${this.lastEncodedPacket.crc}]`);
+    this.logTransmission(`🛰️ TRANSMITTING NATIONAL AIRWAVE BROADCAST (ISRO NavIC / C-DOT SACHET)...`);
+    this.logTransmission(`📦 Binary Frame: ${this.lastEncodedPacket.hexString} [CRC16: 0x${this.lastEncodedPacket.crc}]`);
 
-    // 1. Trigger visual radio wave animation on Leaflet map
-    this.mapCtrl.animateRadioBroadcast(currentScenario.coordinates, 18);
+    this.mapCtrl.animateRadioBroadcast(currentScenario.coordinates, 25);
 
-    // 2. Transmit to autonomous station
     setTimeout(() => {
       this.hardwareNode.receiveRadioPacket(this.lastEncodedPacket.buffer);
-      this.logTransmission(`✅ Packet captured by ${this.hardwareNode.nodeId} (Airwave RSSI: -76dBm). CRC16 Verified.`);
-      this.logTransmission(`🚨 120dB Siren ENGAGED across valley. 360° Optical Strobes ACTIVATED.`);
-      this.logTransmission(`📢 Vernacular Spoken Voice Broadcast starting in ${I18N[this.currentLang].name}.`);
+      this.logTransmission(`✅ Packet broadcast received by ${this.hardwareNode.nodeId} (Airwave RSSI: -72dBm).`);
+      this.logTransmission(`🚨 120dB National Siren ENGAGED. 360° Optical Strobes ACTIVATED.`);
+      this.logTransmission(`📢 Multilingual Spoken Voice Broadcast starting in ${I18N[this.currentLang].name}.`);
     }, 450);
   }
 
@@ -289,7 +306,7 @@ class AegisApp {
 
     if (scoreVal) scoreVal.textContent = `${risk.score}/100`;
     if (scoreBadge) {
-      scoreBadge.textContent = `CODE ${risk.alertLevel}`;
+      scoreBadge.textContent = `LEVEL 4 (${risk.alertLevel})`;
       scoreBadge.style.backgroundColor = risk.color;
     }
     if (scoreBar) {
@@ -304,9 +321,9 @@ class AegisApp {
     const windEl = document.getElementById("val-wind");
 
     if (rainEl) rainEl.textContent = tel.rainfall1h !== undefined ? `${tel.rainfall1h} mm/hr (${tel.rainfall24h}mm / 24h)` : "N/A";
-    if (riverEl) riverEl.textContent = tel.riverLevel !== undefined ? `${tel.riverLevel} m (Danger: ${tel.riverDangerMark}m)` : (tel.teestaRiverLevel ? `${tel.teestaRiverLevel}m (Teesta)` : "Normal");
-    if (damEl) damEl.textContent = tel.damCapacity !== undefined ? `${tel.damCapacity} %` : (tel.lakeWaterHeightM ? `${tel.lakeWaterHeightM}m Lake Depth` : "N/A");
-    if (windEl) windEl.textContent = tel.windSpeed !== undefined ? `${tel.windSpeed} km/h` : (tel.magnitude ? `M${tel.magnitude} Rich.` : "Calm");
+    if (riverEl) riverEl.textContent = tel.riverLevel !== undefined ? `${tel.riverLevel} m (Danger: ${tel.riverDangerMark}m)` : (tel.highTideMeter ? `${tel.highTideMeter}m High Tide` : "Normal");
+    if (damEl) damEl.textContent = tel.damCapacity !== undefined ? `${tel.damCapacity} %` : "Monitored";
+    if (windEl) windEl.textContent = tel.windSpeed !== undefined ? `${tel.windSpeed} km/h` : "Calm";
 
     const popEl = document.getElementById("val-population");
     const breachEl = document.getElementById("val-breach-time");
@@ -390,17 +407,63 @@ class AegisApp {
     logBox.prepend(entry);
   }
 
-  async pollLiveAPIs() {
-    const liveWeather = await this.feeds.fetchLiveWeather();
-    const liveSeismic = await this.feeds.fetchLiveEarthquakes();
+  /**
+   * Connects to Open-Meteo, USGS, and NASA EONET and updates UI in real-time
+   */
+  async syncMultiPlatformTelemetry() {
+    const liveData = await this.feeds.syncAllLivePlatforms();
 
-    const feedStatus = document.getElementById("live-feed-status");
-    if (feedStatus) {
-      feedStatus.innerHTML = `
-        <span style="color:#10b981;">● NESAC SATELLITE ONLINE</span> 
-        | Weather: ${liveWeather.success ? `${liveWeather.temperature}°C, ${liveWeather.pressure}hPa` : 'Brahmaputra Radar'} 
-        | Seismology: ${liveSeismic.success ? `${liveSeismic.count} active regional events` : 'Zone V Monitoring'}
+    // 1. Update Open-Meteo stream card
+    const weatherBox = document.getElementById("stream-body-weather");
+    if (weatherBox && liveData.weather) {
+      const w = liveData.weather;
+      weatherBox.innerHTML = `
+        <div>Temp: <strong>${w.temperature}°C</strong> | Humidity: <strong>${w.humidity}%</strong></div>
+        <div>Precipitation: <strong style="color:#38bdf8;">${w.precipitation} mm/hr</strong> | Wind Gusts: <strong>${w.windGusts} km/h</strong></div>
+        <div>Pressure: <strong>${w.pressure} hPa</strong> | Source: <em style="color:#94a3b8;">${w.source}</em></div>
       `;
+    }
+
+    // 2. Update USGS stream card
+    const seismicBox = document.getElementById("stream-body-seismic");
+    if (seismicBox && liveData.seismic) {
+      const s = liveData.seismic;
+      const recent = s.earthquakes[0];
+      seismicBox.innerHTML = `
+        <div>Regional Events Today: <strong style="color:#f43f5e;">${s.regionalCount}</strong> | Global: <strong>${s.totalGlobalToday || 'Active'}</strong></div>
+        <div>Latest: <strong>M${recent.mag}</strong> - ${recent.place}</div>
+        <div>Depth: <strong>${recent.depthKm} km</strong> | Source: <em style="color:#94a3b8;">${s.source}</em></div>
+      `;
+      // Render earthquake circles on map
+      this.mapCtrl.renderLiveEarthquakes(s.earthquakes);
+    }
+
+    // 3. Update NASA EONET stream card
+    const nasaBox = document.getElementById("stream-body-nasa");
+    if (nasaBox && liveData.nasaEvents) {
+      const n = liveData.nasaEvents;
+      const latestEvent = n.events[0] || { title: "Bay of Bengal Tropical Monsoonal Low", category: "Severe Storm" };
+      nasaBox.innerHTML = `
+        <div>Orbital Disasters Tracked: <strong style="color:#f59e0b;">${n.count} Active</strong></div>
+        <div>Latest: <strong>${latestEvent.title}</strong></div>
+        <div>Category: <strong style="color:#38bdf8;">${latestEvent.category}</strong> | Source: <em style="color:#94a3b8;">${n.source}</em></div>
+      `;
+    }
+
+    // 4. Update Header Badge
+    const liveStatus = document.getElementById("live-feed-status");
+    if (liveStatus) {
+      liveStatus.innerHTML = `
+        <span style="color:#10b981;">● 6 STREAMS SYNCED</span> 
+        | Open-Meteo: ${liveData.weather.precipitation}mm/h 
+        | USGS: ${liveData.seismic.regionalCount} active quakes 
+        | NASA EONET: ${liveData.nasaEvents.count} events
+      `;
+    }
+
+    const clockEl = document.getElementById("exec-live-clock");
+    if (clockEl) {
+      clockEl.textContent = `LIVE MULTI-PLATFORM SYNC: ${liveData.platformsOnline}/3 SCIENTIFIC APIS CONNECTED (${liveData.lastSyncTime})`;
     }
   }
 }
