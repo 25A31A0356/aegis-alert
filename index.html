@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AegisAlert | Multidisciplinary Disaster Early Warning & Life-Saving System</title>
-  <meta name="description" content="Autonomous Multidisciplinary Disaster Early Warning & Life-Saving Platform for Smart India Hackathon. Operates with Zero-Internet and 100% Offline PWA.">
+  <title>AegisAlert | MDoNER Disaster Early Warning & Life-Saving System</title>
+  <meta name="description" content="Autonomous Multi-Hazard Disaster Early Warning System for the Ministry of Development of North Eastern Region (MDoNER) & NDMA. Works 100% Offline with Zero-Internet.">
 
   <!-- Progressive Web App Manifest -->
   <link rel="manifest" href="manifest.json">
@@ -23,8 +23,8 @@
     <div class="brand-section">
       <div class="brand-badge">🛡️</div>
       <div class="brand-text">
-        <h1 id="app-heading">AEGISALERT <span class="brand-tag">SIH MULTIDISCIPLINARY EDITION</span></h1>
-        <p id="app-subheading">Autonomous Disaster Early Warning & Life-Saving Ecosystem</p>
+        <h1 id="app-heading">AEGISALERT <span class="brand-tag">MDoNER NORTH EAST EDITION</span></h1>
+        <p id="app-subheading">Ministry of Development of North Eastern Region • Autonomous Early Warning</p>
       </div>
     </div>
 
@@ -33,18 +33,19 @@
       <!-- Language Selector -->
       <div class="lang-selector-group">
         <span class="lang-globe-icon">🌐</span>
-        <select id="lang-select" class="styled-lang-select" title="Change Language / भाषा बदलें">
+        <select id="lang-select" class="styled-lang-select" title="Change Language / ভাষা সলনি কৰক / भाषा बदलें">
           <option value="en">English</option>
+          <option value="as" selected>অসমীয়া (Assamese)</option>
           <option value="hi">हिंदी (Hindi)</option>
+          <option value="bn">বাংলা (Bengali)</option>
           <option value="te">తెలుగు (Telugu)</option>
           <option value="ta">தமிழ் (Tamil)</option>
-          <option value="bn">বাংলা (Bengali)</option>
         </select>
       </div>
 
       <div class="status-chip" id="live-feed-status">
         <span class="indicator-dot"></span>
-        <span>IMD / CWC / NCS Real-Time Feeds</span>
+        <span>ISRO / NESAC & Brahmaputra Board Telemetry</span>
       </div>
     </div>
   </header>
@@ -55,8 +56,8 @@
   <nav class="role-nav-bar">
     <button class="role-tab active" data-tab="war-room">
       <span class="role-icon">🏛️</span>
-      <span class="role-name" id="tab-label-warroom">Command War Room</span>
-      <span class="role-sub">EOC / District Magistrate</span>
+      <span class="role-name" id="tab-label-warroom">MDoNER Command Room</span>
+      <span class="role-sub">Regional Disaster EOC</span>
     </button>
 
     <button class="role-tab" data-tab="citizen">
@@ -67,14 +68,14 @@
 
     <button class="role-tab" data-tab="responder">
       <span class="role-icon">🚑</span>
-      <span class="role-name" id="tab-label-responder">NDRF / Quick Response</span>
-      <span class="role-sub">Live Rescue & Triage</span>
+      <span class="role-name" id="tab-label-responder">NDRF 1st & 12th Bn</span>
+      <span class="role-sub">Riverine & Mountain Rescue</span>
     </button>
 
     <button class="role-tab" data-tab="shelter">
       <span class="role-icon">🏥</span>
       <span class="role-name" id="tab-label-shelter">Relief Camp & Hospital</span>
-      <span class="role-sub">Beds, Water & Blood</span>
+      <span class="role-sub">Highland Camps & Rations</span>
     </button>
   </nav>
 
@@ -92,16 +93,16 @@
         <div class="panel-card accent-top" style="margin-bottom: 20px;">
           <div class="scenario-bar">
             <div class="selector-group">
-              <label for="scenario-select" class="selector-label">CRISIS SCENARIO:</label>
+              <label for="scenario-select" class="selector-label">CRISIS SCENARIO (NORTH EAST):</label>
               <select id="scenario-select" class="styled-select">
-                <option value="wayanad_flash_flood">🌊 Wayanad Cloudburst & Dam Overflow (Kerala)</option>
-                <option value="assam_brahmaputra_surge">🌊 Brahmaputra River Inundation (Tezpur, Assam)</option>
-                <option value="odisha_super_cyclone">🌀 Bay of Bengal Super Cyclone Landfall (Puri, Odisha)</option>
-                <option value="himalayan_seismic_event">⚡ Main Boundary Thrust Seismic Event (Uttarkashi)</option>
+                <option value="assam_brahmaputra_surge">🌊 Brahmaputra Flood & Majuli Island Cutoff (Assam)</option>
+                <option value="sikkim_glof_surge">🌊 Sikkim Teesta Glacial Lake Outburst Flood (GLOF)</option>
+                <option value="meghalaya_cloudburst_landslide">⛰️ Mawsynram Cloudburst & NH-6 Cutoff (Meghalaya)</option>
+                <option value="arunachal_seismic_rupture">⚡ Main Central Thrust Seismic Rupture (Arunachal)</option>
               </select>
             </div>
             <div class="live-feed-banner">
-              <span>DATA INGEST: <strong style="color:var(--accent-blue);">GOVT OF INDIA REAL-TIME RADAR</strong></span>
+              <span>SATELLITE RADAR: <strong style="color:var(--accent-blue);">ISRO / NESAC & BRAHMAPUTRA BOARD</strong></span>
             </div>
           </div>
         </div>
@@ -113,13 +114,13 @@
               <span class="card-title-icon">📊</span>
               Predictive Hazard Index & Damage-Prevention Pre-Judgment
             </span>
-            <span id="scenario-title" style="font-size: 0.8rem; font-weight: 700; color: var(--accent-blue);">Wayanad Cloudburst (Kerala)</span>
+            <span id="scenario-title" style="font-size: 0.8rem; font-weight: 700; color: var(--accent-blue);">Brahmaputra Flood (Assam)</span>
           </div>
 
           <div class="risk-overview-grid">
             <div class="risk-gauge-box">
               <span class="risk-label-sub">Hazard Threat Score</span>
-              <div id="risk-score-value" class="risk-score-big">92/100</div>
+              <div id="risk-score-value" class="risk-score-big">94/100</div>
               <div id="risk-level-badge" class="risk-badge" style="background-color: var(--accent-red);">CODE RED</div>
               <div class="meter-track">
                 <div id="risk-meter-bar" class="meter-fill"></div>
@@ -130,44 +131,44 @@
               <div class="telemetry-metrics-grid">
                 <div class="metric-cell">
                   <span class="metric-cell-label">Rainfall Rate</span>
-                  <div id="val-rain" class="metric-cell-val">68.4 mm/hr</div>
+                  <div id="val-rain" class="metric-cell-val">48.5 mm/hr</div>
                 </div>
                 <div class="metric-cell">
                   <span class="metric-cell-label">River Gauge</span>
-                  <div id="val-river" class="metric-cell-val">19.8 m (Danger)</div>
+                  <div id="val-river" class="metric-cell-val">86.8 m (Danger: 85.5m)</div>
                 </div>
                 <div class="metric-cell">
-                  <span class="metric-cell-label">Dam Storage</span>
-                  <div id="val-dam" class="metric-cell-val">94.2% Capacity</div>
+                  <span class="metric-cell-label">Dam / Lake Fill</span>
+                  <div id="val-dam" class="metric-cell-val">93.5% Storage</div>
                 </div>
                 <div class="metric-cell">
                   <span class="metric-cell-label">Wind / Shock</span>
-                  <div id="val-wind" class="metric-cell-val">42 km/h</div>
+                  <div id="val-wind" class="metric-cell-val">32 km/h</div>
                 </div>
               </div>
 
               <div class="prediction-box">
                 <div class="prediction-header">
                   <span>⏱️ PRE-JUDGMENT:</span>
-                  <span id="val-breach-time">~40 Minutes Until Embankment Breach</span>
-                  <span>• At-Risk: <strong id="val-population">34,200 Citizens</strong></span>
+                  <span id="val-breach-time">~35 Minutes Until Embankment Breach</span>
+                  <span>• At-Risk: <strong id="val-population">78,500 Citizens</strong></span>
                 </div>
                 <div id="val-prevention-action" class="prediction-body">
-                  Mandatory release of 20,000 cusecs from Banasura Sagar Dam. Evacuate Meppadi and Chooralmala riverbanks within 30 minutes.
+                  Embankment breach alert at Kamalabari. Dispatch NDRF 1st Battalion (Guwahati) zodiac boats. Evacuate 14 riverine chaporis to elevated highlands.
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Tactical GIS India Command Map -->
+        <!-- Tactical GIS North East Command Map -->
         <div class="panel-card" style="margin-bottom: 20px;">
           <div class="card-header">
             <span class="card-title">
               <span class="card-title-icon">🗺️</span>
-              Geospatial Hazard Geofencing & Deployed AegisBeacon Network
+              North Eastern Regional Tactical GIS & Autonomous Beacon Poles
             </span>
-            <span style="font-size:0.75rem; color:var(--text-muted);">Satellite Terrain Base • Turf Geofencing</span>
+            <span style="font-size:0.75rem; color:var(--text-muted);">ISRO NESAC Cartography • 8 NE States</span>
           </div>
 
           <div class="gis-map-wrapper">
@@ -179,11 +180,11 @@
               </div>
               <div class="legend-row">
                 <div class="legend-box" style="background:#10b981;"></div>
-                <span>Deployed AegisBeacon (Zero-Internet Station)</span>
+                <span>Autonomous Beacon Node (Zero-Internet Mast)</span>
               </div>
               <div class="legend-row">
                 <div class="legend-box" style="background:#38bdf8;"></div>
-                <span>Designated High-Ground Relief Center</span>
+                <span>Elevated Safe Relief Highland / Camp</span>
               </div>
             </div>
           </div>
@@ -194,9 +195,9 @@
           <div class="card-header">
             <span class="card-title">
               <span class="card-title-icon">📋</span>
-              District Collector Damage-Prevention Action Protocols (SOPs)
+              MDoNER & State Disaster Authority Damage-Prevention Protocols (SOPs)
             </span>
-            <span style="font-size:0.75rem; color:var(--accent-amber);">NDMA Standard Guidelines</span>
+            <span style="font-size:0.75rem; color:var(--accent-amber);">NDMA / NEC Guidelines</span>
           </div>
           <ul id="sop-list" class="sop-list"></ul>
         </div>
@@ -224,14 +225,13 @@
          ==================================================================== -->
     <section class="hardware-col">
 
-      <!-- Physical Station Simulator Panel -->
       <div class="hardware-visualizer-box">
         <div class="hw-header-bar">
           <div class="hw-title">
             <span>📡</span>
             <div>
               <div>AUTONOMOUS ALERT STATION</div>
-              <div style="font-size:0.72rem; color:var(--text-secondary); font-weight:400;">Field Siren Mast #01 (Zero-Internet Simulator)</div>
+              <div style="font-size:0.72rem; color:var(--text-secondary); font-weight:400;">Majuli Island Ferry Ghat Mast (NESAC Satellite & LoRa)</div>
             </div>
           </div>
           <span id="hw-status-pill" class="status-pill standby">STANDBY</span>
@@ -257,7 +257,7 @@
           <!-- Alphanumeric High-Contrast LED Ticker -->
           <div class="led-matrix-wrapper">
             <div id="hw-led-ticker" class="led-ticker-text">
-              SYSTEM NORMAL • AEGIS SUB-GHZ LISTENING • SOLAR BATTERY OPTIMAL
+              প্ৰণালী স্বাভাবিক • ব্ৰহ্মপুত্ৰ নদী সতৰ্কবাৰ্তা সক্ৰিয় • সৌৰ বেটাৰী ১০০%
             </div>
           </div>
 
@@ -265,15 +265,15 @@
           <div class="hw-telemetry-row">
             <div class="hw-telemetry-cell">
               <span>Battery Storage</span>
-              <strong id="hw-battery-pct">96% (LiFePO4)</strong>
+              <strong id="hw-battery-pct">98% (LiFePO4)</strong>
             </div>
             <div class="hw-telemetry-cell">
               <span>Solar Input</span>
-              <strong id="hw-solar-watts">42.5W Solar</strong>
+              <strong id="hw-solar-watts">48W Solar</strong>
             </div>
             <div class="hw-telemetry-cell">
-              <span>Sub-GHz Signal</span>
-              <strong style="color:var(--accent-green);">-78 dBm (LoRa)</strong>
+              <span>Satellite Link</span>
+              <strong style="color:var(--accent-green);">ISRO NESAC (OK)</strong>
             </div>
           </div>
 
@@ -296,7 +296,7 @@
         <div class="action-buttons-box" style="margin-top: 20px;">
           <button id="btn-broadcast-zero-signal" class="btn-hero-broadcast">
             <span>🛰️</span>
-            <span>TRANSMIT ZERO-SIGNAL BROADCAST</span>
+            <span>TRANSMIT AIRWAVE BROADCAST (NESAC / LoRa)</span>
           </button>
 
           <div class="sub-actions-row">
@@ -315,16 +315,19 @@
         <div class="card-header">
           <span class="card-title">
             <span class="card-title-icon">💻</span>
-            Radio Frequency Telemetry & Broadcast Log
+            MDoNER Regional Telemetry & Broadcast Log
           </span>
-          <span style="font-size:0.75rem; color:var(--accent-blue);">868.1 MHz Terminal</span>
+          <span style="font-size:0.75rem; color:var(--accent-blue);">NESAC S-Band & Sub-GHz</span>
         </div>
         <div id="transmission-log" class="transmission-console">
           <div class="log-entry">
-            <span class="log-time">[BOOT]</span> AegisAlert Multidisciplinary Platform initialized.
+            <span class="log-time">[BOOT]</span> MDoNER North East Regional Warning Hub initialized.
           </div>
           <div class="log-entry">
-            <span class="log-time">[BOOT]</span> PWA Offline Engine active. Languages loaded (EN, HI, TE, TA, BN).
+            <span class="log-time">[BOOT]</span> ISRO / NESAC Meghalaya satellite downlink active.
+          </div>
+          <div class="log-entry">
+            <span class="log-time">[BOOT]</span> Brahmaputra Board telemetry streams: Majuli, Tezpur, Dibrugarh ONLINE.
           </div>
         </div>
       </div>
@@ -344,7 +347,7 @@
       </div>
 
       <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 12px;">
-        Transmitted over 868.1 MHz Sub-GHz airwaves and NavIC satellite messaging. Guaranteed delivery without telecom networks or internet.
+        Transmitted over ISRO NavIC/NESAC satellite messaging and 868.1 MHz Sub-GHz airwaves across North East valleys.
       </p>
 
       <div class="raw-hex-box" id="packet-hex-display">
@@ -376,7 +379,7 @@
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
-          .then(reg => console.log('[PWA] Service Worker registered:', reg.scope))
+          .then(reg => console.log('[PWA] MDoNER Service Worker registered:', reg.scope))
           .catch(err => console.warn('[PWA] Service Worker registration failed:', err));
       });
     }

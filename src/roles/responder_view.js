@@ -1,6 +1,7 @@
 /**
  * AegisAlert First Responder & NDRF Tactical Operations Console
- * Dynamic Triage Priority Scoring, Inflatable Boat Dispatch, and Victim Tracking
+ * Tailored for NDRF 1st Battalion (Guwahati) & 12th Battalion (Arunachal Pradesh)
+ * Specialized in Riverine Brahmaputra Flood Rescue & Himalayan Mountain Debris Flows
  */
 
 export class ResponderView {
@@ -8,39 +9,39 @@ export class ResponderView {
     this.container = document.getElementById(containerId);
     this.sosQueue = [
       {
-        id: "SOS-KL-9821",
-        name: "Meppadi Village Cluster",
-        location: "Chooralmala Riverbank, Kerala",
-        coordinates: [11.5420, 76.1680],
-        triageScore: 96,
+        id: "SOS-AS-1042",
+        name: "Kamalabari Ferry Ghat Cluster",
+        location: "Majuli River Island, Assam",
+        coordinates: [26.9450, 94.2100],
+        triageScore: 98,
         priority: "CRITICAL",
-        peopleTrapped: 6,
-        category: "Elderly & Infant Trapped on Roof",
-        time: "4 mins ago",
+        peopleTrapped: 8,
+        category: "Embankment Breach / Island Isolation",
+        time: "3 mins ago",
         status: "DISPATCHED"
       },
       {
-        id: "SOS-KL-9818",
-        name: "Tea Estate Quarters #4",
-        location: "Mundakkai Slope, Wayanad",
-        coordinates: [11.5310, 76.1950],
-        triageScore: 88,
+        id: "SOS-SK-2019",
+        name: "Chungthang Hydel Quarters",
+        location: "Teesta Basin, Sikkim (GLOF Surge)",
+        coordinates: [27.6040, 88.6470],
+        triageScore: 94,
         priority: "CRITICAL",
-        peopleTrapped: 4,
-        category: "Mudflow Blocking Ground Floor",
-        time: "12 mins ago",
+        peopleTrapped: 5,
+        category: "Glacial Surge Dam Washout",
+        time: "11 mins ago",
         status: "EN_ROUTE"
       },
       {
-        id: "SOS-KL-9804",
-        name: "Govt Lower Primary School",
-        location: "Vellarimala Sector",
-        coordinates: [11.5210, 76.2100],
-        triageScore: 78,
+        id: "SOS-ML-3041",
+        name: "Mawsynram Valley Hamlet",
+        location: "East Khasi Hills, Meghalaya",
+        coordinates: [25.3050, 91.5850],
+        triageScore: 82,
         priority: "HIGH",
-        peopleTrapped: 12,
-        category: "Rising Water Surrounding Building",
-        time: "25 mins ago",
+        peopleTrapped: 14,
+        category: "Landslide Cutoff on NH-6",
+        time: "22 mins ago",
         status: "PENDING"
       }
     ];
@@ -67,7 +68,7 @@ export class ResponderView {
             <strong style="color:#ef4444;">${this.sosQueue.length} Active</strong>
           </div>
           <div class="kpi-block">
-            <span>PEOPLE NEEDING RESCUE</span>
+            <span>CITIZENS NEEDING RESCUE</span>
             <strong style="color:#f59e0b;">${totalTrapped} Souls</strong>
           </div>
           <div class="kpi-block">
@@ -75,16 +76,16 @@ export class ResponderView {
             <strong style="color:#ef4444;">${criticalCount} High Risk</strong>
           </div>
           <div class="kpi-block">
-            <span>NDRF BATTALIONS DEPLOYED</span>
-            <strong style="color:#10b981;">3 Teams (24 Zodiacs)</strong>
+            <span>NDRF BATTALIONS ACTIVE</span>
+            <strong style="color:#10b981;">1st Bn (Guwahati) & 12th Bn (Itanagar)</strong>
           </div>
         </div>
 
         <!-- Live Triage Ticket Queue -->
         <div class="sos-ticket-list">
           <div class="ticket-list-header">
-            <h4>🚨 Live SOS Distress Queue (Sorted by AI Triage Vulnerability)</h4>
-            <span style="font-size:0.75rem; color:#94a3b8;">Real-Time GPS Pushes</span>
+            <h4>🚨 North East Emergency Distress Queue (Sorted by AI Triage Vulnerability)</h4>
+            <span style="font-size:0.75rem; color:#94a3b8;">ISRO NESAC GPS Coordinates</span>
           </div>
 
           <div class="tickets-container">
@@ -114,13 +115,13 @@ export class ResponderView {
 
                 <div class="ticket-actions-row">
                   <button class="btn-ticket-action btn-dispatch-boat" data-id="${item.id}">
-                    🚤 Dispatch Zodiac Boat
+                    🚤 Dispatch Inflatable Zodiac (1st Bn)
                   </button>
                   <button class="btn-ticket-action btn-mark-evacuated" data-id="${item.id}">
-                    ✅ Mark Evacuated / Safe
+                    ✅ Mark Evacuated to Highland
                   </button>
                   <button class="btn-ticket-action btn-drone-recon" data-id="${item.id}">
-                    🛸 Send Drone Recon
+                    🛸 Task NESAC Satellite / Drone Recon
                   </button>
                 </div>
               </div>

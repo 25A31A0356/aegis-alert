@@ -1,196 +1,128 @@
 /**
  * AegisAlert System Configuration & Disaster Knowledge Base
- * Smart India Hackathon (SIH) Specification
+ * MDoNER (Ministry of Development of North Eastern Region) & National SIH Edition
+ * Ingests: NESAC (ISRO), CWC Brahmaputra Board, IMD RMC Guwahati, and NCS
  */
 
 export const CONFIG = {
   SYSTEM_NAME: "AegisAlert",
-  SYSTEM_SUBTITLE: "Autonomous Cyber-Physical Disaster Early Warning & Life-Saving System",
-  VERSION: "2.4.0-SIH",
-  FREQUENCY_BAND: "868.1 MHz Sub-GHz (India LoRa ISM) / NavIC S-Band",
-  BROADCAST_POWER_DBM: 22, // Max legal LoRa ERP in India
-  DEFAULT_MAP_CENTER: [20.5937, 78.9629], // Center of India
-  DEFAULT_ZOOM: 5,
-  
-  // Alert Severity Levels (Based on NDMA / IMD Color Coding)
+  SYSTEM_SUBTITLE: "Autonomous Multi-Hazard Early Warning System for North Eastern Region & India",
+  VERSION: "3.0.0-MDONER-SIH",
+  TARGET_MINISTRY: "Ministry of Development of North Eastern Region (MDoNER) & NDMA",
+  SATELLITE_PARTNER: "ISRO / NESAC (North Eastern Space Applications Centre, Meghalaya)",
+  DEFAULT_MAP_CENTER: [26.2006, 92.9376], // Center of North East India (Assam/Meghalaya)
+  DEFAULT_ZOOM: 7,
+
   ALERT_LEVELS: {
-    GREEN: {
-      code: 0,
-      label: "NORMAL / WATCH",
-      color: "#10b981",
-      sirenRequired: false,
-      strobeMode: "OFF",
-      action: "Standard telemetry monitoring. No immediate public action needed."
-    },
-    YELLOW: {
-      code: 1,
-      label: "ADVISORY / BE AWARE",
-      color: "#facc15",
-      sirenRequired: false,
-      strobeMode: "STEADY_AMBER",
-      action: "Keep emergency transistor/radio active. Prepare emergency kit."
-    },
-    ORANGE: {
-      code: 2,
-      label: "WARNING / BE PREPARED",
-      color: "#f97316",
-      sirenRequired: true,
-      strobeMode: "SLOW_PULSE_ORANGE",
-      action: "Evacuate riverbeds & low-lying areas. Move livestock to high ground."
-    },
-    RED: {
-      code: 3,
-      label: "EMERGENCY / EVACUATE NOW",
-      color: "#ef4444",
-      sirenRequired: true,
-      strobeMode: "RAPID_STROBE_RED",
-      action: "IMMEDIATE EVACUATION! Flash flood / extreme hazard imminent."
-    }
+    GREEN: { code: 0, label: "NORMAL / WATCH", color: "#10b981", action: "Routine satellite and gauge telemetry monitoring." },
+    YELLOW: { code: 1, label: "ADVISORY / BE AWARE", color: "#facc15", action: "Keep emergency transistor radio on. Prepare grab-bag." },
+    ORANGE: { code: 2, label: "WARNING / BE PREPARED", color: "#f97316", action: "Evacuate riverbanks & landslide slopes. Move livestock." },
+    RED: { code: 3, label: "EMERGENCY / EVACUATE NOW", color: "#ef4444", action: "IMMEDIATE EVACUATION! Flash flood / GLOF / Landslide imminent." }
   },
 
-  // Disaster Types Supported
-  DISASTER_TYPES: {
-    FLASH_FLOOD: {
-      id: "FLASH_FLOOD",
-      name: "Flash Flood / Cloudburst",
-      icon: "🌊",
-      officialSource: "Central Water Commission (CWC) & IMD Nowcast",
-      criticalThreshold: "Rainfall > 100mm/3hr OR River Level > Danger Mark",
-      voiceHindi: "चेतावनी! नदी का जलस्तर खतरे के निशान से ऊपर है। तुरंत ऊंचे स्थान पर जाएं!",
-      voiceEnglish: "Attention! River water levels exceeding danger mark. Move to designated high ground immediately!"
-    },
-    CYCLONE: {
-      id: "CYCLONE",
-      name: "Severe Cyclonic Storm",
-      icon: "🌀",
-      officialSource: "IMD Cyclone Warning Division (CWD)",
-      criticalThreshold: "Wind Gusts > 120 km/h OR Central Pressure < 970 hPa",
-      voiceHindi: "सावधान! तीव्र चक्रवात आ रहा है। पक्के आश्रय स्थल में शरण लें!",
-      voiceEnglish: "Warning! Severe cyclone landfall imminent. Take shelter in cyclone relief centers now!"
-    },
-    LANDSLIDE: {
-      id: "LANDSLIDE",
-      name: "Landslide / Debris Flow",
-      icon: "⛰️",
-      officialSource: "Geological Survey of India (GSI) & IMD",
-      criticalThreshold: "Antecedent Rainfall > 150mm/24hr on slopes > 30°",
-      voiceHindi: "सावधान! भूस्खलन की गंभीर आशंका है। ढलान वाले क्षेत्र तुरंत खाली करें!",
-      voiceEnglish: "Alert! High risk of slope failure and landslide. Vacate hillside settlements immediately!"
-    },
-    EARTHQUAKE: {
-      id: "EARTHQUAKE",
-      name: "Seismic Shockwave",
-      icon: "⚡",
-      officialSource: "National Center for Seismology (NCS)",
-      criticalThreshold: "Richter Scale Magnitude > 5.5 (Depth < 30km)",
-      voiceHindi: "भूकंप अलर्ट! खुले मैदान में निकलें, इमारतों और खंभों से दूर रहें!",
-      voiceEnglish: "Earthquake alert! Evacuate to open areas, stay clear of structures and power lines!"
-    }
-  },
-
-  // High-Stress Real-World Scenarios for SIH Demo
+  // High-Impact North East & National Scenarios
   SCENARIOS: [
     {
-      id: "wayanad_flash_flood",
-      title: "Wayanad Cloudburst & Dam Overflow (Kerala)",
-      type: "FLASH_FLOOD",
-      coordinates: [11.6854, 76.1320],
-      zoom: 11,
-      telemetry: {
-        rainfall1h: 68.4, // mm/hr
-        rainfall24h: 242.0, // mm
-        riverLevel: 19.8, // meters
-        riverDangerMark: 18.2, // meters
-        damCapacity: 94.2, // percentage
-        windSpeed: 42 // km/h
-      },
-      preJudgement: {
-        riskLevel: "RED",
-        predictedBreachTimeMin: 40,
-        floodWaveSpeedKmh: 24,
-        recommendedAction: "Mandatory release of 20,000 cusecs from Banasura Sagar Dam. Evacuate Meppadi and Chooralmala riverbanks within 30 minutes.",
-        impactedPopulation: 34200,
-        safeShelter: "St. Joseph Higher Secondary School Camp, Meppadi (Elevation +42m)"
-      }
-    },
-    {
       id: "assam_brahmaputra_surge",
-      title: "Brahmaputra River Inundation (Kaziranga / Tezpur, Assam)",
+      title: "Brahmaputra Basin Flood & Majuli Island Cutoff (Assam)",
       type: "FLASH_FLOOD",
-      coordinates: [26.6528, 92.7926],
+      coordinates: [26.9535, 94.2037],
       zoom: 10,
+      ministryConcern: "MDoNER, Brahmaputra Board & Assam SDMA",
       telemetry: {
-        rainfall1h: 34.0,
-        rainfall24h: 188.0,
-        riverLevel: 66.4,
-        riverDangerMark: 65.23,
-        damCapacity: 91.0,
-        windSpeed: 28
+        rainfall1h: 48.5,
+        rainfall24h: 215.0,
+        riverLevel: 86.8, // meters
+        riverDangerMark: 85.5,
+        damCapacity: 93.5,
+        windSpeed: 32
       },
       preJudgement: {
         riskLevel: "RED",
-        predictedBreachTimeMin: 75,
-        floodWaveSpeedKmh: 14,
-        recommendedAction: "Breach alert at Jia Bharali embankment. Alert forest outposts & National Highway 715 settlements. Shift wildlife rescue teams to Sector 3.",
-        impactedPopulation: 86000,
-        safeShelter: "Tezpur Elevated Relief Center (Shelter #4)"
+        predictedBreachTimeMin: 35,
+        floodWaveSpeedKmh: 18,
+        recommendedAction: "Embankment breach alert at Kamalabari. Dispatch NDRF 1st Battalion (Guwahati) zodiac boats. Evacuate 14 riverine chaporis to elevated highlands.",
+        impactedPopulation: 78500,
+        safeShelter: "Garmur Elevated Multi-Purpose Relief Complex, Majuli (+28m Elevation)"
       }
     },
     {
-      id: "odisha_super_cyclone",
-      title: "Bay of Bengal Severe Cyclone Landfall (Puri Coast, Odisha)",
-      type: "CYCLONE",
-      coordinates: [19.8135, 85.8312],
+      id: "sikkim_glof_surge",
+      title: "Sikkim Teesta Basin Glacial Lake Outburst Flood (GLOF)",
+      type: "FLASH_FLOOD",
+      coordinates: [27.7025, 88.6138],
       zoom: 10,
+      ministryConcern: "MDoNER, MoES & Sikkim SDMA",
       telemetry: {
-        rainfall1h: 52.0,
-        rainfall24h: 310.0,
-        centralPressure: 954, // hPa
-        windSpeed: 165, // km/h sustained
-        stormSurgeHeight: 3.8 // meters
+        rainfall1h: 62.0,
+        rainfall24h: 280.0,
+        lakeWaterHeightM: 42.0,
+        moraineDamBreachPct: 75,
+        teestaRiverLevel: 104.2,
+        riverDangerMark: 98.0
       },
       preJudgement: {
         riskLevel: "RED",
-        predictedBreachTimeMin: 120,
-        floodWaveSpeedKmh: 55,
-        recommendedAction: "Immediate shutdown of coastal power grids to prevent electrocution. Evacuate thatched houses within 3km of high tide line to multi-purpose cyclone shelters.",
-        impactedPopulation: 145000,
-        safeShelter: "Puri Multi-Purpose Cyclone Shelter Complex #12"
+        predictedBreachTimeMin: 25,
+        floodWaveSpeedKmh: 45,
+        recommendedAction: "South Lhonak Moraine Dam failure detected by NESAC satellite. Sound Chungthang and Mangan sirens immediately. Evacuate downstream NH-10 corridor.",
+        impactedPopulation: 42000,
+        safeShelter: "Mangan District Administrative Stadium Relief Camp (+120m Elevation)"
       }
     },
     {
-      id: "himalayan_seismic_event",
-      title: "Main Boundary Thrust Seismic Rupture (Uttarkashi, Uttarakhand)",
+      id: "meghalaya_cloudburst_landslide",
+      title: "Mawsynram Cloudburst & National Highway 6 Cutoff (Meghalaya)",
+      type: "LANDSLIDE",
+      coordinates: [25.2986, 91.5822],
+      zoom: 10,
+      ministryConcern: "MDoNER, BRO & Meghalaya SDMA",
+      telemetry: {
+        rainfall1h: 84.0, // mm/hr extreme rainfall
+        rainfall24h: 420.0,
+        soilSaturationPct: 98.4,
+        slopeAngleDeg: 42
+      },
+      preJudgement: {
+        riskLevel: "RED",
+        predictedBreachTimeMin: 15,
+        floodWaveSpeedKmh: 30,
+        recommendedAction: "Multiple debris flows detected along Shillong-Silchar highway. Border Roads Organisation (BRO) tasked for emergency clearance. Halt commercial traffic.",
+        impactedPopulation: 29000,
+        safeShelter: "Cherrapunji Community Hall & Elevated Safe Shelter"
+      }
+    },
+    {
+      id: "arunachal_seismic_rupture",
+      title: "Main Central Thrust Himalayan Seismic Event (Arunachal Pradesh)",
       type: "EARTHQUAKE",
-      coordinates: [30.7268, 78.4354],
+      coordinates: [28.2180, 94.7278],
       zoom: 9,
+      ministryConcern: "MDoNER, NCS & Arunachal Pradesh SDMA",
       telemetry: {
-        magnitude: 6.4,
-        depthKm: 12,
-        peakGroundAccel: "0.38g",
+        magnitude: 6.8,
+        depthKm: 10,
+        peakGroundAccel: "0.45g",
         pWaveArrivalSec: 0,
-        sWaveArrivalSec: 14
+        sWaveArrivalSec: 18
       },
       preJudgement: {
         riskLevel: "RED",
-        predictedBreachTimeMin: 0, // Instant
+        predictedBreachTimeMin: 0,
         floodWaveSpeedKmh: 0,
-        recommendedAction: "Trigger automatic early warning P-wave beacon alarm. Stop all railway movements in Rishikesh-Karanprayag section. Sound village siren towers.",
-        impactedPopulation: 62000,
-        safeShelter: "District Sports Stadium Open Ground, Uttarkashi"
+        recommendedAction: "Major earthquake in West Siang sector. Mobilize NDRF 12th Battalion (Itanagar). Inspect Upper Siang hydel dams for structural fissures.",
+        impactedPopulation: 54000,
+        safeShelter: "Aalo General Ground Open Relief Center"
       }
     }
   ],
 
-  // Deployed AegisBeacon Physical Towers across India
+  // Deployed Autonomous Nodes across North East India
   DEPLOYED_BEACONS: [
-    { id: "BEACON-KL-01", name: "Meppadi Riverfront Pole", lat: 11.5540, lng: 76.1265, status: "ONLINE", battery: 98, solarW: 45, signal: "LORA_MESH_OK" },
-    { id: "BEACON-KL-02", name: "Chooralmala Bridge Node", lat: 11.5420, lng: 76.1680, status: "ONLINE", battery: 94, solarW: 42, signal: "LORA_MESH_OK" },
-    { id: "BEACON-KL-03", name: "Mundakkai Slope Station", lat: 11.5310, lng: 76.1950, status: "ONLINE", battery: 89, solarW: 38, signal: "LORA_MESH_OK" },
-    { id: "BEACON-AS-01", name: "Tezpur Ghat Tower", lat: 26.6210, lng: 92.7840, status: "ONLINE", battery: 96, solarW: 50, signal: "NAVIC_SAT_OK" },
-    { id: "BEACON-AS-02", name: "Kaziranga Outpost Node", lat: 26.5775, lng: 93.1711, status: "ONLINE", battery: 91, solarW: 48, signal: "LORA_MESH_OK" },
-    { id: "BEACON-OD-01", name: "Puri Beach Lightpost", lat: 19.7983, lng: 85.8249, status: "ONLINE", battery: 100, solarW: 55, signal: "NAVIC_SAT_OK" },
-    { id: "BEACON-OD-02", name: "Konark Fisherman Chowk", lat: 19.8876, lng: 86.0945, status: "ONLINE", battery: 95, solarW: 52, signal: "LORA_MESH_OK" },
-    { id: "BEACON-UK-01", name: "Uttarkashi Town Square", lat: 30.7310, lng: 78.4410, status: "ONLINE", battery: 92, solarW: 40, signal: "NAVIC_SAT_OK" }
+    { id: "BEACON-AS-01", name: "Majuli Island Ferry Ghat", lat: 26.9450, lng: 94.2100, status: "ONLINE", battery: 98, solarW: 48, signal: "NESAC_SAT_OK" },
+    { id: "BEACON-AS-02", name: "Kaziranga Forest Outpost", lat: 26.5775, lng: 93.1711, status: "ONLINE", battery: 94, solarW: 50, signal: "LORA_MESH_OK" },
+    { id: "BEACON-SK-01", name: "Chungthang Teesta Bridge", lat: 27.6040, lng: 88.6470, status: "ONLINE", battery: 91, solarW: 42, signal: "NESAC_SAT_OK" },
+    { id: "BEACON-ML-01", name: "Mawsynram Ridge Mast", lat: 25.3050, lng: 91.5850, status: "ONLINE", battery: 96, solarW: 45, signal: "LORA_MESH_OK" },
+    { id: "BEACON-AR-01", name: "Pasighat Siang Riverbank", lat: 28.0667, lng: 95.3333, status: "ONLINE", battery: 100, solarW: 52, signal: "NESAC_SAT_OK" }
   ]
 };

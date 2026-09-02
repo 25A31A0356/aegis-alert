@@ -1,6 +1,6 @@
 /**
- * AegisAlert Relief Shelter & Hospital Logistics Command
- * Manages bed capacities, drinking water, medical inventory, and family reunification
+ * AegisAlert North East Relief Shelter & Highland Command
+ * Manages elevated highland shelters, water filtration, medical supplies, and family reunification
  */
 
 export class ShelterView {
@@ -8,35 +8,35 @@ export class ShelterView {
     this.container = document.getElementById(containerId);
     this.shelters = [
       {
-        id: "CAMP-MEPPADI-01",
-        name: "St. Joseph Higher Secondary School Camp",
-        location: "Meppadi Hill Ridge (+42m elevation)",
-        capacity: 500,
-        occupied: 312,
-        waterLiters: 12400,
-        foodRationDays: 5,
-        doctorOnDuty: "Dr. Ananya Nair (Medical Officer)",
-        bloodUnits: { "O-": 6, "A+": 18, "B+": 22, "AB+": 8 },
+        id: "CAMP-MAJULI-01",
+        name: "Garmur Elevated Multi-Purpose Relief Complex",
+        location: "Majuli Island, Assam (+28m Elevation Highland)",
+        capacity: 1200,
+        occupied: 742,
+        waterLiters: 28000,
+        foodRationDays: 7,
+        doctorOnDuty: "Dr. Bhupen Hazarika (Medical Officer, Assam Health)",
+        bloodUnits: { "O-": 8, "A+": 24, "B+": 32, "AB+": 12 },
         status: "OPEN_RECEIVING"
       },
       {
-        id: "CAMP-VYTHIRI-02",
-        name: "Vythiri Community Hall & High School",
-        location: "Vythiri Sector (+38m elevation)",
-        capacity: 350,
-        occupied: 180,
-        waterLiters: 8500,
-        foodRationDays: 4,
-        doctorOnDuty: "Dr. Rajesh Kurup (Pediatrician)",
-        bloodUnits: { "O-": 4, "A+": 12, "B+": 15, "AB+": 5 },
+        id: "CAMP-SIKKIM-02",
+        name: "Mangan District Administrative Safe Shelter",
+        location: "Mangan Hill Ridge, Sikkim (+120m Elevation Above Teesta)",
+        capacity: 650,
+        occupied: 380,
+        waterLiters: 14500,
+        foodRationDays: 6,
+        doctorOnDuty: "Dr. Tenzing Norbu (Senior Surgeon, STNM Gangtok)",
+        bloodUnits: { "O-": 6, "A+": 16, "B+": 20, "AB+": 8 },
         status: "OPEN_RECEIVING"
       }
     ];
 
     this.missingRegistry = [
-      { id: "REG-01", name: "Ramesh Chandran", age: 44, family: "Wife Sunita, Son Rahul", status: "SAFELY_CHECKED_IN", shelter: "St. Joseph Camp" },
-      { id: "REG-02", name: "Devaki Amma", age: 72, family: "Looking for daughter Mini", status: "MEDICAL_TREATMENT", shelter: "St. Joseph Camp" },
-      { id: "REG-03", name: "Kiran Babu", age: 11, family: "Separated at Chooralmala bridge", status: "UNACCOMPANIED_CHILD", shelter: "Vythiri Community Hall" }
+      { id: "REG-AS-01", name: "Pranab Saikia", age: 52, family: "Wife Anamika, Son Deep", status: "SAFELY_CHECKED_IN", shelter: "Garmur Highland Camp, Majuli" },
+      { id: "REG-SK-02", name: "Sonam Lepcha", age: 68, family: "Looking for grandson Tashi", status: "MEDICAL_TREATMENT", shelter: "Mangan Administrative Camp, Sikkim" },
+      { id: "REG-ML-03", name: "Mary Lyngdoh", age: 29, family: "Separated at Shillong-Silchar NH-6 landslide", status: "SAFELY_CHECKED_IN", shelter: "Cherrapunji Safe Shelter" }
     ];
   }
 
@@ -65,8 +65,8 @@ export class ShelterView {
                 <!-- Bed Occupancy Bar -->
                 <div class="camp-meter-section">
                   <div class="meter-labels">
-                    <span>Bed Occupancy: <strong>${camp.occupied} / ${camp.capacity}</strong></span>
-                    <span>Available: <strong style="color:#10b981;">${availableBeds} Beds</strong></span>
+                    <span>Highland Shelter Capacity: <strong>${camp.occupied} / ${camp.capacity}</strong></span>
+                    <span>Available: <strong style="color:#10b981;">${availableBeds} Highland Beds</strong></span>
                   </div>
                   <div class="camp-progress-track">
                     <div class="camp-progress-fill" style="width: ${occupancyPct}%;"></div>
@@ -76,15 +76,15 @@ export class ShelterView {
                 <!-- Logistics Metrics -->
                 <div class="camp-logistics-grid">
                   <div class="logistics-cell">
-                    <span>Drinking Water</span>
+                    <span>Safe Drinking Water</span>
                     <strong>${camp.waterLiters.toLocaleString("en-IN")} L</strong>
                   </div>
                   <div class="logistics-cell">
                     <span>Food Buffer</span>
-                    <strong>${camp.foodRationDays} Days</strong>
+                    <strong>${camp.foodRationDays} Days Buffer</strong>
                   </div>
                   <div class="logistics-cell">
-                    <span>Duty Doctor</span>
+                    <span>On-Duty Doctor</span>
                     <strong style="font-size:0.75rem;">${camp.doctorOnDuty}</strong>
                   </div>
                   <div class="logistics-cell">
@@ -100,8 +100,8 @@ export class ShelterView {
         <!-- Family Reunification Registry -->
         <div class="registry-box">
           <div class="registry-header">
-            <h4>👨‍👩‍👧‍👦 Missing Persons & Family Reunification Portal</h4>
-            <input type="text" id="registry-search-input" class="registry-search-bar" placeholder="Search by name or village..." />
+            <h4>👨‍👩‍👧‍👦 North East Missing Persons & Family Reunification Portal</h4>
+            <input type="text" id="registry-search-input" class="registry-search-bar" placeholder="Search by citizen name, village, or camp..." />
           </div>
 
           <table class="registry-table">

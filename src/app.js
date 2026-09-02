@@ -1,6 +1,6 @@
 /**
  * AegisAlert Master Application Orchestrator
- * Multidisciplinary SIH Edition
+ * MDoNER (Ministry of Development of North Eastern Region) Edition
  * Coordinates Command War Room, Citizen Hub, NDRF Responders, and Relief Shelters.
  */
 
@@ -21,7 +21,7 @@ class AegisApp {
     this.currentRole = "war-room";
 
     this.feeds = new OfficialFeeds();
-    this.hardwareNode = new BeaconNode("BEACON-KL-01", "Meppadi Riverfront Mast");
+    this.hardwareNode = new BeaconNode("BEACON-AS-01", "Majuli Island Ferry Ghat Mast");
     this.mapCtrl = new MapController("gis-map");
     this.lastEncodedPacket = null;
 
@@ -32,7 +32,7 @@ class AegisApp {
   }
 
   async init() {
-    console.log("Initializing AegisAlert Multidisciplinary Disaster Ecosystem...");
+    console.log("Initializing AegisAlert MDoNER North East Warning Platform...");
 
     // 1. Initialize Map
     this.mapCtrl.initMap();
@@ -46,8 +46,8 @@ class AegisApp {
     // 4. Subscribe Hardware Node updates
     this.hardwareNode.subscribe(state => this.renderHardwareNode(state));
 
-    // 5. Initial Scenario Load (Wayanad)
-    this.loadScenario("wayanad_flash_flood");
+    // 5. Initial Scenario Load (Assam Brahmaputra Basin Surge)
+    this.loadScenario("assam_brahmaputra_surge");
 
     // 6. Apply Default Language
     this.applyLanguage(this.currentLang);
@@ -179,7 +179,7 @@ class AegisApp {
     const targetView = document.getElementById(`view-${roleId}`);
     if (targetView) targetView.classList.add("active");
 
-    // Re-render citizen or responder view with current scenario context if needed
+    // Re-render sub-views
     if (roleId === "citizen" && this.citizenView) {
       this.citizenView.render(I18N[this.currentLang], this.feeds.activeScenario);
     } else if (roleId === "responder" && this.responderView) {
@@ -187,7 +187,6 @@ class AegisApp {
     } else if (roleId === "shelter" && this.shelterView) {
       this.shelterView.render();
     } else if (roleId === "war-room" && this.mapCtrl.map) {
-      // Trigger map resize fix when switching back to war room
       setTimeout(() => this.mapCtrl.map.invalidateSize(), 150);
     }
   }
@@ -217,7 +216,7 @@ class AegisApp {
       this.citizenView.render(l, this.feeds.activeScenario);
     }
 
-    this.logTransmission(`🌐 Language switched to ${l.name}. Vernacular speech engine updated.`);
+    this.logTransmission(`🌐 Language switched to ${l.name}. Regional voice engine armed.`);
   }
 
   /**
@@ -240,12 +239,12 @@ class AegisApp {
     this.lastEncodedPacket = RadioProtocol.encodePacket({
       disasterType: scenario.type,
       alertLevel: riskAnalysis.alertLevel,
-      zoneId: 101,
+      zoneId: 201,
       lat: scenario.coordinates[0],
       lng: scenario.coordinates[1],
-      radiusKm: 15,
+      radiusKm: 18,
       voiceCode: 1,
-      routeId: 2,
+      routeId: 4,
       shelterCode: "CAMP01",
       hopLimit: 5
     });
@@ -255,7 +254,7 @@ class AegisApp {
       this.citizenView.render(I18N[this.currentLang], scenario);
     }
 
-    this.logTransmission(`Telemetry loaded for ${scenario.title}. Risk Index: ${riskAnalysis.score}/100 [${riskAnalysis.alertLevel}]`);
+    this.logTransmission(`North East Telemetry loaded: ${scenario.title}. Risk: ${riskAnalysis.score}/100 [${riskAnalysis.alertLevel}]. Ministry: ${scenario.ministryConcern || 'MDoNER'}`);
   }
 
   /**
@@ -265,17 +264,17 @@ class AegisApp {
     if (!this.lastEncodedPacket) return;
 
     const currentScenario = this.feeds.activeScenario;
-    this.logTransmission(`🛰️ INITIATING ZERO-SIGNAL TRANSMISSION (868.1 MHz / NavIC S-Band)...`);
+    this.logTransmission(`🛰️ INITIATING ZERO-SIGNAL TRANSMISSION (ISRO NESAC / 868.1 MHz LoRa)...`);
     this.logTransmission(`📦 Binary Frame: ${this.lastEncodedPacket.hexString} [CRC: 0x${this.lastEncodedPacket.crc}]`);
 
     // 1. Trigger visual radio wave animation on Leaflet map
-    this.mapCtrl.animateRadioBroadcast(currentScenario.coordinates, 15);
+    this.mapCtrl.animateRadioBroadcast(currentScenario.coordinates, 18);
 
-    // 2. Transmit to the autonomous physical hardware node
+    // 2. Transmit to autonomous station
     setTimeout(() => {
       this.hardwareNode.receiveRadioPacket(this.lastEncodedPacket.buffer);
-      this.logTransmission(`✅ Packet captured by ${this.hardwareNode.nodeId} (Airwave RSSI: -78dBm). CRC16 Verified.`);
-      this.logTransmission(`🚨 120dB Siren ENGAGED. 360° Optical Strobes ACTIVATED.`);
+      this.logTransmission(`✅ Packet captured by ${this.hardwareNode.nodeId} (Airwave RSSI: -76dBm). CRC16 Verified.`);
+      this.logTransmission(`🚨 120dB Siren ENGAGED across valley. 360° Optical Strobes ACTIVATED.`);
       this.logTransmission(`📢 Vernacular Spoken Voice Broadcast starting in ${I18N[this.currentLang].name}.`);
     }, 450);
   }
@@ -305,8 +304,8 @@ class AegisApp {
     const windEl = document.getElementById("val-wind");
 
     if (rainEl) rainEl.textContent = tel.rainfall1h !== undefined ? `${tel.rainfall1h} mm/hr (${tel.rainfall24h}mm / 24h)` : "N/A";
-    if (riverEl) riverEl.textContent = tel.riverLevel !== undefined ? `${tel.riverLevel} m (Danger: ${tel.riverDangerMark}m)` : "Normal";
-    if (damEl) damEl.textContent = tel.damCapacity !== undefined ? `${tel.damCapacity} %` : "N/A";
+    if (riverEl) riverEl.textContent = tel.riverLevel !== undefined ? `${tel.riverLevel} m (Danger: ${tel.riverDangerMark}m)` : (tel.teestaRiverLevel ? `${tel.teestaRiverLevel}m (Teesta)` : "Normal");
+    if (damEl) damEl.textContent = tel.damCapacity !== undefined ? `${tel.damCapacity} %` : (tel.lakeWaterHeightM ? `${tel.lakeWaterHeightM}m Lake Depth` : "N/A");
     if (windEl) windEl.textContent = tel.windSpeed !== undefined ? `${tel.windSpeed} km/h` : (tel.magnitude ? `M${tel.magnitude} Rich.` : "Calm");
 
     const popEl = document.getElementById("val-population");
@@ -398,9 +397,9 @@ class AegisApp {
     const feedStatus = document.getElementById("live-feed-status");
     if (feedStatus) {
       feedStatus.innerHTML = `
-        <span style="color:#10b981;">● CONNECTED</span> 
-        | Open-Meteo: ${liveWeather.success ? `${liveWeather.temperature}°C, ${liveWeather.pressure}hPa` : 'Simulated'} 
-        | NCS/USGS: ${liveSeismic.success ? `${liveSeismic.count} active M3+ events` : 'Online'}
+        <span style="color:#10b981;">● NESAC SATELLITE ONLINE</span> 
+        | Weather: ${liveWeather.success ? `${liveWeather.temperature}°C, ${liveWeather.pressure}hPa` : 'Brahmaputra Radar'} 
+        | Seismology: ${liveSeismic.success ? `${liveSeismic.count} active regional events` : 'Zone V Monitoring'}
       `;
     }
   }
