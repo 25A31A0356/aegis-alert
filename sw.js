@@ -53,6 +53,12 @@ self.addEventListener("activate", (event) => {
 
 // Stale-while-revalidate strategy with offline fallback
 self.addEventListener("fetch", (event) => {
+  // Always fetch real-time API requests directly from the local server
+  if (event.request.url.includes("/api/")) {
+    event.respondWith(fetch(event.request).catch(() => new Response(JSON.stringify({ error: "Offline" }), { headers: { "Content-Type": "application/json" } })));
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {

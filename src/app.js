@@ -74,6 +74,9 @@ class AegisApp {
     // 10. Initialize Live Disaster Drill & Real-Time Crisis Simulator
     this.drillEngine = new DisasterSimulatorEngine(this);
     this.drillEngine.init();
+
+    // 11. Connect to Local Enterprise Disaster Server APIs & SSE Stream
+    this.connectLiveServerFeed();
   }
 
   /**
@@ -235,6 +238,124 @@ class AegisApp {
     if (modalClose && modal) {
       modalClose.addEventListener("click", () => modal.classList.remove("open"));
     }
+
+    // 10. Mobile Evacuation Alert & SMS Dispatch Simulator
+    const btnSendMobile = document.getElementById("btn-send-mobile-alert");
+    if (btnSendMobile) {
+      btnSendMobile.addEventListener("click", async () => {
+        const phone = document.getElementById("sms-phone-input")?.value || "+91 98450 11223";
+        const calId = document.getElementById("sms-calamity-select")?.value || "CAL-01";
+        const cal = (this.calamities || []).find(c => c.id === calId) || { region: "Majuli, Assam", safe_shelter: "Garmur Highland Camp (+38m)" };
+
+        try {
+          const res = await fetch("/api/mobile/simulate-sms", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              phone: phone,
+              location: cal.region,
+              evacuation_target: cal.safe_shelter
+            })
+          });
+
+          if (res.ok) {
+            const data = await res.json();
+            const notifBody = document.getElementById("phone-notif-body");
+            if (notifBody) {
+              notifBody.textContent = `Severe hazard in ${cal.region}. Immediate evacuation ordered. Follow marked route to ${cal.safe_shelter}. Helpline: 112. Free medical care available.`;
+            }
+            this.logTransmission(`📲 MOBILE EVACUATION ALERT DISPATCHED: Recipient ${phone} [${cal.region}] via C-DOT SACHET Cell Broadcast.`);
+            alert(`🚨 Evacuation SMS Sent to ${phone}!\nCarrier: C-DOT SACHET Cell Broadcast\nSafe Route: ${cal.safe_shelter}`);
+          }
+        } catch (err) {
+          console.warn("SMS dispatch error:", err);
+        }
+      });
+    }
+
+    // 11. Geographical Hazard Area Sirens
+    document.querySelectorAll(".btn-toggle-geo-siren").forEach(btn => {
+      btn.addEventListener("click", async (e) => {
+        const calId = e.target.getAttribute("data-id");
+        const card = document.getElementById(`siren-card-${calId}`);
+        const isCurrentlyActive = btn.classList.contains("btn-siren-active");
+        const nextState = !isCurrentlyActive;
+
+        try {
+          const res = await fetch("/api/alerts/siren/trigger", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ calamity_id: calId, state: nextState })
+          });
+
+          if (res.ok) {
+            if (nextState) {
+              btn.classList.add("btn-siren-active");
+              btn.textContent = "🚨 Siren: ACTIVE (120dB)";
+              if (card) card.classList.add("active");
+              this.hardwareNode.soundAlert();
+              this.logTransmission(`🚨 GEOGRAPHICAL SIREN ENGAGED: 120dB Acoustic Horn sounding for ${calId}.`);
+            } else {
+              btn.classList.remove("btn-siren-active");
+              btn.textContent = "🔈 Siren: STANDBY";
+              if (card) card.classList.remove("active");
+              this.hardwareNode.silenceAlert();
+              this.logTransmission(`🔇 GEOGRAPHICAL SIREN SILENCED for ${calId}.`);
+            }
+          }
+        } catch (err) {
+          console.warn("Siren trigger error:", err);
+        }
+      });
+    });
+
+    // Expose helpers for map popups
+    window.__triggerAreaSiren = (calId) => {
+      const btn = document.querySelector(`.btn-toggle-geo-siren[data-id="${calId}"]`);
+      if (btn) btn.click();
+    };
+
+    window.__openMobileModal = (region, shelter) => {
+      const sel = document.getElementById("sms-calamity-select");
+      if (sel) {
+        for (let opt of sel.options) {
+          if (opt.text.includes(region.split(',')[0])) {
+            sel.value = opt.value;
+            break;
+          }
+        }
+      }
+      const btn = document.getElementById("btn-send-mobile-alert");
+      if (btn) btn.click();
+    };
+  }
+
+  async connectLiveServerFeed() {
+    try {
+      const res = await fetch("/api/calamities/live");
+      if (res.ok) {
+        const data = await res.json();
+        this.calamities = data.calamities || [];
+        this.mapCtrl.renderAllCalamityPins(this.calamities);
+        this.logTransmission(`✅ Connected to Local Disaster Server API. Loaded ${this.calamities.length} national calamity sectors.`);
+      }
+    } catch (e) {
+      console.warn("Local server feed unavailable:", e);
+    }
+
+    // Connect to Server-Sent Events (SSE) stream
+    try {
+      const evtSource = new EventSource("/api/stream");
+      evtSource.onmessage = (event) => {
+        try {
+          const payload = JSON.parse(event.data);
+          if (payload.event === "TELEMETRY_TICK") {
+            const timeBadge = document.getElementById("live-platform-count-tag");
+            if (timeBadge) timeBadge.textContent = `SSE LIVE STREAM: ${payload.time}`;
+          }
+        } catch (e) {}
+      };
+    } catch (e) {}
   }
 
   switchRole(roleId) {

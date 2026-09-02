@@ -194,3 +194,22 @@ For live hackathon evaluations, presentations, and mock emergency drills, AegisA
   - 🆘 **Inject Urgent Trapped Family SOS**
   - ⛰️ **Inject Highway Rockslide**
 - **Authoritative Emergency Voice Announcer:** Uses client-side Web Speech Synthesis to announce critical disaster events in an authoritative military/emergency command voice.
+
+---
+
+## 🖥️ AegisAlert Enterprise Demo Server (Python 3.13 Multi-Threaded HTTP & REST APIs)
+
+The project now includes a **high-performance, standalone demo local server** (server.py) with zero external dependencies:
+- **How to Run:**
+  `powershell
+  python server.py
+  `
+- **Local Address:** http://localhost:8080 (or http://127.0.0.1:8080)
+- **Built-in REST APIs & Real-Time Endpoints:**
+  - GET  /api/status : System health, uptime, active calamity counter, active siren states.
+  - GET  /api/calamities/live : Multi-calamity threat detection telemetry across India (Floods, Heavy Rain, Cyclones, Landslides, Heatwaves).
+  - GET  /api/stream : **Server-Sent Events (SSE)** real-time data feed updating connected maps and dashboards automatically.
+  - POST /api/alerts/broadcast : Government alert dispatching to mobile cell towers and autonomous siren masts with digital SHA-256 seals.
+  - POST /api/alerts/siren/trigger : Geographical area siren controller (triggers 120dB horns for specific hazard zones).
+  - GET  /api/gov/export?format=json|csv : Free unrestricted open data export for government emergency teams.
+  - POST /api/mobile/simulate-sms : Dispatches high-priority evacuation route alerts directly to citizen smartphones in the affected zone.

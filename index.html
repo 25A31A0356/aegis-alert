@@ -319,6 +319,67 @@
           </div>
         </div>
 
+        <!-- Interactive Citizen Mobile Device Evacuation Alert Simulator -->
+        <div class="panel-card mobile-simulator-card" style="margin-bottom: 20px;">
+          <div class="card-header">
+            <span class="card-title">
+              <span class="card-title-icon">📲</span>
+              Mobile Device Evacuation Alert & SMS Dispatcher (Affected Areas Only)
+            </span>
+            <span class="carrier-broadcast-badge">C-DOT SACHET CELL BROADCAST READY</span>
+          </div>
+
+          <div class="mobile-sim-layout">
+            <div class="mobile-dispatch-form">
+              <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:10px;">
+                Directly sends high-priority evacuation route alerts and life-saving instructions to all resident smartphones located inside the geofenced danger zone:
+              </p>
+              <div class="mobile-input-group">
+                <label>Recipient Resident Phone (Demo):</label>
+                <input type="text" id="sms-phone-input" value="+91 98450 11223" class="sms-input-field" placeholder="+91 XXXXX XXXXX" />
+              </div>
+              <div class="mobile-input-group" style="margin-top:8px;">
+                <label>Target Affected Hazard Zone:</label>
+                <select id="sms-calamity-select" class="sms-select-field">
+                  <option value="CAL-01">Majuli & Jorhat, Assam (Brahmaputra Flood)</option>
+                  <option value="CAL-02">Chooralmala & Meppadi, Kerala (Landslide Mudflow)</option>
+                  <option value="CAL-03">Puri Coastal Belt, Odisha (Severe Cyclone)</option>
+                  <option value="CAL-04">Rudraprayag, Uttarakhand (Cloudburst Torrent)</option>
+                  <option value="CAL-05">Bikaner & Churu, Rajasthan (49.4°C Heatwave)</option>
+                </select>
+              </div>
+              <button id="btn-send-mobile-alert" class="btn-dispatch-sms" style="margin-top:12px;">
+                🚀 Send Evacuation Alert to Affected Mobiles
+              </button>
+            </div>
+
+            <!-- Realistic Smartphone Frame Simulator -->
+            <div class="phone-frame-mockup">
+              <div class="phone-notch"></div>
+              <div class="phone-screen">
+                <div class="phone-status-bar">
+                  <span>23:55</span>
+                  <span>📶 5G  🔋 94%</span>
+                </div>
+                <div class="phone-notification-card" id="phone-notification-preview">
+                  <div class="notif-header">
+                    <span class="notif-badge-gov">GOVT EMERGENCY ALERT</span>
+                    <span class="notif-time">NOW</span>
+                  </div>
+                  <strong class="notif-title">🚨 MANDATORY EVACUATION: RED ZONE</strong>
+                  <p class="notif-body" id="phone-notif-body">
+                    Severe hazard in Majuli, Assam. Immediate evacuation ordered. Follow marked highland route to Garmur Camp (+38m). Helpline: 112. Free medical care available.
+                  </p>
+                  <div class="notif-actions">
+                    <span class="notif-btn-nav">🧭 Safe Route</span>
+                    <span class="notif-btn-call">📞 Call 112</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Multi-Platform Live Data Verification Drawer -->
         <div class="panel-card" style="margin-bottom: 20px;">
           <div class="card-header">
@@ -396,6 +457,76 @@
               <span class="seal-label">SOVEREIGN CRYPTOGRAPHIC BROADCAST SEAL</span>
               <code class="seal-hash">SHA256: 7F4B92C8E109DA3541BF884E0C392A</code>
               <span class="seal-status">● AUTHORIZATION LOCKED & LEGALLY BINDING</span>
+            </div>
+          </div>
+
+          <!-- Free Unrestricted Open Data Access for Government Teams -->
+          <div class="gov-open-data-bar">
+            <span class="open-data-label">📂 GOVT UNRESTRICTED DATA ACCESS:</span>
+            <div class="open-data-actions">
+              <a href="/api/gov/export?format=json" target="_blank" class="btn-gov-export" title="Download unrestricted raw disaster telemetry in JSON">
+                📥 Export Telemetry (JSON)
+              </a>
+              <a href="/api/gov/export?format=csv" target="_blank" class="btn-gov-export" title="Download unrestricted tabular disaster records in CSV">
+                📥 Export Report (CSV)
+              </a>
+              <span class="open-data-tag">NO LOGIN WALL • STATUTORY PUBLIC DATA</span>
+            </div>
+          </div>
+
+          <!-- Specific Geographical Area Siren Controllers -->
+          <div class="geographical-sirens-section">
+            <span class="geo-siren-title">📢 GEOGRAPHICAL HAZARD SIREN TRIGGER MATRIX (BY AFFECTED AREA):</span>
+            <div class="geo-sirens-grid">
+              <div class="geo-siren-card active" id="siren-card-CAL-01">
+                <div class="geo-siren-info">
+                  <strong>🌊 Majuli Flood Sector (Assam)</strong>
+                  <span>142,000 at risk • Danger Mark 105.7m</span>
+                </div>
+                <button class="btn-toggle-geo-siren btn-siren-active" data-id="CAL-01">
+                  🚨 Siren: ACTIVE (120dB)
+                </button>
+              </div>
+
+              <div class="geo-siren-card active" id="siren-card-CAL-02">
+                <div class="geo-siren-info">
+                  <strong>⛰️ Wayanad Landslide Ridge (Kerala)</strong>
+                  <span>38,000 at risk • 42° Slope Incline</span>
+                </div>
+                <button class="btn-toggle-geo-siren btn-siren-active" data-id="CAL-02">
+                  🚨 Siren: ACTIVE (120dB)
+                </button>
+              </div>
+
+              <div class="geo-siren-card" id="siren-card-CAL-03">
+                <div class="geo-siren-info">
+                  <strong>🌀 Puri Cyclone Coastal Belt (Odisha)</strong>
+                  <span>320,000 at risk • 185km/h Gale</span>
+                </div>
+                <button class="btn-toggle-geo-siren" data-id="CAL-03">
+                  🔈 Siren: STANDBY
+                </button>
+              </div>
+
+              <div class="geo-siren-card" id="siren-card-CAL-04">
+                <div class="geo-siren-info">
+                  <strong>⛈️ Kedarnath Cloudburst Gorge (Uttarakhand)</strong>
+                  <span>18,500 at risk • 112mm/hr Torrent</span>
+                </div>
+                <button class="btn-toggle-geo-siren" data-id="CAL-04">
+                  🔈 Siren: STANDBY
+                </button>
+              </div>
+
+              <div class="geo-siren-card" id="siren-card-CAL-05">
+                <div class="geo-siren-info">
+                  <strong>☀️ Thar Desert Heat Dome (Rajasthan)</strong>
+                  <span>260,000 at risk • 49.4°C Loo</span>
+                </div>
+                <button class="btn-toggle-geo-siren" data-id="CAL-05">
+                  🔈 Siren: STANDBY
+                </button>
+              </div>
             </div>
           </div>
         </div>
