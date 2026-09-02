@@ -4,7 +4,7 @@
  * Caches all 4 Stakeholder Portals, Audio Oscillators, and Vernacular Dictionaries.
  */
 
-const CACHE_NAME = "aegis-alert-v4.5-national";
+const CACHE_NAME = "aegis-alert-v5.0-national";
 const ASSETS_TO_CACHE = [
   "./",
   "./index.html",
@@ -15,6 +15,7 @@ const ASSETS_TO_CACHE = [
   "./src/i18n/languages.js",
   "./src/telemetry/official_feeds.js",
   "./src/telemetry/risk_engine.js",
+  "./src/telemetry/disaster_simulator_engine.js",
   "./src/transmission/radio_protocol.js",
   "./src/hardware_sim/audio_synthesizer.js",
   "./src/hardware_sim/beacon_node.js",

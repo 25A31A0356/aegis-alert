@@ -172,3 +172,12 @@ We created the **Media Intelligence & Verified Social Sentiment Radar**:
 1. **Official PIB Fact Check Integration:** Ingests and displays real-time debunks of viral social media rumors (e.g., verifying that a dam is safely discharging rather than breached).
 2. **National Broadcaster Feed:** Synchronizes news flashes from DD News and All India Radio (Akashvani).
 3. **Dynamic Broadcast Ticker:** Automatically refreshes time to time, allowing government authorities to push official press statements directly to citizen devices and media outlets.
+
+---
+
+### Q19: How can judges or evaluators experience the real-time progression of a disaster during a live demo?
+**Answer:**  
+We built the **Live Disaster Drill & Real-Time Incident Playback Engine**:
+1. **Dynamic Incident Ticker:** Evaluators don't just see static mockups; clicking **[START LIVE DRILL]** launches an active chronological simulation where telemetry dynamically shifts second-by-second (rain ramping up, river gauges overtopping, dams filling).
+2. **Phase-Driven Escalation:** Evaluators observe the system automatically respond to consecutive crisis phases—from early rainfall monitoring to catastrophic embankment breach, regional power blackout, cell tower collapse, and military airlift coordination.
+3. **Interactive Chaos Injectors:** Judges can press instant problem buttons (e.g. *Inject Power Blackout* or *Inject 0-Bar Cell Tower Collapse*) to stress-test how AegisAlert instantly switches to autonomous lithium battery and sub-GHz airwave mesh protocols with live voice announcements.

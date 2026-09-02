@@ -176,3 +176,21 @@ During disasters, fake news and viral social media rumors often trigger deadly s
 - **DD News & All India Radio (AIR Akashvani):** Live crisis coverage and national highway clearance bulletins.
 - **NDMA Official Social Radar:** Real-time advisories streamed directly to the public.
 - **Dynamic Auto-Refresh:** The news wire automatically streams fresh bulletins from time to time, keeping the operations room informed of ground and social media developments.
+
+---
+
+## 🎮 Live Disaster Drill & Real-Time Crisis Experience Engine
+
+For live hackathon evaluations, presentations, and mock emergency drills, AegisAlert National includes a **Real-Time Incident Playback & Chaos Engine**:
+- **Second-by-Second Crisis Progression:** Click **[▶️ START LIVE DRILL]** to see the catastrophe escalate in real-time with an active elapsed timer (T+00:00:00):
+  - **Phase 1 (T+00:15):** Rain rate surges to 95 mm/hr torrent, river gauge crosses official CWC danger mark.
+  - **Phase 2 (T+00:30):** Catastrophic 30m embankment collapse occurs; targeted airwave siren auto-engages; 80 trapped school children SOS pops into the queue.
+  - **Phase 3 (T+01:00):** Regional electrical substations flood (Power Blackout); cellular towers collapse to 0 bars. AegisAlert switches smoothly to solar-powered Sub-GHz airwave radio.
+  - **Phase 4 (T+01:30):** IAF Mi-17 choppers scramble from Tezpur Airbase; PIB Fact Check debunks viral panic rumors.
+- **1-Click Real-Time Chaos Injectors:** Presenters can instantly trigger sudden real-world crises:
+  - ⚡ **Inject Power Blackout**
+  - 📶 **Inject Cell Tower Destruction**
+  - 🌊 **Inject Sudden Embankment Breach**
+  - 🆘 **Inject Urgent Trapped Family SOS**
+  - ⛰️ **Inject Highway Rockslide**
+- **Authoritative Emergency Voice Announcer:** Uses client-side Web Speech Synthesis to announce critical disaster events in an authoritative military/emergency command voice.

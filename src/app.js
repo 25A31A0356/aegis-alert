@@ -14,6 +14,7 @@ import { MapController } from "./ui/map_controller.js";
 import { CitizenView } from "./roles/citizen_view.js";
 import { ResponderView } from "./roles/responder_view.js";
 import { ShelterView } from "./roles/shelter_view.js";
+import { DisasterSimulatorEngine } from "./telemetry/disaster_simulator_engine.js";
 
 class AegisApp {
   constructor() {
@@ -69,6 +70,10 @@ class AegisApp {
       this.feeds.pushNextMediaBulletin();
       this.renderMediaBulletins();
     }, 18000);
+
+    // 10. Initialize Live Disaster Drill & Real-Time Crisis Simulator
+    this.drillEngine = new DisasterSimulatorEngine(this);
+    this.drillEngine.init();
   }
 
   /**

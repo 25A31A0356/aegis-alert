@@ -109,6 +109,69 @@
   </section>
 
   <!-- ====================================================================
+       LIVE DISASTER DRILL & REAL-TIME CRISIS SIMULATOR COCKPIT
+       ==================================================================== -->
+  <section class="live-drill-cockpit" id="live-drill-cockpit">
+    <div class="drill-top-row">
+      <div class="drill-title-col">
+        <div class="drill-badge-pulse">● LIVE DISASTER DRILL</div>
+        <div class="drill-headline">
+          <strong>Real-Time Crisis Progression & Incident Playback Engine</strong>
+          <span>Watch the dynamic second-by-second escalation of a real natural disaster in real-time</span>
+        </div>
+      </div>
+
+      <div class="drill-controls-group">
+        <button id="btn-drill-toggle" class="btn-drill-action btn-drill-start">
+          <span id="drill-icon">▶️</span> <span id="drill-text">START LIVE DRILL</span>
+        </button>
+        <button id="btn-drill-speed" class="btn-drill-sub" title="Toggle simulation speed: 1x, 5x, 10x">
+          Speed: <strong id="val-drill-speed">1x</strong>
+        </button>
+        <button id="btn-drill-reset" class="btn-drill-sub" title="Reset crisis drill to initial conditions">
+          🔄 Reset
+        </button>
+      </div>
+
+      <div class="drill-metrics-strip">
+        <div class="drill-clock-box">
+          <span class="drill-clock-lbl">CRISIS ELAPSED TIME</span>
+          <strong id="drill-timer-val" class="drill-clock-val">T+00:00:00</strong>
+        </div>
+        <div class="drill-stage-box">
+          <span class="drill-stage-lbl">DISASTER ESCALATION PHASE</span>
+          <strong id="drill-phase-val" class="drill-stage-val phase-watch">PHASE 1: MONITORING</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Real-Time Problem Injectors (Chaos Engineering for Demo) -->
+    <div class="drill-injectors-row">
+      <span class="injectors-title">⚡ REAL-TIME PROBLEM INJECTORS (LIVE DEMO TESTING):</span>
+      <div class="injectors-buttons">
+        <button class="btn-inject-chaos" data-type="blackout" title="Trigger immediate power grid collapse">
+          ⚡ Inject Power Blackout
+        </button>
+        <button class="btn-inject-chaos" data-type="tower_down" title="Trigger cell tower destruction">
+          📶 Inject Cell Tower Collapse
+        </button>
+        <button class="btn-inject-chaos" data-type="breach" title="Trigger catastrophic embankment overtopping">
+          🌊 Inject Embankment Breach
+        </button>
+        <button class="btn-inject-chaos" data-type="citizen_sos" title="Inject urgent trapped family SOS">
+          🆘 Inject Urgent Citizen SOS
+        </button>
+        <button class="btn-inject-chaos" data-type="rockslide" title="Inject sudden highway rockslide cutoff">
+          ⛰️ Inject Highway Rockslide
+        </button>
+        <button id="btn-drill-voice-announcer" class="btn-inject-chaos announcer-toggle" title="Toggle emergency voice announcements">
+          🗣️ Voice: ON
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================================
        MULTIDISCIPLINARY ROLE SWITCHER BAR (PAN-INDIA APEX)
        ==================================================================== -->
   <nav class="role-nav-bar">
