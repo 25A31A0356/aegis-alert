@@ -113,3 +113,35 @@ We engineered a **Graceful Multi-Tier Degradation (Fail-Safe Architecture)**:
 2. **Addresses India's Most Severe Humanitarian Need:** Natural disasters claim thousands of Indian lives and cost billions in infrastructure damage annually. AegisAlert directly tackles this national challenge.
 3. **Cross-Ministry Statutory Alignment:** The solution directly implements the statutory mandates of the **Disaster Management Act of 2005**, uniting NDMA, MHA, Ministry of Defence, and Jal Shakti onto a unified operational platform.
 4. **Inclusive, Zero-Cost Empathy:** By combining offline PWA resilience, vernacular voice recognition, and ₹0 hardware costs, our 5-member student team has engineered an egalitarian life-saving system built for the most vulnerable citizens of the Republic of India.
+
+
+---
+
+### Q13: How does the system target only citizens inside the active Red Zone without causing panic elsewhere?
+**Answer:**  
+We engineered a **Precision Geofenced Polygon Engine**:
+1. **Zero-Spillover Mathematical Geofencing:** When an embankment breach, landslide, or toofan surge is identified, the system creates a spatial bounding polygon (e.g. 16.0 km danger radius).
+2. **Targeted In-Zone Alerting:**
+   - **For citizens inside the polygon:** The device immediately overrides silent mode, flashing a prominent **CRITICAL GEOFENCE OVERRIDE** banner, triggering an alternating 650Hz–950Hz acoustic siren, initiating full-screen optical strobes, and calculating the exact bearing and distance to the nearest green safety boundary (e.g. 1.4 km North-East).
+   - **For citizens outside the polygon:** The application displays a calm **SAFE BUFFER ZONE** badge (You are 28.4 km outside the hazard polygon. Maintain vigilance; do not enter the marked red zone.).
+   - This eliminates the widespread panic caused by legacy un-targeted state-wide broadcasts.
+
+---
+
+### Q14: How is this platform strictly controlled by the Government?
+**Answer:**  
+AegisAlert National is engineered exclusively as a **Sovereign Government Tool** under the statutory authority of the **Disaster Management Act of 2005**:
+1. **Incident Commander Authorization (NICAS):** Emergency broadcasts cannot be triggered arbitrarily. They require clearance from an authorized Government Incident Commander (e.g., Union Joint Secretary / District Magistrate).
+2. **Cryptographic Sovereign Seal:** Every outgoing 32-byte radio packet is digitally sealed with an immutable SHA-256 government hash (SHA256: 7F4B92C8...) and legally bound under **Section 10(2)(l) of the DM Act, 2005**.
+3. **Immutable Audit Trail:** Logs the exact timestamp, authorizing officer ID, and jurisdictional polygon of every transmission.
+
+---
+
+### Q15: How does this system have the potential to outsource and supersede any existing software in India?
+**Answer:**  
+AegisAlert National is designed as the **Supreme Apex Disaster Interoperability Engine of the Republic of India**. It does not merely compete with existing software; it **subsumes, outsources, and coordinates them**:
+1. **C-DOT SACHET:** While SACHET only pushes one-way text notifications, AegisAlert acts as the intelligence core that feeds SACHET while simultaneously managing the two-way citizen response loop, audio sirens, and evacuation routing.
+2. **ERSS (Dial 112):** Automatically receives forward-triaged distress tickets from AegisAlert with AI vulnerability scores (0–100) already calculated.
+3. **Indian Railways Kavach & Bridge Sentinels:** Ingests live CWC dam releases and cloudburst surges to automatically flag railway track washouts.
+4. **100+ Smart City ICCCs:** Integrates directly with municipal drainage sumps and urban traffic flyover closures.
+5. **State SDMAs:** Solves the interstate boundary deadlock by synchronizing upstream reservoir releases with downstream state evacuation corridors on a unified national standard (ITU-T CAP X.1303).

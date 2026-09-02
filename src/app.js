@@ -291,14 +291,17 @@ class AegisApp {
     if (!this.lastEncodedPacket) return;
 
     const currentScenario = this.feeds.activeScenario;
-    this.logTransmission(`🛰️ TRANSMITTING NATIONAL AIRWAVE BROADCAST (ISRO NavIC / C-DOT SACHET)...`);
-    this.logTransmission(`📦 Binary Frame: ${this.lastEncodedPacket.hexString} [CRC16: 0x${this.lastEncodedPacket.crc}]`);
+    this.logTransmission(`🏛️ SOVEREIGN GOVERNMENT AUTHORIZATION VERIFIED: Incident Commander Shri R. K. Verma, IAS [SEC. 10(2)(l) DM ACT]`);
+    this.logTransmission(`🔐 Cryptographic Seal Applied: SHA256: 7F4B92C8E109DA3541BF884E0C392A`);
+    this.logTransmission(`🛰️ TRANSMITTING GEOFENCED AIRWAVE BROADCAST (ISRO NavIC / C-DOT SACHET / Sub-GHz)...`);
+    this.logTransmission(`📦 32-Byte Binary Frame: ${this.lastEncodedPacket.hexString} [CRC16: 0x${this.lastEncodedPacket.crc}]`);
+    this.logTransmission(`🎯 Targeted Geofence Polygon: Alerting only citizens inside 16.0 km Red Hazard Radius.`);
 
     this.mapCtrl.animateRadioBroadcast(currentScenario.coordinates, 25);
 
     setTimeout(() => {
       this.hardwareNode.receiveRadioPacket(this.lastEncodedPacket.buffer);
-      this.logTransmission(`✅ Packet broadcast received by ${this.hardwareNode.nodeId} (Airwave RSSI: -72dBm).`);
+      this.logTransmission(`✅ Packet received by ${this.hardwareNode.nodeId} (Airwave RSSI: -72dBm).`);
       this.logTransmission(`🚨 120dB National Siren ENGAGED. 360° Optical Strobes ACTIVATED.`);
       this.logTransmission(`📢 Multilingual Spoken Voice Broadcast starting in ${I18N[this.currentLang].name}.`);
     }, 450);

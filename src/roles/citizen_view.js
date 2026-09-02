@@ -1,7 +1,7 @@
 /**
  * AegisAlert Citizen Survival Hub (Zero-Install Offline PWA)
- * 1-Tap Distress Beacon, Vernacular AI Voice SOS, and Safe Evacuation Routing
- * Synthesizes 120dB device sirens and full-screen optical strobes for zero-hardware survival.
+ * 1-Tap Distress Beacon, Vernacular AI Voice SOS, and Precision Geofenced Red Zone Alerting
+ * Only citizens within the active hazard polygon are alerted with high-decibel alarms and forced strobes.
  */
 
 export class CitizenView {
@@ -11,7 +11,7 @@ export class CitizenView {
     this.isRecordingVoice = false;
     this.recognition = null;
     this.audioCtx = null;
-    this.sirenInterval = null;
+    this.isInsideRedZone = true; // Default simulated inside for demo
     this.initSpeechRecognition();
   }
 
@@ -27,10 +27,41 @@ export class CitizenView {
   render(langData, currentScenario) {
     if (!this.container) return;
 
+    const hazardRadiusKm = 16.0;
+    const simulatedDistKm = this.isInsideRedZone ? 4.6 : 28.4;
+    const isInZone = simulatedDistKm <= hazardRadiusKm;
+
     this.container.innerHTML = `
       <div class="citizen-card-shell">
         
-        <!-- Offline Warning Bar -->
+        <!-- Precision Geofence Red Zone Status Card -->
+        <div class="geofence-alert-box ${isInZone ? 'geofence-breached-red' : 'geofence-safe-green'}">
+          <div class="geofence-header">
+            <span class="geofence-icon">${isInZone ? '🚨' : '🛡️'}</span>
+            <div>
+              <strong class="geofence-title">
+                ${isInZone ? 'CRITICAL GEOFENCE OVERRIDE: YOU ARE INSIDE THE RED ZONE!' : 'SAFE BUFFER ZONE: OUTSIDE ACTIVE HAZARD POLYGON'}
+              </strong>
+              <div class="geofence-desc">
+                ${isInZone 
+                  ? `Government Directive: Immediate evacuation mandatory. You are ${simulatedDistKm} km from ${currentScenario.title.split('(')[0].trim()} epicenter.` 
+                  : `You are safely ${simulatedDistKm} km away from active impact. Normal activities permitted; maintain vigilance.`}
+              </div>
+            </div>
+            <button id="btn-toggle-geofence" class="btn-toggle-geofence" title="Switch simulated location to demonstrate targeted alerting">
+              ${isInZone ? 'Simulate Outside Zone' : 'Simulate Inside Red Zone'}
+            </button>
+          </div>
+
+          ${isInZone ? `
+            <div class="geofence-escape-guidance">
+              <span>🏃 <strong>Immediate Escape Vector:</strong> Move 035° North-East away from riverbed/slope.</span>
+              <span class="distance-to-safety">Safe Green Boundary: <strong>1.4 km</strong></span>
+            </div>
+          ` : ''}
+        </div>
+
+        <!-- Offline Status Bar -->
         <div class="offline-badge-bar">
           <span>📡 ${langData.offlineNotice}</span>
           <span style="color:#10b981;">● GPS: ${currentScenario.coordinates[0].toFixed(4)}°N, ${currentScenario.coordinates[1].toFixed(4)}°E (High Precision)</span>
@@ -38,7 +69,7 @@ export class CitizenView {
 
         <!-- Big Red 1-Tap SOS Distress Button -->
         <div class="sos-action-center">
-          <button id="btn-citizen-sos" class="btn-mega-sos" title="Broadcast emergency GPS coordinates to NDRF and sound local alarm">
+          <button id="btn-citizen-sos" class="btn-mega-sos ${isInZone ? 'sos-pulsing-urgent' : ''}" title="Broadcast emergency GPS coordinates to NDRF and sound local alarm">
             <span class="sos-icon">🆘</span>
             <span class="sos-label">${langData.sosButton}</span>
             <span class="sos-sublabel">TRANSMITS GPS • SENSORY STROBE • LOCAL SIREN WAIL</span>
@@ -73,7 +104,7 @@ export class CitizenView {
             <div class="shelter-info">
               <div class="shelter-name">${currentScenario.preJudgement.safeShelter}</div>
               <div class="shelter-meta">Distance: <strong>1.2 km</strong> • Safe Walking Time: <strong>15 mins</strong></div>
-              <div class="safe-path-tag">✅ Designated Safe Highland Route • Avoids Low-Lying Estuary Bridges</div>
+              <div class="safe-path-tag">✅ Designated Safe Highland Route • Avoids Red Hazard Polygon</div>
             </div>
             <div class="compass-bearing">
               <div class="bearing-arrow">↗️</div>
@@ -89,29 +120,39 @@ export class CitizenView {
   }
 
   bindEvents(langData, currentScenario) {
+    // 1. Geofence toggle simulation button
+    const btnToggleGeo = document.getElementById("btn-toggle-geofence");
+    if (btnToggleGeo) {
+      btnToggleGeo.addEventListener("click", () => {
+        this.isInsideRedZone = !this.isInsideRedZone;
+        this.render(langData, currentScenario);
+        if (this.isInsideRedZone) {
+          this.flashScreenEmergency();
+          this.startDeviceSiren();
+        }
+      });
+    }
+
+    // 2. 1-Tap SOS button
     const btnSos = document.getElementById("btn-citizen-sos");
     if (btnSos) {
       btnSos.addEventListener("click", () => {
         btnSos.classList.add("sos-activated");
         btnSos.querySelector(".sos-label").textContent = langData.sosTriggered;
         
-        // 1. Trigger Full Screen Emergency Strobe for visibility in storms
         this.flashScreenEmergency();
-
-        // 2. Synthesize audio siren through phone speakers via Web Audio API
         this.startDeviceSiren();
 
-        // 3. Dispatch SOS ticket to NDRF Responders
         if (this.onSosTriggered) {
           this.onSosTriggered({
             id: `SOS-CITIZEN-${Math.floor(1000 + Math.random() * 9000)}`,
             name: `Citizen Distress Alert (${currentScenario.title.split("&")[0].trim()})`,
-            location: `${currentScenario.coordinates[0].toFixed(4)}°N, ${currentScenario.coordinates[1].toFixed(4)}°E`,
+            location: `${currentScenario.coordinates[0].toFixed(4)}°N, ${currentScenario.coordinates[1].toFixed(4)}°E (Inside Red Zone)`,
             coordinates: currentScenario.coordinates,
-            triageScore: 96,
+            triageScore: 98,
             priority: "CRITICAL",
             peopleTrapped: 4,
-            category: "RISING WATER / ROOFTOP STRANDED",
+            category: "GEOFENCED RED ZONE EVACUATION",
             forcesRequired: "NDRF Zodiac + IAF Chopper",
             time: "Just now",
             status: "DISPATCHED"
@@ -120,6 +161,7 @@ export class CitizenView {
       });
     }
 
+    // 3. Voice mic and transcription
     const btnMic = document.getElementById("btn-voice-mic");
     const inputTranscript = document.getElementById("voice-transcript-input");
     const btnSubmit = document.getElementById("btn-submit-voice-sos");
@@ -161,60 +203,54 @@ export class CitizenView {
     }
   }
 
-  /**
-   * Vernacular Speech Parser: Extracts victim counts and critical medical keywords across 8 Indian languages
-   */
   parseVoiceSOS(transcript, currentScenario) {
     const triageCard = document.getElementById("voice-triage-preview");
     if (!triageCard) return;
 
     let score = 70;
-    let category = "Flood Extraction";
+    let category = "Red Zone Distress";
     const lower = transcript.toLowerCase();
 
-    // 1. Infants / Children across Indian languages
     if (
       lower.includes("child") || lower.includes("baby") || lower.includes("infant") ||
-      lower.includes("बच्चा") || lower.includes("शिशु") || // Hindi
-      lower.includes("ল'ৰা") || lower.includes("শিশু") || // Assamese
-      lower.includes("বাচ্চা") || // Bengali
-      lower.includes("बाळ") || lower.includes("मुलगा") || // Marathi
-      lower.includes("పిల్లలు") || // Telugu
-      lower.includes("குழந்தை") || // Tamil
-      lower.includes("બાળક") // Gujarati
+      lower.includes("बच्चा") || lower.includes("शिशु") ||
+      lower.includes("ল'ৰা") || lower.includes("শিশু") ||
+      lower.includes("বাচ্চা") ||
+      lower.includes("बाळ") || lower.includes("मुलगा") ||
+      lower.includes("పిల్లలు") ||
+      lower.includes("குழந்தை") ||
+      lower.includes("બાળક")
     ) {
       score += 15;
-      category = "Infants & Children at Severe Risk";
+      category = "Infants & Children in Danger";
     }
 
-    // 2. Elderly / Pregnant / Injured
     if (
       lower.includes("elderly") || lower.includes("pregnant") || lower.includes("injured") || lower.includes("blood") ||
-      lower.includes("बुजुर्ग") || lower.includes("गर्भवती") || lower.includes("घायल") || // Hindi
-      lower.includes("বৃদ্ধ") || lower.includes("আহত") || // Assamese
-      lower.includes("বয়স্ক") || lower.includes("গর্ভবতী") || // Bengali
-      lower.includes("म्हातारे") || lower.includes("जखमी") || // Marathi
-      lower.includes("ముసలి") || lower.includes("గాయపడ్డారు") || // Telugu
-      lower.includes("முதியவர்") || lower.includes("காயமடைந்த") || // Tamil
-      lower.includes("વૃદ્ધ") || lower.includes("ઈજાગ્રસ્ત") // Gujarati
+      lower.includes("बुजुर्ग") || lower.includes("गर्भवती") || lower.includes("घायल") ||
+      lower.includes("বৃদ্ধ") || lower.includes("আহত") ||
+      lower.includes("বয়স্ক") || lower.includes("গর্ভবতী") ||
+      lower.includes("म्हातारे") || lower.includes("जखमी") ||
+      lower.includes("ముసలి") || lower.includes("గాయపడ్డారు") ||
+      lower.includes("முதியவர்") || lower.includes("காயமடைந்த") ||
+      lower.includes("વૃદ્ધ") || lower.includes("ઈજાગ્રસ્ત")
     ) {
       score += 15;
       category = "High-Priority Medical Trauma";
     }
 
-    // 3. Rooftop / Cutoff
     if (
       lower.includes("roof") || lower.includes("trapped") || lower.includes("drowning") || lower.includes("water inside") ||
-      lower.includes("छत") || lower.includes("फंसे") || lower.includes("पानी भर गया") || // Hindi
-      lower.includes("ছাদ") || lower.includes("আৱদ্ধ") || lower.includes("পানী সোমাইছে") || // Assamese
-      lower.includes("ছাদে") || lower.includes("আটকে আছি") || // Bengali
-      lower.includes("अडकलो") || lower.includes("पाणी शिरले") || // Marathi
-      lower.includes("ఇరుక్కుపోయాం") || lower.includes("పైకప్పు") || // Telugu
-      lower.includes("மாட்டிவிட்டோம்") || lower.includes("கூரை") || // Tamil
-      lower.includes("ફસાયેલા") // Gujarati
+      lower.includes("छत") || lower.includes("फंसे") || lower.includes("पानी भर गया") ||
+      lower.includes("ছাদ") || lower.includes("আৱদ্ধ") || lower.includes("পানী সোমাইছে") ||
+      lower.includes("ছাদে") || lower.includes("আটকে আছি") ||
+      lower.includes("अडकलो") || lower.includes("पाणी शिरले") ||
+      lower.includes("ఇరుక్కుపోయాం") || lower.includes("పైకప్పు") ||
+      lower.includes("மாட்டிவிட்டோம்") || lower.includes("கூரை") ||
+      lower.includes("ફસાયેલા")
     ) {
       score += 10;
-      category = "Rooftop Air-Extraction Required";
+      category = "Rooftop / Mudflow Entrapment";
     }
 
     score = Math.min(score, 100);
@@ -233,7 +269,7 @@ export class CitizenView {
       this.onSosTriggered({
         id: `VOICE-SOS-${Math.floor(1000 + Math.random() * 9000)}`,
         name: "Vernacular Voice Distress Signal",
-        location: `${currentScenario.coordinates[0].toFixed(4)}°N, ${currentScenario.coordinates[1].toFixed(4)}°E`,
+        location: `${currentScenario.coordinates[0].toFixed(4)}°N, ${currentScenario.coordinates[1].toFixed(4)}°E (Red Zone)`,
         coordinates: currentScenario.coordinates,
         triageScore: score,
         priority: score >= 90 ? "CRITICAL" : "HIGH",
@@ -247,9 +283,6 @@ export class CitizenView {
     }
   }
 
-  /**
-   * Generates a 120dB civil defense siren tone using the client's Web Audio API
-   */
   startDeviceSiren() {
     try {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -292,9 +325,6 @@ export class CitizenView {
     }
   }
 
-  /**
-   * Optical strobe light for deaf citizens or night rescue
-   */
   flashScreenEmergency() {
     const flashEl = document.createElement("div");
     flashEl.className = "full-screen-emergency-strobe";
