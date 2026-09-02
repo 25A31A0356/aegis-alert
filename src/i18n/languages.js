@@ -1,0 +1,103 @@
+/**
+ * AegisAlert Vernacular Multilingual Translation Engine
+ * Smart India Hackathon (SIH) Multidisciplinary Accessibility Module
+ * Supports: English, Hindi, Telugu, Tamil, Bengali
+ */
+
+export const I18N = {
+  en: {
+    name: "English",
+    systemTitle: "Autonomous Disaster Early Warning & Life-Saving System",
+    roleCitizen: "Citizen Survival Hub",
+    roleWarRoom: "Command War Room",
+    roleResponder: "NDRF / First Responder",
+    roleHospital: "Shelter & Hospital Hub",
+    sosButton: "1-TAP EMERGENCY SOS",
+    sosTriggered: "SOS TRANSMITTED! RESCUE DISPATCHED",
+    voiceSosPrompt: "Hold mic and speak in your language (e.g., 'Water inside house, 4 family members trapped')...",
+    safeRoute: "Safe Evacuation Path",
+    offlineNotice: "OFFLINE MODE ACTIVE • Telemetry cached locally",
+    evacuateNow: "IMMEDIATE EVACUATION DIRECTED! Move to designated high ground.",
+    shelterNear: "Nearest Safe Relief Camp",
+    bedsAvailable: "Beds Available",
+    waterRations: "Drinking Water (Liters)",
+    bloodUnits: "Emergency Blood Units",
+    triagePriority: "Vulnerability Triage Score"
+  },
+  hi: {
+    name: "हिंदी (Hindi)",
+    systemTitle: "स्वायत्त आपदा पूर्व चेतावनी एवं जीवन-रक्षक प्रणाली",
+    roleCitizen: "नागरिक सुरक्षा हब",
+    roleWarRoom: "कमांड वॉर रूम",
+    roleResponder: "एनडीआरएफ / बचाव दल",
+    roleHospital: "राहत शिविर एवं अस्पताल",
+    sosButton: "आपातकालीन एसओएस (मदद चाहिए)",
+    sosTriggered: "एसओएस भेजा गया! बचाव दल रवाना",
+    voiceSosPrompt: "माइक दबाकर अपनी भाषा में बोलें (जैसे: 'घर में पानी भर गया है, 4 लोग फंसे हैं')...",
+    safeRoute: "सुरक्षित निकासी मार्ग",
+    offlineNotice: "ऑफलाइन मोड सक्रिय • डेटा सुरक्षित संग्रहीत",
+    evacuateNow: "तत्काल निकासी का आदेश! ऊंचे स्थान पर जाएं।",
+    shelterNear: "निकटतम सुरक्षित राहत शिविर",
+    bedsAvailable: "उपलब्ध बिस्तर",
+    waterRations: "पेयजल (लीटर)",
+    bloodUnits: "आपातकालीन रक्त यूनिट",
+    triagePriority: "प्राथमिकता स्कोर"
+  },
+  te: {
+    name: "తెలుగు (Telugu)",
+    systemTitle: "స్వయంప్రతిపత్తి విపత్తు ముందస్తు హెచ్చరిక & రక్షణ వ్యవస్థ",
+    roleCitizen: "పౌర రక్షణ కేంద్రం",
+    roleWarRoom: "కమాండ్ వార్ రూమ్",
+    roleResponder: "ఎన్డీఆర్ఎఫ్ / రక్షక దళం",
+    roleHospital: "పునరావాస శిబిరం & ఆసుపత్రి",
+    sosButton: "అత్యవసర SOS (సహాయం కావాలి)",
+    sosTriggered: "SOS పంపబడింది! రక్షణ బృందం బయలుదేరింది",
+    voiceSosPrompt: "మైక్ నొక్కి మాట్లాడండి (ఉదా: 'ఇంట్లోకి నీరు వచ్చింది, 4 మంది చిక్కుకున్నారు')...",
+    safeRoute: "సురక్షిత తరలింపు మార్గం",
+    offlineNotice: "ఆఫ్‌లైన్ మోడ్ సక్రియంగా ఉంది",
+    evacuateNow: "తక్షణమే ఖాళీ చేయండి! ఎత్తైన ప్రదేశానికి వెళ్ళండి.",
+    shelterNear: "సమీప పునరావాస కేంద్రం",
+    bedsAvailable: "అందుబాటులో ఉన్న పడకలు",
+    waterRations: "మంచినీరు (లీటర్లు)",
+    bloodUnits: "రక్తం యూనిట్లు",
+    triagePriority: "ప్రాధాన్యత స్కోరు"
+  },
+  ta: {
+    name: "தமிழ் (Tamil)",
+    systemTitle: "தன்னாட்சி பேரிடர் முன் எச்சரிக்கை மற்றும் பாதுகாப்பு அமைப்பு",
+    roleCitizen: "குடிமக்கள் பாதுகாப்பு மையம்",
+    roleWarRoom: "கட்டளை அறை",
+    roleResponder: "மீட்புக் குழு",
+    roleHospital: "நிவாரண முகாம் & மருத்துவமனை",
+    sosButton: "அவசர SOS உதவி",
+    sosTriggered: "SOS அனுப்பப்பட்டது! மீட்புக் குழு விரைந்துள்ளது",
+    voiceSosPrompt: "மைக் அழுத்தி பேசவும் (எ.கா: 'வீட்டில் வெள்ள நீர் புகுந்தது, 4 பேர் சிக்கியுள்ளனர்')...",
+    safeRoute: "பாதுகாப்பான வெளியேற்ற பாதை",
+    offlineNotice: "ஆஃப்லைன் பயன்முறை செயலில் உள்ளது",
+    evacuateNow: "உடனடியாக வெளியேறவும்! உயரமான இடத்திற்கு செல்லவும்.",
+    shelterNear: "அருகிலுள்ள நிவாரண முகாம்",
+    bedsAvailable: "கிடைக்கும் படுக்கைகள்",
+    waterRations: "குடிநீர் (லிட்டர்)",
+    bloodUnits: "இரத்த அலகுகள்",
+    triagePriority: "முன்னுரிமை மதிப்பீடு"
+  },
+  bn: {
+    name: "বাংলা (Bengali)",
+    systemTitle: "স্বয়ংক্রিয় দুর্যোগ পূর্ব সতর্কতা ও জীবন রক্ষা ব্যবস্থা",
+    roleCitizen: "নাগরিক সুরক্ষা হাব",
+    roleWarRoom: "কমান্ড ওয়ার রুম",
+    roleResponder: "উদ্ধারকারী দল",
+    roleHospital: "ত্রাণ শিবির ও হাসপাতাল",
+    sosButton: "জরুরী এসওএস (সাহায্য চাই)",
+    sosTriggered: "এসওএস পাঠানো হয়েছে! উদ্ধারকারী দল আসছে",
+    voiceSosPrompt: "মাইক চেপে কথা বলুন (যেমন: 'বাড়িতে জল ঢুকেছে, ৪ জন আটকে আছি')...",
+    safeRoute: "নিরাপদ স্থানান্তর রুট",
+    offlineNotice: "অফলাইন মোড সক্রিয় রয়েছে",
+    evacuateNow: "অবিলম্বে নিরাপদ আশ্রয়ে যান!",
+    shelterNear: "নিকটবর্তী ত্রাণ শিবির",
+    bedsAvailable: "উপলব্ধ শয্যা",
+    waterRations: "পানীয় জল (লিটার)",
+    bloodUnits: "জরুরী রক্ত ইউনিট",
+    triagePriority: "জরুরী অগ্রাধিকার স্কোর"
+  }
+};

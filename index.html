@@ -3,8 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AegisAlert | Cyber-Physical Zero-Internet Disaster Early Warning System</title>
-  <meta name="description" content="Autonomous Cyber-Physical Disaster Early Warning & Life-Saving System for Smart India Hackathon. Operates with Zero Internet and Zero Cellular Coverage.">
+  <title>AegisAlert | Multidisciplinary Disaster Early Warning & Life-Saving System</title>
+  <meta name="description" content="Autonomous Multidisciplinary Disaster Early Warning & Life-Saving Platform for Smart India Hackathon. Operates with Zero-Internet and 100% Offline PWA.">
+
+  <!-- Progressive Web App Manifest -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0284c7">
 
   <!-- Leaflet Tactical GIS Map CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
@@ -19,163 +23,215 @@
     <div class="brand-section">
       <div class="brand-badge">🛡️</div>
       <div class="brand-text">
-        <h1>AEGISALERT <span class="brand-tag">SIH NATIONAL EDITION</span></h1>
-        <p>Autonomous Cyber-Physical Disaster Early Warning & Life-Saving Platform</p>
+        <h1 id="app-heading">AEGISALERT <span class="brand-tag">SIH MULTIDISCIPLINARY EDITION</span></h1>
+        <p id="app-subheading">Autonomous Disaster Early Warning & Life-Saving Ecosystem</p>
       </div>
     </div>
 
-    <div class="system-status-pills">
-      <div class="status-chip" title="Direct satellite downlink and Sub-GHz radio propagation">
-        <span class="indicator-dot"></span>
-        <span>RF: 868.1 MHz LoRa & NavIC S-Band</span>
+    <!-- Vernacular Language & Status Bar -->
+    <div class="header-controls">
+      <!-- Language Selector -->
+      <div class="lang-selector-group">
+        <span class="lang-globe-icon">🌐</span>
+        <select id="lang-select" class="styled-lang-select" title="Change Language / भाषा बदलें">
+          <option value="en">English</option>
+          <option value="hi">हिंदी (Hindi)</option>
+          <option value="te">తెలుగు (Telugu)</option>
+          <option value="ta">தமிழ் (Tamil)</option>
+          <option value="bn">বাংলা (Bengali)</option>
+        </select>
       </div>
+
       <div class="status-chip" id="live-feed-status">
         <span class="indicator-dot"></span>
-        <span>IMD / CWC / NCS Real-Time Telemetry</span>
+        <span>IMD / CWC / NCS Real-Time Feeds</span>
       </div>
     </div>
   </header>
+
+  <!-- ====================================================================
+       MULTIDISCIPLINARY ROLE SWITCHER BAR (4 CORE STAKEHOLDERS)
+       ==================================================================== -->
+  <nav class="role-nav-bar">
+    <button class="role-tab active" data-tab="war-room">
+      <span class="role-icon">🏛️</span>
+      <span class="role-name" id="tab-label-warroom">Command War Room</span>
+      <span class="role-sub">EOC / District Magistrate</span>
+    </button>
+
+    <button class="role-tab" data-tab="citizen">
+      <span class="role-icon">🧑‍🤝‍🧑</span>
+      <span class="role-name" id="tab-label-citizen">Citizen Survival Hub</span>
+      <span class="role-sub">1-Tap SOS • Offline PWA</span>
+    </button>
+
+    <button class="role-tab" data-tab="responder">
+      <span class="role-icon">🚑</span>
+      <span class="role-name" id="tab-label-responder">NDRF / Quick Response</span>
+      <span class="role-sub">Live Rescue & Triage</span>
+    </button>
+
+    <button class="role-tab" data-tab="shelter">
+      <span class="role-icon">🏥</span>
+      <span class="role-name" id="tab-label-shelter">Relief Camp & Hospital</span>
+      <span class="role-sub">Beds, Water & Blood</span>
+    </button>
+  </nav>
 
   <!-- Main Dual-Console Layout -->
   <main class="main-layout">
 
     <!-- ====================================================================
-         LEFT COLUMN: National Command War Room & Ingestion Engine
+         LEFT COLUMN: Multidisciplinary Dynamic Workspace
          ==================================================================== -->
     <section class="war-room-col">
 
-      <!-- Scenario Selector & Live Ingestion Bar -->
-      <div class="panel-card accent-top">
-        <div class="scenario-bar">
-          <div class="selector-group">
-            <label for="scenario-select" class="selector-label">CRISIS SCENARIO:</label>
-            <select id="scenario-select" class="styled-select">
-              <option value="wayanad_flash_flood">🌊 Wayanad Cloudburst & Dam Overflow (Kerala)</option>
-              <option value="assam_brahmaputra_surge">🌊 Brahmaputra River Inundation (Tezpur, Assam)</option>
-              <option value="odisha_super_cyclone">🌀 Bay of Bengal Super Cyclone Landfall (Puri, Odisha)</option>
-              <option value="himalayan_seismic_event">⚡ Main Boundary Thrust Seismic Event (Uttarkashi)</option>
-            </select>
+      <!-- TAB 1: Government Command War Room -->
+      <div id="view-war-room" class="role-view active">
+        <!-- Scenario Selector & Live Ingest Bar -->
+        <div class="panel-card accent-top" style="margin-bottom: 20px;">
+          <div class="scenario-bar">
+            <div class="selector-group">
+              <label for="scenario-select" class="selector-label">CRISIS SCENARIO:</label>
+              <select id="scenario-select" class="styled-select">
+                <option value="wayanad_flash_flood">🌊 Wayanad Cloudburst & Dam Overflow (Kerala)</option>
+                <option value="assam_brahmaputra_surge">🌊 Brahmaputra River Inundation (Tezpur, Assam)</option>
+                <option value="odisha_super_cyclone">🌀 Bay of Bengal Super Cyclone Landfall (Puri, Odisha)</option>
+                <option value="himalayan_seismic_event">⚡ Main Boundary Thrust Seismic Event (Uttarkashi)</option>
+              </select>
+            </div>
+            <div class="live-feed-banner">
+              <span>DATA INGEST: <strong style="color:var(--accent-blue);">GOVT OF INDIA REAL-TIME RADAR</strong></span>
+            </div>
           </div>
-          <div class="live-feed-banner">
-            <span>DATA SOURCE: <strong style="color:var(--accent-blue);">GOVT OF INDIA REAL-TIME INGESTION</strong></span>
+        </div>
+
+        <!-- Predictive Risk Meter & Telemetry Overview -->
+        <div class="panel-card" style="margin-bottom: 20px;">
+          <div class="card-header">
+            <span class="card-title">
+              <span class="card-title-icon">📊</span>
+              Predictive Hazard Index & Damage-Prevention Pre-Judgment
+            </span>
+            <span id="scenario-title" style="font-size: 0.8rem; font-weight: 700; color: var(--accent-blue);">Wayanad Cloudburst (Kerala)</span>
           </div>
+
+          <div class="risk-overview-grid">
+            <div class="risk-gauge-box">
+              <span class="risk-label-sub">Hazard Threat Score</span>
+              <div id="risk-score-value" class="risk-score-big">92/100</div>
+              <div id="risk-level-badge" class="risk-badge" style="background-color: var(--accent-red);">CODE RED</div>
+              <div class="meter-track">
+                <div id="risk-meter-bar" class="meter-fill"></div>
+              </div>
+            </div>
+
+            <div class="telemetry-right">
+              <div class="telemetry-metrics-grid">
+                <div class="metric-cell">
+                  <span class="metric-cell-label">Rainfall Rate</span>
+                  <div id="val-rain" class="metric-cell-val">68.4 mm/hr</div>
+                </div>
+                <div class="metric-cell">
+                  <span class="metric-cell-label">River Gauge</span>
+                  <div id="val-river" class="metric-cell-val">19.8 m (Danger)</div>
+                </div>
+                <div class="metric-cell">
+                  <span class="metric-cell-label">Dam Storage</span>
+                  <div id="val-dam" class="metric-cell-val">94.2% Capacity</div>
+                </div>
+                <div class="metric-cell">
+                  <span class="metric-cell-label">Wind / Shock</span>
+                  <div id="val-wind" class="metric-cell-val">42 km/h</div>
+                </div>
+              </div>
+
+              <div class="prediction-box">
+                <div class="prediction-header">
+                  <span>⏱️ PRE-JUDGMENT:</span>
+                  <span id="val-breach-time">~40 Minutes Until Embankment Breach</span>
+                  <span>• At-Risk: <strong id="val-population">34,200 Citizens</strong></span>
+                </div>
+                <div id="val-prevention-action" class="prediction-body">
+                  Mandatory release of 20,000 cusecs from Banasura Sagar Dam. Evacuate Meppadi and Chooralmala riverbanks within 30 minutes.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tactical GIS India Command Map -->
+        <div class="panel-card" style="margin-bottom: 20px;">
+          <div class="card-header">
+            <span class="card-title">
+              <span class="card-title-icon">🗺️</span>
+              Geospatial Hazard Geofencing & Deployed AegisBeacon Network
+            </span>
+            <span style="font-size:0.75rem; color:var(--text-muted);">Satellite Terrain Base • Turf Geofencing</span>
+          </div>
+
+          <div class="gis-map-wrapper">
+            <div id="gis-map"></div>
+            <div class="map-floating-legend">
+              <div class="legend-row">
+                <div class="legend-box" style="background:#ef4444; opacity:0.6;"></div>
+                <span>Red Hazard Zone (Immediate Evacuation)</span>
+              </div>
+              <div class="legend-row">
+                <div class="legend-box" style="background:#10b981;"></div>
+                <span>Deployed AegisBeacon (Zero-Internet Station)</span>
+              </div>
+              <div class="legend-row">
+                <div class="legend-box" style="background:#38bdf8;"></div>
+                <span>Designated High-Ground Relief Center</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Standard Operating Procedures (SOPs) -->
+        <div class="panel-card">
+          <div class="card-header">
+            <span class="card-title">
+              <span class="card-title-icon">📋</span>
+              District Collector Damage-Prevention Action Protocols (SOPs)
+            </span>
+            <span style="font-size:0.75rem; color:var(--accent-amber);">NDMA Standard Guidelines</span>
+          </div>
+          <ul id="sop-list" class="sop-list"></ul>
         </div>
       </div>
 
-      <!-- Predictive Risk Meter & Telemetry Overview -->
-      <div class="panel-card">
-        <div class="card-header">
-          <span class="card-title">
-            <span class="card-title-icon">📊</span>
-            Predictive Hazard Index & Damage-Prevention Pre-Judgment
-          </span>
-          <span id="scenario-title" style="font-size: 0.8rem; font-weight: 700; color: var(--accent-blue);">Wayanad Cloudburst (Kerala)</span>
-        </div>
-
-        <div class="risk-overview-grid">
-          <div class="risk-gauge-box">
-            <span class="risk-label-sub">Hazard Threat Score</span>
-            <div id="risk-score-value" class="risk-score-big">92/100</div>
-            <div id="risk-level-badge" class="risk-badge" style="background-color: var(--accent-red);">CODE RED</div>
-            <div class="meter-track">
-              <div id="risk-meter-bar" class="meter-fill"></div>
-            </div>
-          </div>
-
-          <div class="telemetry-right">
-            <!-- 4-Cell Telemetry Grid -->
-            <div class="telemetry-metrics-grid">
-              <div class="metric-cell">
-                <span class="metric-cell-label">Rainfall Rate</span>
-                <div id="val-rain" class="metric-cell-val">68.4 mm/hr</div>
-              </div>
-              <div class="metric-cell">
-                <span class="metric-cell-label">River Gauge</span>
-                <div id="val-river" class="metric-cell-val">19.8 m (Danger)</div>
-              </div>
-              <div class="metric-cell">
-                <span class="metric-cell-label">Dam Storage</span>
-                <div id="val-dam" class="metric-cell-val">94.2% Capacity</div>
-              </div>
-              <div class="metric-cell">
-                <span class="metric-cell-label">Wind / Shock</span>
-                <div id="val-wind" class="metric-cell-val">42 km/h</div>
-              </div>
-            </div>
-
-            <!-- Pre-Judgment Damage Prevention Box -->
-            <div class="prediction-box">
-              <div class="prediction-header">
-                <span>⏱️ PRE-JUDGMENT:</span>
-                <span id="val-breach-time">~40 Minutes Until Embankment Breach</span>
-                <span>• At-Risk: <strong id="val-population">34,200 Citizens</strong></span>
-              </div>
-              <div id="val-prevention-action" class="prediction-body">
-                Mandatory release of 20,000 cusecs from Banasura Sagar Dam. Evacuate Meppadi and Chooralmala riverbanks within 30 minutes.
-              </div>
-            </div>
-          </div>
-        </div>
+      <!-- TAB 2: Citizen Survival Hub (Offline PWA) -->
+      <div id="view-citizen" class="role-view">
+        <div id="citizen-mount-point"></div>
       </div>
 
-      <!-- Tactical GIS India Command Map -->
-      <div class="panel-card">
-        <div class="card-header">
-          <span class="card-title">
-            <span class="card-title-icon">🗺️</span>
-            Geospatial Hazard Geofencing & Deployed AegisBeacon Network
-          </span>
-          <span style="font-size:0.75rem; color:var(--text-muted);">Satellite Terrain Base • Turf Geofencing</span>
-        </div>
-
-        <div class="gis-map-wrapper">
-          <div id="gis-map"></div>
-          <div class="map-floating-legend">
-            <div class="legend-row">
-              <div class="legend-box" style="background:#ef4444; opacity:0.6;"></div>
-              <span>Red Hazard Zone (Immediate Evacuation)</span>
-            </div>
-            <div class="legend-row">
-              <div class="legend-box" style="background:#10b981;"></div>
-              <span>Deployed AegisBeacon (Zero-Internet Pole)</span>
-            </div>
-            <div class="legend-row">
-              <div class="legend-box" style="background:#38bdf8;"></div>
-              <span>Designated High-Ground Relief Center</span>
-            </div>
-          </div>
-        </div>
+      <!-- TAB 3: NDRF / First Responder Tactical View -->
+      <div id="view-responder" class="role-view">
+        <div id="responder-mount-point"></div>
       </div>
 
-      <!-- Standard Operating Procedures (SOPs) -->
-      <div class="panel-card">
-        <div class="card-header">
-          <span class="card-title">
-            <span class="card-title-icon">📋</span>
-            District Collector Damage-Prevention Action Protocols (SOPs)
-          </span>
-          <span style="font-size:0.75rem; color:var(--accent-amber);">NDMA Standard Guidelines</span>
-        </div>
-        <ul id="sop-list" class="sop-list">
-          <!-- Dynamically populated by risk_engine.js -->
-        </ul>
+      <!-- TAB 4: Relief Camp & Hospital Resource Command -->
+      <div id="view-shelter" class="role-view">
+        <div id="shelter-mount-point"></div>
       </div>
 
     </section>
 
     <!-- ====================================================================
-         RIGHT COLUMN: Virtual Autonomous Physical AegisBeacon Unit
+         RIGHT COLUMN: Zero-Internet Alert Simulator & Airwave Broadcast Unit
          ==================================================================== -->
     <section class="hardware-col">
 
-      <!-- Physical Mast Hardware Simulator Panel -->
+      <!-- Physical Station Simulator Panel -->
       <div class="hardware-visualizer-box">
         <div class="hw-header-bar">
           <div class="hw-title">
             <span>📡</span>
             <div>
-              <div>AEGISBEACON POLE #01</div>
-              <div style="font-size:0.72rem; color:var(--text-secondary); font-weight:400;">Meppadi Riverfront Mast (Offline Field Unit)</div>
+              <div>AUTONOMOUS ALERT STATION</div>
+              <div style="font-size:0.72rem; color:var(--text-secondary); font-weight:400;">Field Siren Mast #01 (Zero-Internet Simulator)</div>
             </div>
           </div>
           <span id="hw-status-pill" class="status-pill standby">STANDBY</span>
@@ -265,10 +321,10 @@
         </div>
         <div id="transmission-log" class="transmission-console">
           <div class="log-entry">
-            <span class="log-time">[BOOT]</span> AegisAlert Sub-GHz Airwave Daemon initialized on 868.1 MHz.
+            <span class="log-time">[BOOT]</span> AegisAlert Multidisciplinary Platform initialized.
           </div>
           <div class="log-entry">
-            <span class="log-time">[BOOT]</span> ISRO NavIC S-Band messaging receiver online. Zero-Internet ready.
+            <span class="log-time">[BOOT]</span> PWA Offline Engine active. Languages loaded (EN, HI, TE, TA, BN).
           </div>
         </div>
       </div>
@@ -288,7 +344,7 @@
       </div>
 
       <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 12px;">
-        Transmitted over 868.1 MHz LoRa airwaves and NavIC S-Band satellite messaging. Guaranteed delivery without telecom networks or internet.
+        Transmitted over 868.1 MHz Sub-GHz airwaves and NavIC satellite messaging. Guaranteed delivery without telecom networks or internet.
       </p>
 
       <div class="raw-hex-box" id="packet-hex-display">
@@ -304,9 +360,7 @@
             <th>Decoded Description</th>
           </tr>
         </thead>
-        <tbody id="packet-breakdown-rows">
-          <!-- Dynamically populated by app.js -->
-        </tbody>
+        <tbody id="packet-breakdown-rows"></tbody>
       </table>
     </div>
   </div>
@@ -316,6 +370,17 @@
   
   <!-- Master Application Script -->
   <script type="module" src="src/app.js"></script>
+
+  <!-- PWA Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('[PWA] Service Worker registered:', reg.scope))
+          .catch(err => console.warn('[PWA] Service Worker registration failed:', err));
+      });
+    }
+  </script>
 
 </body>
 </html>

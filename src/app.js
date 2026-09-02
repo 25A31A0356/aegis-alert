@@ -1,44 +1,98 @@
 /**
  * AegisAlert Master Application Orchestrator
- * Connects Government Command War Room, Risk AI, GIS Map, Radio Protocol, and Hardware Node.
+ * Multidisciplinary SIH Edition
+ * Coordinates Command War Room, Citizen Hub, NDRF Responders, and Relief Shelters.
  */
 
 import { CONFIG } from "./config.js";
+import { I18N } from "./i18n/languages.js";
 import { OfficialFeeds } from "./telemetry/official_feeds.js";
 import { RiskEngine } from "./telemetry/risk_engine.js";
 import { RadioProtocol } from "./transmission/radio_protocol.js";
 import { BeaconNode } from "./hardware_sim/beacon_node.js";
 import { MapController } from "./ui/map_controller.js";
+import { CitizenView } from "./roles/citizen_view.js";
+import { ResponderView } from "./roles/responder_view.js";
+import { ShelterView } from "./roles/shelter_view.js";
 
 class AegisApp {
   constructor() {
+    this.currentLang = "en";
+    this.currentRole = "war-room";
+
     this.feeds = new OfficialFeeds();
-    this.hardwareNode = new BeaconNode("BEACON-KL-01", "Meppadi Riverfront Alert Mast");
+    this.hardwareNode = new BeaconNode("BEACON-KL-01", "Meppadi Riverfront Mast");
     this.mapCtrl = new MapController("gis-map");
     this.lastEncodedPacket = null;
+
+    // Multidisciplinary Sub-Views
+    this.citizenView = null;
+    this.responderView = null;
+    this.shelterView = null;
   }
 
   async init() {
-    console.log("Initializing AegisAlert Autonomous Warning System...");
+    console.log("Initializing AegisAlert Multidisciplinary Disaster Ecosystem...");
 
     // 1. Initialize Map
     this.mapCtrl.initMap();
 
-    // 2. Setup UI Event Listeners
+    // 2. Initialize Sub-Views
+    this.initMultidisciplinaryViews();
+
+    // 3. Setup UI Event Listeners & Role Switcher
     this.setupEventListeners();
 
-    // 3. Subscribe Hardware Node updates to update the physical unit DOM
+    // 4. Subscribe Hardware Node updates
     this.hardwareNode.subscribe(state => this.renderHardwareNode(state));
 
-    // 4. Initial Scenario Load (Wayanad)
+    // 5. Initial Scenario Load (Wayanad)
     this.loadScenario("wayanad_flash_flood");
 
-    // 5. Try live API polling in background
+    // 6. Apply Default Language
+    this.applyLanguage(this.currentLang);
+
+    // 7. Background live sensor polling
     this.pollLiveAPIs();
   }
 
+  initMultidisciplinaryViews() {
+    // When a citizen triggers an SOS, automatically send it to the NDRF responder queue
+    this.citizenView = new CitizenView("citizen-mount-point", (newSos) => {
+      this.logTransmission(`🚨 INCOMING CITIZEN SOS: ${newSos.id} at ${newSos.location}`);
+      if (this.responderView) {
+        this.responderView.addSOS(newSos);
+      }
+    });
+
+    this.responderView = new ResponderView("responder-mount-point");
+    this.shelterView = new ShelterView("shelter-mount-point");
+
+    // Render initial views
+    this.citizenView.render(I18N[this.currentLang], this.feeds.activeScenario);
+    this.responderView.render();
+    this.shelterView.render();
+  }
+
   setupEventListeners() {
-    // Scenario Selector
+    // 1. Multidisciplinary Role Switcher Tabs
+    const tabs = document.querySelectorAll(".role-tab");
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        const targetTab = tab.getAttribute("data-tab");
+        this.switchRole(targetTab);
+      });
+    });
+
+    // 2. Vernacular Language Selector
+    const langSelect = document.getElementById("lang-select");
+    if (langSelect) {
+      langSelect.addEventListener("change", (e) => {
+        this.applyLanguage(e.target.value);
+      });
+    }
+
+    // 3. Scenario Selector
     const scenarioSelect = document.getElementById("scenario-select");
     if (scenarioSelect) {
       scenarioSelect.addEventListener("change", (e) => {
@@ -46,13 +100,13 @@ class AegisApp {
       });
     }
 
-    // Zero-Signal Broadcast Button
+    // 4. Zero-Signal Broadcast Button
     const btnBroadcast = document.getElementById("btn-broadcast-zero-signal");
     if (btnBroadcast) {
       btnBroadcast.addEventListener("click", () => this.handleBroadcast());
     }
 
-    // Silence Siren Button
+    // 5. Silence Siren Button
     const btnSilence = document.getElementById("btn-silence");
     if (btnSilence) {
       btnSilence.addEventListener("click", () => {
@@ -61,7 +115,7 @@ class AegisApp {
       });
     }
 
-    // Grid Blackout Toggle
+    // 6. Grid Blackout Toggle
     const btnGrid = document.getElementById("toggle-grid-power");
     if (btnGrid) {
       btnGrid.addEventListener("click", () => {
@@ -71,7 +125,7 @@ class AegisApp {
       });
     }
 
-    // Cellular Cutoff Toggle
+    // 7. Cellular Cutoff Toggle
     const btnCell = document.getElementById("toggle-cellular");
     if (btnCell) {
       btnCell.addEventListener("click", () => {
@@ -81,7 +135,7 @@ class AegisApp {
       });
     }
 
-    // Audio Mute Toggle
+    // 8. Audio Mute Toggle
     const btnMute = document.getElementById("toggle-mute");
     if (btnMute) {
       btnMute.addEventListener("click", () => {
@@ -90,7 +144,7 @@ class AegisApp {
       });
     }
 
-    // Packet Inspector Modal Toggle
+    // 9. Packet Inspector Modal Toggle
     const btnInspect = document.getElementById("btn-inspect-packet");
     const modal = document.getElementById("packet-modal");
     const modalClose = document.getElementById("modal-close");
@@ -104,6 +158,66 @@ class AegisApp {
     if (modalClose && modal) {
       modalClose.addEventListener("click", () => modal.classList.remove("open"));
     }
+  }
+
+  /**
+   * Switches between the 4 Multidisciplinary Views
+   */
+  switchRole(roleId) {
+    this.currentRole = roleId;
+
+    // Update Tab Buttons
+    document.querySelectorAll(".role-tab").forEach(t => {
+      t.classList.toggle("active", t.getAttribute("data-tab") === roleId);
+    });
+
+    // Update Role Views
+    document.querySelectorAll(".role-view").forEach(v => {
+      v.classList.remove("active");
+    });
+
+    const targetView = document.getElementById(`view-${roleId}`);
+    if (targetView) targetView.classList.add("active");
+
+    // Re-render citizen or responder view with current scenario context if needed
+    if (roleId === "citizen" && this.citizenView) {
+      this.citizenView.render(I18N[this.currentLang], this.feeds.activeScenario);
+    } else if (roleId === "responder" && this.responderView) {
+      this.responderView.render();
+    } else if (roleId === "shelter" && this.shelterView) {
+      this.shelterView.render();
+    } else if (roleId === "war-room" && this.mapCtrl.map) {
+      // Trigger map resize fix when switching back to war room
+      setTimeout(() => this.mapCtrl.map.invalidateSize(), 150);
+    }
+  }
+
+  /**
+   * Translates UI elements dynamically across Indian languages
+   */
+  applyLanguage(langCode) {
+    this.currentLang = langCode;
+    const l = I18N[langCode] || I18N.en;
+
+    const subhead = document.getElementById("app-subheading");
+    if (subhead) subhead.textContent = l.systemTitle;
+
+    const tabWar = document.getElementById("tab-label-warroom");
+    const tabCit = document.getElementById("tab-label-citizen");
+    const tabRes = document.getElementById("tab-label-responder");
+    const tabShe = document.getElementById("tab-label-shelter");
+
+    if (tabWar) tabWar.textContent = l.roleWarRoom;
+    if (tabCit) tabCit.textContent = l.roleCitizen;
+    if (tabRes) tabRes.textContent = l.roleResponder;
+    if (tabShe) tabShe.textContent = l.roleHospital;
+
+    // Re-render Citizen Hub with new language
+    if (this.citizenView) {
+      this.citizenView.render(l, this.feeds.activeScenario);
+    }
+
+    this.logTransmission(`🌐 Language switched to ${l.name}. Vernacular speech engine updated.`);
   }
 
   /**
@@ -136,6 +250,11 @@ class AegisApp {
       hopLimit: 5
     });
 
+    // 5. Update Citizen View with new shelter
+    if (this.citizenView) {
+      this.citizenView.render(I18N[this.currentLang], scenario);
+    }
+
     this.logTransmission(`Telemetry loaded for ${scenario.title}. Risk Index: ${riskAnalysis.score}/100 [${riskAnalysis.alertLevel}]`);
   }
 
@@ -152,21 +271,19 @@ class AegisApp {
     // 1. Trigger visual radio wave animation on Leaflet map
     this.mapCtrl.animateRadioBroadcast(currentScenario.coordinates, 15);
 
-    // 2. Transmit to the autonomous physical hardware node after 400ms speed-of-light delay
+    // 2. Transmit to the autonomous physical hardware node
     setTimeout(() => {
       this.hardwareNode.receiveRadioPacket(this.lastEncodedPacket.buffer);
       this.logTransmission(`✅ Packet captured by ${this.hardwareNode.nodeId} (Airwave RSSI: -78dBm). CRC16 Verified.`);
-      this.logTransmission(`🚨 Acoustic Siren 120dB ENGAGED. 360° Strobe Array ACTIVATED.`);
-      this.logTransmission(`📢 Vernacular Spoken Voice Broadcast starting in Hindi & English.`);
+      this.logTransmission(`🚨 120dB Siren ENGAGED. 360° Optical Strobes ACTIVATED.`);
+      this.logTransmission(`📢 Vernacular Spoken Voice Broadcast starting in ${I18N[this.currentLang].name}.`);
     }, 450);
   }
 
   renderWarRoom(scenario, risk) {
-    // Title & Type
     const titleEl = document.getElementById("scenario-title");
     if (titleEl) titleEl.textContent = scenario.title;
 
-    // Risk Meter & Score
     const scoreVal = document.getElementById("risk-score-value");
     const scoreBadge = document.getElementById("risk-level-badge");
     const scoreBar = document.getElementById("risk-meter-bar");
@@ -181,7 +298,6 @@ class AegisApp {
       scoreBar.style.backgroundColor = risk.color;
     }
 
-    // Telemetry Gauges
     const tel = scenario.telemetry;
     const rainEl = document.getElementById("val-rain");
     const riverEl = document.getElementById("val-river");
@@ -193,7 +309,6 @@ class AegisApp {
     if (damEl) damEl.textContent = tel.damCapacity !== undefined ? `${tel.damCapacity} %` : "N/A";
     if (windEl) windEl.textContent = tel.windSpeed !== undefined ? `${tel.windSpeed} km/h` : (tel.magnitude ? `M${tel.magnitude} Rich.` : "Calm");
 
-    // Impacted Population & Pre-Judgment
     const popEl = document.getElementById("val-population");
     const breachEl = document.getElementById("val-breach-time");
     const actionEl = document.getElementById("val-prevention-action");
@@ -202,7 +317,6 @@ class AegisApp {
     if (breachEl) breachEl.textContent = scenario.preJudgement.predictedBreachTimeMin > 0 ? `~${scenario.preJudgement.predictedBreachTimeMin} Minutes` : "Immediate Impact";
     if (actionEl) actionEl.textContent = scenario.preJudgement.recommendedAction;
 
-    // Damage Prevention SOP Directives
     const sopList = document.getElementById("sop-list");
     if (sopList) {
       sopList.innerHTML = risk.damageMitigationSOP.map(item => `
@@ -215,7 +329,6 @@ class AegisApp {
   }
 
   renderHardwareNode(state) {
-    // Battery & Solar
     const battEl = document.getElementById("hw-battery-pct");
     const solarEl = document.getElementById("hw-solar-watts");
     const statusPill = document.getElementById("hw-status-pill");
@@ -227,7 +340,6 @@ class AegisApp {
       statusPill.className = `status-pill ${state.state.toLowerCase()}`;
     }
 
-    // Actuators
     const sirenIndicator = document.getElementById("hw-siren-indicator");
     const strobeLight = document.getElementById("hw-strobe-lamp");
     const ledTicker = document.getElementById("hw-led-ticker");
