@@ -159,9 +159,50 @@ body {
   cursor: pointer;
 }
 
-.styled-lang-select option {
+.styled-lang-select option,
+.lang-select option {
   background: #0b111c;
   color: #fff;
+}
+
+.language-picker-group {
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  border-radius: var(--radius-md);
+  padding: 2px 8px;
+}
+
+.btn-voice-readout {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.3));
+  border: 1px solid rgba(16, 185, 129, 0.5);
+  color: #34d399;
+  padding: 8px 14px;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-voice-readout:hover {
+  background: rgba(16, 185, 129, 0.35);
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.4);
+  transform: translateY(-1px);
+}
+
+.btn-voice-readout.voice-active {
+  background: linear-gradient(135deg, #059669, #10b981);
+  color: #ffffff;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.8);
+  animation: pulse-voice 1s infinite alternate;
+}
+
+@keyframes pulse-voice {
+  0% { transform: scale(1); box-shadow: 0 0 12px rgba(16, 185, 129, 0.6); }
+  100% { transform: scale(1.05); box-shadow: 0 0 24px rgba(52, 211, 153, 1); }
 }
 
 .status-chip {

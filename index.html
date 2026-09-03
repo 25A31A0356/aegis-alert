@@ -77,15 +77,39 @@
         </select>
       </div>
 
+      <!-- Multidisciplinary Language Selector -->
+      <div class="header-control-group language-picker-group">
+        <span class="control-icon">🌐</span>
+        <select id="global-language-select" class="styled-select lang-select" title="Select Pan-India Regional Language">
+          <option value="en" selected>🇬🇧 English</option>
+          <option value="hi">🇮🇳 हिंदी (Hindi)</option>
+          <option value="te">🪔 తెలుగు (Telugu)</option>
+          <option value="ta">🌾 தமிழ் (Tamil)</option>
+          <option value="mr">🚩 मराठी (Marathi)</option>
+          <option value="bn">☕ বাংলা (Bengali)</option>
+          <option value="as">🦏 অসমীয়া (Assamese)</option>
+          <option value="ml">🌴 മലയാളം (Malayalam)</option>
+          <option value="gu">🦁 ગુજરાતી (Gujarati)</option>
+          <option value="kn">🌾 ಕನ್ನಡ (Kannada)</option>
+          <option value="pa">🌾 ਪੰਜਾਬੀ (Punjabi)</option>
+          <option value="or">🪷 ଓଡ଼ିଆ (Odia)</option>
+        </select>
+      </div>
+
+      <!-- Voice Audio Readout Button -->
+      <button id="btn-voice-readout" class="btn-voice-readout" title="Listen to Voice Evacuation Directive in Selected Language">
+        🔊 <span class="voice-btn-label">Voice Alert</span>
+      </button>
+
       <!-- One-Click Run Emergency Scenario -->
       <button id="btn-run-scenario" class="btn-scenario-trigger" title="Launch 90-Second Simulated Crisis Lifecycle">
-        🚨 Run Emergency Scenario
+        🚨 <span id="label-run-scenario">Run Emergency Scenario</span>
       </button>
 
       <!-- Demo Mode Badge -->
       <div class="demo-mode-badge" title="Prototype Demonstration Mode Active">
         <span class="demo-pulse-dot"></span>
-        <span>DEMO MODE</span>
+        <span id="label-demo-mode">DEMO MODE</span>
       </div>
     </div>
   </header>
@@ -125,12 +149,12 @@
       <div class="overview-hero-card">
         <div class="overview-top-row">
           <div>
-            <span class="section-eyebrow">MULTI-HAZARD SITUATION OVERVIEW</span>
+            <span id="situation-overview-heading" class="section-eyebrow">MULTI-HAZARD SITUATION OVERVIEW</span>
             <h2 id="overview-location-name" class="overview-heading">Hyderabad, Telangana</h2>
             <p id="overview-location-desc" class="overview-subtext">Deccan Plateau Urban Basin • High-density metropolis vulnerable to stormwater drainage bottleneck and lake overtopping.</p>
           </div>
           <div class="composite-gauge-box">
-            <span class="gauge-label">AEGIS COMPOSITE RISK SCORE</span>
+            <span id="composite-risk-title" class="gauge-label">AEGIS COMPOSITE RISK SCORE</span>
             <div id="composite-score-num" class="composite-score-number">78<span class="score-max">/100</span></div>
             <div id="composite-level-badge" class="risk-badge-pill level-high">HIGH RISK</div>
             <div class="composite-meter-track">
@@ -154,7 +178,7 @@
           <div class="hazard-card-head">
             <span class="hazard-card-icon">🌧️</span>
             <div>
-              <strong class="hazard-card-title">Rainfall Risk</strong>
+              <strong id="hazard-title-rain" class="hazard-card-title">Rainfall Risk</strong>
               <span id="card-rain-trend" class="hazard-trend-tag text-red">↑ +14% (Intensifying)</span>
             </div>
           </div>
@@ -171,7 +195,7 @@
           <div class="hazard-card-head">
             <span class="hazard-card-icon">🌊</span>
             <div>
-              <strong class="hazard-card-title">Flood / Inundation Risk</strong>
+              <strong id="hazard-title-flood" class="hazard-card-title">Flood / Inundation Risk</strong>
               <span id="card-flood-trend" class="hazard-trend-tag text-red">↑ +18% (Overtopping)</span>
             </div>
           </div>
@@ -188,7 +212,7 @@
           <div class="hazard-card-head">
             <span class="hazard-card-icon">⛰️</span>
             <div>
-              <strong class="hazard-card-title">Landslide Risk</strong>
+              <strong id="hazard-title-landslide" class="hazard-card-title">Landslide Risk</strong>
               <span id="card-landslide-trend" class="hazard-trend-tag text-green">0% (Stable)</span>
             </div>
           </div>
@@ -205,7 +229,7 @@
           <div class="hazard-card-head">
             <span class="hazard-card-icon">⚡</span>
             <div>
-              <strong class="hazard-card-title">Lightning / Thunderstorm</strong>
+              <strong id="hazard-title-lightning" class="hazard-card-title">Lightning / Thunderstorm</strong>
               <span id="card-lightning-trend" class="hazard-trend-tag text-amber">↑ +25% (Convective Storm)</span>
             </div>
           </div>
@@ -222,7 +246,7 @@
           <div class="hazard-card-head">
             <span class="hazard-card-icon">🌡️</span>
             <div>
-              <strong class="hazard-card-title">Heat & Thermal Stress</strong>
+              <strong id="hazard-title-heat" class="hazard-card-title">Heat & Thermal Stress</strong>
               <span id="card-heat-trend" class="hazard-trend-tag text-green">0% (Moderate)</span>
             </div>
           </div>
@@ -239,7 +263,7 @@
           <div class="hazard-card-head">
             <span class="hazard-card-icon">🌫️</span>
             <div>
-              <strong class="hazard-card-title">Air Pollution Coupled</strong>
+              <strong id="hazard-title-pollution" class="hazard-card-title">Air Pollution Coupled</strong>
               <span id="card-pollution-trend" class="hazard-trend-tag text-amber">+6% (Stagnant)</span>
             </div>
           </div>
@@ -282,7 +306,7 @@
           <div class="card-header">
             <span class="card-title">
               <span class="card-title-icon">📊</span>
-              Current Environmental Variables
+              <span id="env-params-title">Current Environmental Variables</span>
             </span>
             <span class="timestamp-tag" id="sensor-timestamp">LIVE TELEMETRY</span>
           </div>

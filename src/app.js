@@ -11,11 +11,13 @@ import { RiskFusionEngine } from "./telemetry/risk_fusion_engine.js";
 import { AegisAiAssistant } from "./ai/aegis_assistant.js";
 import { ChartsController } from "./ui/charts_controller.js";
 import { MapController } from "./ui/map_controller.js";
+import { I18N } from "./i18n/languages.js";
 
 class AegisApp {
   constructor() {
     this.currentLocation = LOCATIONS_DATA[0]; // Hyderabad default
     this.currentScenario = "flash_flood";
+    this.currentLanguage = localStorage.getItem("aegis_lang") || "en";
     this.currentRisks = null;
     this.activeView = "view-dashboard";
 
@@ -29,7 +31,10 @@ class AegisApp {
   }
 
   async init() {
-    console.log("Initializing AEGIS ALERT Multi-Hazard Platform...");
+    console.log("Initializing AEGIS ALERT Multilingual Multi-Hazard Platform...");
+
+    // 0. Apply Saved/Initial Language
+    this.applyLanguage(this.currentLanguage, false);
 
     // 1. Calculate Initial Multi-Hazard Risk Fusion
     this.updateRiskCalculations();
@@ -229,6 +234,108 @@ class AegisApp {
       .replace(/\n/g, '<br/>');
   }
 
+  applyLanguage(langKey, speak = false) {
+    const t = I18N[langKey] || I18N.en;
+    this.currentLanguage = langKey;
+    localStorage.setItem("aegis_lang", langKey);
+
+    // Update Select Dropdown
+    const selLang = document.getElementById("global-language-select");
+    if (selLang) selLang.value = langKey;
+
+    // Brand & Header
+    const heading = document.getElementById("app-heading");
+    if (heading) heading.innerHTML = `${t.appHeading} <span class="brand-tag">MULTI-HAZARD INTELLIGENCE</span>`;
+    const subheading = document.getElementById("app-subheading");
+    if (subheading) subheading.textContent = `"${t.tagline}" • SIH26001–SIH26192`;
+
+    // Navigation Tabs
+    const navMap = {
+      "view-dashboard": t.navDashboard,
+      "view-map": t.navMap,
+      "view-hazards": t.navHazards,
+      "view-forecast": t.navForecast,
+      "view-analytics": t.navAnalytics,
+      "view-vulnerability": t.navRedZones,
+      "view-alerts": t.navAlerts,
+      "view-ai": t.navAi,
+      "view-about": t.navAbout
+    };
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      const v = btn.getAttribute("data-view");
+      if (navMap[v]) btn.textContent = navMap[v];
+    });
+
+    // Buttons & Badges
+    const btnRun = document.getElementById("label-run-scenario");
+    if (btnRun) btnRun.textContent = t.runScenario.replace(/^🚨\s*/, "");
+    const lblDemo = document.getElementById("label-demo-mode");
+    if (lblDemo) lblDemo.textContent = t.demoMode;
+
+    // Situation Overview Header
+    const sitHeading = document.getElementById("situation-overview-heading");
+    if (sitHeading) sitHeading.textContent = t.situationOverview;
+
+    // Risk Meter Label
+    const compLabel = document.getElementById("composite-risk-title");
+    if (compLabel) compLabel.textContent = t.compositeScore;
+
+    // 6 Hazard Card Titles
+    const hazTitles = {
+      "rain": t.rainRisk,
+      "flood": t.floodRisk,
+      "landslide": t.landslideRisk,
+      "lightning": t.lightningRisk,
+      "heat": t.heatRisk,
+      "pollution": t.pollutionRisk
+    };
+    Object.keys(hazTitles).forEach(k => {
+      const el = document.getElementById(`hazard-title-${k}`);
+      if (el) el.textContent = hazTitles[k];
+    });
+
+    // Environmental Parameters Header
+    const envHeader = document.getElementById("env-params-title");
+    if (envHeader) envHeader.textContent = t.currentVariables;
+
+    // Disclaimer
+    const disc = document.querySelector(".demo-disclaimer-banner span");
+    if (disc) disc.innerHTML = `⚠️ <strong>${t.demoMode}:</strong> ${t.disclaimer}`;
+
+    // Re-render Dashboard & Tables
+    this.renderDashboard();
+
+    // Optional Audio Voice Announcement
+    if (speak) {
+      this.playVoiceAlert();
+    }
+  }
+
+  playVoiceAlert() {
+    if (!('speechSynthesis' in window)) {
+      console.warn("SpeechSynthesis API not supported in this browser.");
+      return;
+    }
+
+    const t = I18N[this.currentLanguage] || I18N.en;
+    window.speechSynthesis.cancel(); // Cancel any ongoing speech
+
+    const utter = new SpeechSynthesisUtterance(t.voiceAlert);
+    utter.lang = t.langCode || "en-IN";
+    utter.rate = 0.95; // Slightly slower for clarity
+    utter.pitch = 1.05;
+
+    // Visual button feedback
+    const btnVoice = document.getElementById("btn-voice-readout");
+    if (btnVoice) {
+      btnVoice.classList.add("voice-active");
+      utter.onend = () => btnVoice.classList.remove("voice-active");
+      utter.onerror = () => btnVoice.classList.remove("voice-active");
+    }
+
+    window.speechSynthesis.speak(utter);
+  }
+
   selectLocation(locId) {
     const loc = LOCATIONS_DATA.find(l => l.id === locId) || LOCATIONS_DATA[0];
     this.currentLocation = loc;
@@ -349,6 +456,22 @@ class AegisApp {
         this.switchView(viewId);
       });
     });
+
+    // Multilingual Language Dropdown
+    const selLang = document.getElementById("global-language-select");
+    if (selLang) {
+      selLang.addEventListener("change", (e) => {
+        this.applyLanguage(e.target.value, true);
+      });
+    }
+
+    // Voice Readout Button
+    const btnVoice = document.getElementById("btn-voice-readout");
+    if (btnVoice) {
+      btnVoice.addEventListener("click", () => {
+        this.playVoiceAlert();
+      });
+    }
 
     // Location Dropdown
     const selLoc = document.getElementById("global-location-select");
