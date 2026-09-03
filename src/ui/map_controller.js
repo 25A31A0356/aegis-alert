@@ -99,20 +99,22 @@ export class MapController {
         }
       });
       marker.bindPopup(`
-        <div style="color:#0f172a; font-family:sans-serif; font-size:12px; min-width:200px;">
+        <div style="color:#0f172a; font-family:sans-serif; font-size:12px; min-width:230px;">
           <strong style="color:#0284c7; font-size:13px;">📍 ${loc.name}, ${loc.state}</strong><br/>
-          <span style="color:#475569;">Terrain: ${loc.terrain}</span><br/>
-          <div style="margin:6px 0; padding:6px; background:#f1f5f9; border-radius:4px;">
-            <span>Current Rain: <strong>${loc.current.rainfall_mmh} mm/h</strong></span><br/>
-            <span>Water Level: <strong>${loc.current.water_level_m}m</strong> / ${loc.current.danger_mark_m}m</span><br/>
-            <span>Exposed Population: <strong>${loc.current.population_exposed.toLocaleString("en-IN")}</strong></span>
+          <span style="color:#475569; font-size:11px;">${loc.terrain}</span><br/>
+          <div style="margin:6px 0; padding:6px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:4px;">
+            <div>🌧️ Rain: <strong>${loc.current.rainfall_mmh} mm/h</strong> | 🌡️ Temp: <strong>${loc.current.temperature_c}°C</strong></div>
+            <div>🌫️ AQI: <strong style="color:${loc.current.aqi > 200 ? '#dc2626' : loc.current.aqi > 100 ? '#d97706' : '#059669'}">${loc.current.aqi}</strong> (PM2.5: ${loc.current.pm25})</div>
+            <div>🌊 Water Stage: <strong>${loc.current.water_level_m}m</strong> / ${loc.current.danger_mark_m}m</div>
+            <div style="font-size:10px; color:#64748b; margin-top:4px;">⚠️ <em>${loc.primary_hazards.join(", ")}</em></div>
+            ${loc.historical_disasters ? `<div style="font-size:10px; color:#b91c1c; margin-top:2px;">📜 <strong>History:</strong> ${loc.historical_disasters}</div>` : ''}
           </div>
-          <button onclick="window.__selectLocation('${loc.id}')" style="background:#0284c7; color:#fff; border:none; padding:5px 10px; border-radius:4px; font-size:11px; cursor:pointer; width:100%;">
-            🔎 View Full Environmental Dossier
+          <button onclick="window.__selectLocation('${loc.id}')" style="background:#0284c7; color:#fff; border:none; padding:6px 10px; border-radius:4px; font-size:11px; cursor:pointer; width:100%; font-weight:bold;">
+            🔎 Select & Sync Real-Time Telemetry
           </button>
         </div>
       `);
-      this.layers.flood.addLayer(marker);
+      this.layers.rainfall.addLayer(marker);
     });
   }
 

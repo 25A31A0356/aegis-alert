@@ -51,16 +51,53 @@
       <!-- Location Selector -->
       <div class="header-control-group">
         <span class="control-icon">📍</span>
-        <select id="global-location-select" class="styled-select" title="Select Monitored Location">
-          <option value="LOC-HYD" selected>Hyderabad, Telangana</option>
-          <option value="LOC-GHY">Guwahati, Assam</option>
-          <option value="LOC-DED">Dehradun, Uttarakhand</option>
-          <option value="LOC-VSP">Visakhapatnam, Andhra Pradesh</option>
-          <option value="LOC-VJA">Vijayawada, Andhra Pradesh</option>
-          <option value="LOC-SHL">Shillong, Meghalaya</option>
-          <option value="LOC-MUM">Mumbai, Maharashtra</option>
-          <option value="LOC-CHE">Chennai, Tamil Nadu</option>
-          <option value="LOC-BLR">Bengaluru, Karnataka</option>
+        <select id="global-location-select" class="styled-select" title="Select Monitored State / Union Territory">
+          <optgroup label="🏛️ Southern India">
+            <option value="LOC-TG-HYD" selected>Telangana (Hyderabad - Deccan Basin)</option>
+            <option value="LOC-AP-VSP">Andhra Pradesh (Visakhapatnam - Coast)</option>
+            <option value="LOC-AP-VJA">Andhra Pradesh (Vijayawada - Krishna Basin)</option>
+            <option value="LOC-KA-BLR">Karnataka (Bengaluru - Lake Basin)</option>
+            <option value="LOC-TN-CHE">Tamil Nadu (Chennai - Coromandel Coast)</option>
+            <option value="LOC-KL-WAY">Kerala (Wayanad / Idukki - Western Ghats)</option>
+            <option value="LOC-PY-PUD">Puducherry (Coromandel Seafront)</option>
+          </optgroup>
+          <optgroup label="🏔️ Northern & Himalayan India">
+            <option value="LOC-DL-DEL">National Capital Region (Delhi - Yamuna & Smog)</option>
+            <option value="LOC-UK-DED">Uttarakhand (Dehradun / Kedarnath - Garhwal)</option>
+            <option value="LOC-HP-SHI">Himachal Pradesh (Shimla / Kullu-Manali)</option>
+            <option value="LOC-JK-SRI">Jammu & Kashmir (Srinagar / Jammu - Jhelum)</option>
+            <option value="LOC-LA-LEH">Ladakh (Leh / Indus Cold Desert)</option>
+            <option value="LOC-PB-ASR">Punjab (Amritsar / Sutlej Basin)</option>
+            <option value="LOC-HR-GUR">Haryana (Gurugram / NCR Environs)</option>
+            <option value="LOC-UP-LKO">Uttar Pradesh (Lucknow / Varanasi - Ganga Basin)</option>
+          </optgroup>
+          <optgroup label="🌊 Eastern & Deltaic India">
+            <option value="LOC-WB-KOL">West Bengal (Kolkata / Sundarbans Delta)</option>
+            <option value="LOC-OR-BHU">Odisha (Bhubaneswar / Puri - Cyclone Alley)</option>
+            <option value="LOC-BR-PAT">Bihar (Patna / Kosi Flood Basin)</option>
+            <option value="LOC-JH-RAN">Jharkhand (Ranchi / Damodar Basin)</option>
+          </optgroup>
+          <optgroup label="🌄 North-Eastern States">
+            <option value="LOC-AS-GHY">Assam (Guwahati - Brahmaputra Corridor)</option>
+            <option value="LOC-ML-SHL">Meghalaya (Shillong / Cherrapunji)</option>
+            <option value="LOC-SK-GAN">Sikkim (Gangtok / Teesta GLOF Basin)</option>
+            <option value="LOC-AR-ITA">Arunachal Pradesh (Itanagar / Siang Valley)</option>
+            <option value="LOC-MN-IMP">Manipur (Imphal - Loktak Lacustrine Basin)</option>
+            <option value="LOC-MZ-AIZ">Mizoram (Aizawl - Unstable Shale Slopes)</option>
+            <option value="LOC-NL-KOH">Nagaland (Kohima - Naga Hill Passes)</option>
+            <option value="LOC-TR-AGT">Tripura (Agartala - Howrah/Gumti Basin)</option>
+          </optgroup>
+          <optgroup label="🏜️ Western & Central India">
+            <option value="LOC-MH-MUM">Maharashtra (Mumbai - Konkan Megalopolis)</option>
+            <option value="LOC-GJ-AHM">Gujarat (Ahmedabad / Surat - Gulf of Khambhat)</option>
+            <option value="LOC-RJ-JAI">Rajasthan (Jaipur / Jodhpur - Thar Desert)</option>
+            <option value="LOC-MP-BHO">Madhya Pradesh (Bhopal / Narmada Valley)</option>
+            <option value="LOC-CT-RAI">Chhattisgarh (Raipur - Upper Mahanadi)</option>
+            <option value="LOC-GA-PAN">Goa (Panaji - Konkan Estuarine Coast)</option>
+          </optgroup>
+          <optgroup label="🏝️ Maritime Island Territories">
+            <option value="LOC-AN-PBL">Andaman & Nicobar Islands (Port Blair - Subsea Trench)</option>
+          </optgroup>
         </select>
       </div>
 
