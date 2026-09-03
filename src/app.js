@@ -8,6 +8,7 @@
 
 import { LOCATIONS_DATA, VULNERABILITY_RED_ZONES, WEATHER_STATIONS_DATA } from "./data/locations_data.js";
 import { RiskFusionEngine } from "./telemetry/risk_fusion_engine.js";
+import { LiveDataService } from "./telemetry/live_data_service.js";
 import { AegisAiAssistant } from "./ai/aegis_assistant.js";
 import { ChartsController } from "./ui/charts_controller.js";
 import { MapController } from "./ui/map_controller.js";
@@ -25,6 +26,9 @@ class AegisApp {
     this.mapCtrlFull = null;
     this.chartsCtrl = new ChartsController();
     this.aiAssistant = new AegisAiAssistant(this);
+    this.liveDataService = new LiveDataService();
+    this.liveForecastData = null;
+    this.isLiveSyncActive = true;
 
     this.scenarioInterval = null;
     this.scenarioTimeSec = 0;
@@ -355,21 +359,93 @@ class AegisApp {
     window.speechSynthesis.speak(utter);
   }
 
-  selectLocation(locId) {
+  async selectLocation(locId, autoFetchLive = true) {
     const loc = LOCATIONS_DATA.find(l => l.id === locId) || LOCATIONS_DATA[0];
     this.currentLocation = loc;
 
     const sel = document.getElementById("global-location-select");
     if (sel) sel.value = locId;
 
-    this.updateRiskCalculations();
-    this.renderDashboard();
+    if (autoFetchLive && this.isLiveSyncActive) {
+      await this.syncLivePublicTelemetry(true);
+    } else {
+      this.updateRiskCalculations();
+      this.renderDashboard();
+      this.renderRedZonesTable();
+    }
 
     if (this.mapCtrlDashboard) this.mapCtrlDashboard.flyToLocation(loc);
     if (this.mapCtrlFull) this.mapCtrlFull.flyToLocation(loc);
 
-    this.chartsCtrl.renderForecastChart("chart-forecast-main", loc);
+    this.chartsCtrl.renderForecastChart("chart-forecast-main", loc, this.liveForecastData);
+    this.chartsCtrl.renderForecastChart("chart-flood-detail", loc, this.liveForecastData);
     this.chartsCtrl.renderRiskRadar("chart-risk-radar", this.currentRisks);
+  }
+
+  async syncLivePublicTelemetry(showToast = false) {
+    const loc = this.currentLocation;
+    const [lat, lon] = loc.coordinates;
+    const btnSync = document.getElementById("btn-sync-live-data");
+    if (btnSync) btnSync.classList.add("syncing");
+
+    try {
+      // 1. Fetch Live NWP & Satellite Soundings from Open-Meteo
+      const liveData = await this.liveDataService.fetchLiveWeather(lat, lon);
+
+      if (liveData && liveData.isLive) {
+        // Apply live parameters to current location
+        loc.current.temperature_c = parseFloat(liveData.temperature_c.toFixed(1));
+        loc.current.humidity_pct = Math.round(liveData.humidity_pct);
+        loc.current.rainfall_mmh = parseFloat(liveData.rainfall_mmh.toFixed(1));
+        loc.current.wind_speed_kmh = parseFloat(liveData.wind_speed_kmh.toFixed(1));
+        loc.current.pressure_hpa = parseFloat(liveData.pressure_hpa.toFixed(1));
+        if (liveData.cape_index) loc.current.cape_index = liveData.cape_index;
+
+        this.liveForecastData = liveData.forecast_6h;
+
+        // 2. Fetch Real-Time Global Seismic Tremors from USGS
+        const quakes = await this.liveDataService.fetchSeismicActivity(lat, lon);
+        if (quakes.length > 0) {
+          console.log(`[AEGIS USGS Feed] ${quakes.length} seismic events detected near ${loc.name}`);
+        }
+
+        // Update badge text
+        const badgeText = document.getElementById("label-demo-mode");
+        if (badgeText) badgeText.textContent = `LIVE: ${liveData.source.split(" ")[0].toUpperCase()}`;
+
+        if (showToast) {
+          this.showLiveToast(`🌐 Live Public Telemetry Synchronized for ${loc.name}!\n• Temp: ${liveData.temperature_c}°C | Rain: ${liveData.rainfall_mmh}mm/h | Wind: ${liveData.wind_speed_kmh}km/h | CAPE: ${liveData.cape_index} J/kg`);
+        }
+      }
+    } catch (err) {
+      console.warn("Live telemetry ingestion caught:", err);
+    } finally {
+      if (btnSync) btnSync.classList.remove("syncing");
+      this.updateRiskCalculations();
+      this.renderDashboard();
+      this.renderRedZonesTable();
+      this.chartsCtrl.renderForecastChart("chart-forecast-main", loc, this.liveForecastData);
+      this.chartsCtrl.renderForecastChart("chart-flood-detail", loc, this.liveForecastData);
+      this.chartsCtrl.renderRiskRadar("chart-risk-radar", this.currentRisks);
+    }
+  }
+
+  showLiveToast(message) {
+    // Remove existing toast
+    const existing = document.querySelector(".live-badge-toast");
+    if (existing) existing.remove();
+
+    const toast = document.createElement("div");
+    toast.className = "live-badge-toast";
+    toast.innerHTML = `<span>📡</span> <div>${message.replace(/\n/g, '<br/>')}</div>`;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+      toast.style.transition = "opacity 0.4s ease, transform 0.4s ease";
+      toast.style.opacity = "0";
+      toast.style.transform = "translateY(20px)";
+      setTimeout(() => toast.remove(), 400);
+    }, 4500);
   }
 
   setScenario(scenarioKey) {
@@ -377,7 +453,7 @@ class AegisApp {
     this.updateRiskCalculations();
     this.renderDashboard();
 
-    this.chartsCtrl.renderForecastChart("chart-forecast-main", this.currentLocation);
+    this.chartsCtrl.renderForecastChart("chart-forecast-main", this.currentLocation, this.liveForecastData);
     this.chartsCtrl.renderRiskRadar("chart-risk-radar", this.currentRisks);
   }
 
@@ -400,7 +476,7 @@ class AegisApp {
       setTimeout(() => this.mapCtrlFull.map.invalidateSize(), 150);
     }
     if (viewId === "view-forecast") {
-      this.chartsCtrl.renderForecastChart("chart-forecast-main", this.currentLocation);
+      this.chartsCtrl.renderForecastChart("chart-forecast-main", this.currentLocation, this.liveForecastData);
     }
     if (viewId === "view-analytics") {
       this.chartsCtrl.renderAnalyticsTrends("chart-analytics-main", "24h");
@@ -496,6 +572,14 @@ class AegisApp {
     if (btnVoice) {
       btnVoice.addEventListener("click", () => {
         this.playVoiceAlert();
+      });
+    }
+
+    // Live Public Data Sync Button
+    const btnSyncLive = document.getElementById("btn-sync-live-data");
+    if (btnSyncLive) {
+      btnSyncLive.addEventListener("click", () => {
+        this.syncLivePublicTelemetry(true);
       });
     }
 

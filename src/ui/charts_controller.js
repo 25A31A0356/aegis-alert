@@ -14,14 +14,21 @@ export class ChartsController {
   /**
    * Initializes or updates the 6-Hour Forecast Chart
    */
-  renderForecastChart(canvasId, location) {
+  renderForecastChart(canvasId, location, liveForecast = null) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
 
-    const labels = ["10:00 AM", "11:00 AM", "12:00 PM", "01:00 PM", "02:00 PM", "03:00 PM"];
-    const rainData = [18, 48, 65, 82, 70, 35];
-    const floodRiskData = [35, 58, 74, 88, 85, 62];
-    const lightningRiskData = [15, 30, 60, 85, 90, 40];
+    let labels = ["10:00 AM", "11:00 AM", "12:00 PM", "01:00 PM", "02:00 PM", "03:00 PM"];
+    let rainData = [18, 48, 65, 82, 70, 35];
+    let floodRiskData = [35, 58, 74, 88, 85, 62];
+    let lightningRiskData = [15, 30, 60, 85, 90, 40];
+
+    if (liveForecast && liveForecast.labels && liveForecast.labels.length > 0) {
+      labels = liveForecast.labels;
+      rainData = liveForecast.rain;
+      floodRiskData = liveForecast.floodRisk;
+      lightningRiskData = liveForecast.lightningRisk;
+    }
 
     if (window.Chart) {
       if (this.charts[canvasId]) {

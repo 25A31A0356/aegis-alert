@@ -411,6 +411,42 @@ class AegisDisasterRequestHandler(SimpleHTTPRequestHandler):
                 })
                 return
 
+        elif path == "/api/live-weather":
+            params = parse_qs(parsed.query)
+            lat = params.get("lat", ["17.385"])[0]
+            lon = params.get("lon", ["78.486"])[0]
+            try:
+                import urllib.request
+                om_url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current=temperature_2m,relative_humidity_2m,precipitation,rain,weather_code,surface_pressure,wind_speed_10m&timezone=auto"
+                req = urllib.request.Request(om_url, headers={"User-Agent": "AegisAlert/5.5"})
+                with urllib.request.urlopen(req, timeout=3.5) as resp:
+                    data = json.loads(resp.read().decode("utf-8"))
+                    curr = data.get("current", {})
+                    self.send_json_response({
+                        "isLive": True,
+                        "source": "Open-Meteo Public API (Proxied)",
+                        "temperature_c": curr.get("temperature_2m", 30.0),
+                        "humidity_pct": curr.get("relative_humidity_2m", 65),
+                        "rainfall_mmh": curr.get("precipitation", 0.0),
+                        "wind_speed_kmh": curr.get("wind_speed_10m", 15.0),
+                        "pressure_hpa": curr.get("surface_pressure", 1010.0),
+                        "timestamp": datetime.now().isoformat()
+                    })
+                    return
+            except Exception as e:
+                self.send_json_response({
+                    "isLive": False,
+                    "source": "Calibrated Baseline Fallback",
+                    "error": str(e),
+                    "temperature_c": 31.5,
+                    "humidity_pct": 68,
+                    "rainfall_mmh": 12.0,
+                    "wind_speed_kmh": 18.0,
+                    "pressure_hpa": 1008.0,
+                    "timestamp": datetime.now().isoformat()
+                })
+                return
+
         elif path == "/api/stream":
             self.send_response(200)
             self.send_header("Content-Type", "text/event-stream")

@@ -106,10 +106,16 @@
         🚨 <span id="label-run-scenario">Run Emergency Scenario</span>
       </button>
 
-      <!-- Demo Mode Badge -->
-      <div class="demo-mode-badge" title="Prototype Demonstration Mode Active">
-        <span class="demo-pulse-dot"></span>
-        <span id="label-demo-mode">DEMO MODE</span>
+      <!-- Live Public Telemetry Sync Button -->
+      <button id="btn-sync-live-data" class="btn-sync-live-data" title="Fetch Real-Time Telemetry from Open-Meteo & USGS Public Platforms">
+        <span class="live-dot-pulse">●</span>
+        <span id="label-sync-live">Live Public Data</span>
+      </button>
+
+      <!-- Demo Mode Badge / Live Data Status -->
+      <div id="badge-live-status" class="demo-mode-badge" title="Live Telemetry Ingestion Active">
+        <span class="demo-pulse-dot live-active"></span>
+        <span id="label-demo-mode">LIVE PUBLIC SYNC</span>
       </div>
     </div>
   </header>
