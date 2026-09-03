@@ -296,6 +296,11 @@ class AegisDisasterRequestHandler(SimpleHTTPRequestHandler):
         path = parsed.path
 
         # REST API Routes
+        if path == "/favicon.ico":
+            self.send_response(204)
+            self.end_headers()
+            return
+
         if path == "/api/status":
             self.send_json_response({
                 "status": "ONLINE",
