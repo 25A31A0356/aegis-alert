@@ -1,35 +1,28 @@
 /**
- * AegisAlert Offline Service Worker (PWA)
- * Enables 100% offline operation when mobile towers or internet cables fail.
- * Caches all 4 Stakeholder Portals, Audio Oscillators, and Vernacular Dictionaries.
+ * AEGIS ALERT Offline Service Worker (PWA)
+ * Network-First Strategy: Always serves fresh files from server when online
  */
 
-const CACHE_NAME = "aegis-alert-v5.0-national";
+const CACHE_NAME = "aegis-alert-v6.0-live";
 const ASSETS_TO_CACHE = [
   "./",
   "./index.html",
   "./style.css",
   "./manifest.json",
   "./src/app.js",
-  "./src/config.js",
   "./src/i18n/languages.js",
-  "./src/telemetry/official_feeds.js",
-  "./src/telemetry/risk_engine.js",
-  "./src/telemetry/disaster_simulator_engine.js",
-  "./src/transmission/radio_protocol.js",
-  "./src/hardware_sim/audio_synthesizer.js",
-  "./src/hardware_sim/beacon_node.js",
-  "./src/ui/map_controller.js",
-  "./src/roles/citizen_view.js",
-  "./src/roles/responder_view.js",
-  "./src/roles/shelter_view.js"
+  "./src/data/locations_data.js",
+  "./src/telemetry/risk_fusion_engine.js",
+  "./src/ai/aegis_assistant.js",
+  "./src/ui/charts_controller.js",
+  "./src/ui/map_controller.js"
 ];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log("[Aegis SW] Caching 100% of Pan-India offline emergency survival assets...");
-      return cache.addAll(ASSETS_TO_CACHE).catch(err => console.warn("Asset caching error:", err));
+      console.log("[Aegis SW] Caching fresh offline emergency assets...");
+      return cache.addAll(ASSETS_TO_CACHE).catch(err => console.warn("Caching error:", err));
     })
   );
   self.skipWaiting();
@@ -41,7 +34,7 @@ self.addEventListener("activate", (event) => {
       return Promise.all(
         keys.map((key) => {
           if (key !== CACHE_NAME) {
-            console.log("[Aegis SW] Removing stale cache:", key);
+            console.log("[Aegis SW] Purging old cache:", key);
             return caches.delete(key);
           }
         })
@@ -51,24 +44,24 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
-// Stale-while-revalidate strategy with offline fallback
+// Network-First with Cache Fallback for instant updates
 self.addEventListener("fetch", (event) => {
-  // Always fetch real-time API requests directly from the local server
   if (event.request.url.includes("/api/")) {
-    event.respondWith(fetch(event.request).catch(() => new Response(JSON.stringify({ error: "Offline" }), { headers: { "Content-Type": "application/json" } })));
+    event.respondWith(
+      fetch(event.request).catch(() => new Response(JSON.stringify({ error: "Offline" }), { headers: { "Content-Type": "application/json" } }))
+    );
     return;
   }
 
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      return fetch(event.request).catch(() => {
-        if (event.request.headers.get("accept")?.includes("text/html")) {
-          return caches.match("./index.html");
+    fetch(event.request)
+      .then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200) {
+          const resClone = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, resClone));
         }
-      });
-    })
+        return networkResponse;
+      })
+      .catch(() => caches.match(event.request))
   );
 });
