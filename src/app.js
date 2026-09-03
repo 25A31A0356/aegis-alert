@@ -240,7 +240,7 @@ class AegisApp {
     localStorage.setItem("aegis_lang", langKey);
 
     // Update Select Dropdown & Language Pills
-    const selLang = document.getElementById("global-language-select");
+    const selLang = document.getElementById("global-language-select") || document.getElementById("lang-select");
     if (selLang) selLang.value = langKey;
 
     document.querySelectorAll(".lang-pill-btn").forEach(btn => {
@@ -462,7 +462,7 @@ class AegisApp {
     });
 
     // Multilingual Language Dropdown & Quick Language Pills
-    const selLang = document.getElementById("global-language-select");
+    const selLang = document.getElementById("global-language-select") || document.getElementById("lang-select");
     if (selLang) {
       selLang.addEventListener("change", (e) => {
         this.applyLanguage(e.target.value, true);
