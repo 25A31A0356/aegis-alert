@@ -101,6 +101,21 @@ AEGIS ALERT directly addresses **15 Smart India Hackathon problem statements**:
 
 ---
 
+## 📚 Academic Research, Scientific Formulas & Statutory References
+
+Complete publication-grade documentation dossiers have been compiled for hackathon evaluation juries, academic vivas, and national deployment:
+
+* 📄 **[Scientific Research & Statutory References Dossier](presentation/RESEARCH_AND_REFERENCES.md):**  
+  *Detailed mathematical models for Landslide Mohr-Coulomb shear analysis, SCS-CN Flood Inundation, CAPE Lightning Nowcasting, Steadman Heat Stress Index, NDMA Guidelines, IMD SOPs, and 3GPP TS 23.041 Cell Broadcast standards.*
+* 📊 **[Comprehensive Feasibility & Viability Analysis](presentation/FEASIBILITY_AND_VIABILITY_ANALYSIS.md):**  
+  *Technical, economic, operational, and legal viability matrix evaluating indigenous ₹18,500 edge nodes vs ₹3.5L legacy systems.*
+* 🏛️ **[Executive Presentation & SIH Jury Dossier](presentation/PROJECT_PRESENTATION_DOSSIER.md):**  
+  *10-minute presentation guide, 5-member student team roles, and live evaluation walkthrough.*
+* 📡 **[Hardware & Omnichannel Architecture Diagrams](presentation/HARDWARE_ARCHITECTURE_DIAGRAMS.md):**  
+  *Orbital, Command, Tower Tethering, and Output device schematics for zero-internet blackout operations.*
+
+---
+
 ## 👥 5-Member Student Engineering Team Roles
 
 1. **Member 1 (Team Lead & AI/ML Engineer):** Multi-Hazard Risk Fusion Engine & WeatherGPT Conversational Model.
