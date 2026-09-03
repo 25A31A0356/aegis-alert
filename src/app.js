@@ -239,9 +239,13 @@ class AegisApp {
     this.currentLanguage = langKey;
     localStorage.setItem("aegis_lang", langKey);
 
-    // Update Select Dropdown
+    // Update Select Dropdown & Language Pills
     const selLang = document.getElementById("global-language-select");
     if (selLang) selLang.value = langKey;
+
+    document.querySelectorAll(".lang-pill-btn").forEach(btn => {
+      btn.classList.toggle("active", btn.getAttribute("data-lang") === langKey);
+    });
 
     // Brand & Header
     const heading = document.getElementById("app-heading");
@@ -457,13 +461,20 @@ class AegisApp {
       });
     });
 
-    // Multilingual Language Dropdown
+    // Multilingual Language Dropdown & Quick Language Pills
     const selLang = document.getElementById("global-language-select");
     if (selLang) {
       selLang.addEventListener("change", (e) => {
         this.applyLanguage(e.target.value, true);
       });
     }
+
+    document.querySelectorAll(".lang-pill-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const lang = btn.getAttribute("data-lang") || "en";
+        this.applyLanguage(lang, true);
+      });
+    });
 
     // Voice Readout Button
     const btnVoice = document.getElementById("btn-voice-readout");
