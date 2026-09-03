@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AegisAlert National | Apex Multi-Ministry Disaster Management Grid of India</title>
-  <meta name="description" content="Apex Multi-Ministry Disaster Early Warning & Life-Saving Command Grid for the Government of India (NDMA & MHA). Pan-India Theaters with 100% Offline PWA.">
+  <title>AEGIS ALERT | AI-Powered Multi-Hazard Early Warning & Situational Awareness Platform</title>
+  <meta name="description" content="AEGIS ALERT: AI-Powered Multi-Hazard Early Warning & Situational Awareness Platform inspired by Smart India Hackathon SIH26001 - SIH26192.">
 
   <!-- Progressive Web App Manifest -->
   <link rel="manifest" href="manifest.json">
@@ -13,786 +13,875 @@
   <!-- Leaflet Tactical GIS Map CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
   
+  <!-- Chart.js for High-Performance Analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
   <!-- Custom Application Stylesheet -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Top Tactical Navigation & Telemetry Bar -->
+  <!-- =========================================================================
+       TOP GLOBAL NAVIGATION BAR
+       ========================================================================= -->
   <header class="header-bar">
     <div class="brand-section">
-      <div class="brand-badge" style="background: linear-gradient(135deg, #f97316 0%, #ffffff 50%, #16a34a 100%);">🛡️</div>
+      <div class="brand-badge">🛡️</div>
       <div class="brand-text">
-        <h1 id="app-heading">AEGISALERT NATIONAL <span class="brand-tag">GOVT OF INDIA APEX GRID</span></h1>
-        <p id="app-subheading">National Disaster Management Authority (NDMA) • Ministry of Home Affairs • NEOC New Delhi</p>
+        <h1 id="app-heading">AEGIS ALERT <span class="brand-tag">MULTI-HAZARD INTELLIGENCE</span></h1>
+        <p id="app-subheading">"See the Risk. Understand the Threat. Act Early." • SIH26001–SIH26192</p>
       </div>
     </div>
 
-    <!-- Vernacular Language & Status Bar -->
+    <!-- Navigation Tabs -->
+    <nav class="nav-links">
+      <button class="nav-btn active" data-view="view-dashboard">🏠 Dashboard</button>
+      <button class="nav-btn" data-view="view-map">🗺️ Live Map</button>
+      <button class="nav-btn" data-view="view-hazards">⚠️ Hazards</button>
+      <button class="nav-btn" data-view="view-forecast">⏱️ Forecast</button>
+      <button class="nav-btn" data-view="view-analytics">📊 Analytics</button>
+      <button class="nav-btn" data-view="view-vulnerability">🏘️ Red Zones</button>
+      <button class="nav-btn" data-view="view-alerts">🚨 Alerts</button>
+      <button class="nav-btn" data-view="view-ai">🤖 Ask AEGIS</button>
+      <button class="nav-btn" data-view="view-about">📖 About / SIH</button>
+    </nav>
+
+    <!-- Top Controls: Location, Demo Mode & Emergency Scenario -->
     <div class="header-controls">
-      <!-- 8-Language Pan-India Selector -->
-      <div class="lang-selector-group">
-        <span class="lang-globe-icon">🌐</span>
-        <select id="lang-select" class="styled-lang-select" title="National Language Selector / भाषा चुनें">
-          <option value="en">English (Official)</option>
-          <option value="hi" selected>हिंदी (National Union)</option>
-          <option value="as">অসমীয়া (North East)</option>
-          <option value="bn">বাংলা (East)</option>
-          <option value="mr">मराठी (West)</option>
-          <option value="te">తెలుగు (South)</option>
-          <option value="ta">தமிழ் (South)</option>
-          <option value="gu">ગુજરાતી (West)</option>
+      <!-- Location Selector -->
+      <div class="header-control-group">
+        <span class="control-icon">📍</span>
+        <select id="global-location-select" class="styled-select" title="Select Monitored Location">
+          <option value="LOC-HYD" selected>Hyderabad, Telangana</option>
+          <option value="LOC-GHY">Guwahati, Assam</option>
+          <option value="LOC-DED">Dehradun, Uttarakhand</option>
+          <option value="LOC-VSP">Visakhapatnam, Andhra Pradesh</option>
+          <option value="LOC-VJA">Vijayawada, Andhra Pradesh</option>
+          <option value="LOC-SHL">Shillong, Meghalaya</option>
+          <option value="LOC-MUM">Mumbai, Maharashtra</option>
+          <option value="LOC-CHE">Chennai, Tamil Nadu</option>
+          <option value="LOC-BLR">Bengaluru, Karnataka</option>
         </select>
       </div>
 
-      <div class="status-chip" id="live-feed-status">
-        <span class="indicator-dot"></span>
-        <span>NEOC Apex Multi-Ministry Ingestion Grid</span>
+      <!-- Demo Scenario Selector -->
+      <div class="header-control-group">
+        <span class="control-icon">🧪</span>
+        <select id="demo-scenario-select" class="styled-select" title="Select Demonstration Scenario">
+          <option value="normal">Normal Conditions</option>
+          <option value="heavy_rain">Heavy Rainfall</option>
+          <option value="flash_flood" selected>Flash Flood & Inundation</option>
+          <option value="thunderstorm">Thunderstorm & Lightning</option>
+          <option value="heatwave">Extreme Heatwave</option>
+          <option value="multi_hazard">Multi-Hazard Event</option>
+        </select>
+      </div>
+
+      <!-- One-Click Run Emergency Scenario -->
+      <button id="btn-run-scenario" class="btn-scenario-trigger" title="Launch 90-Second Simulated Crisis Lifecycle">
+        🚨 Run Emergency Scenario
+      </button>
+
+      <!-- Demo Mode Badge -->
+      <div class="demo-mode-badge" title="Prototype Demonstration Mode Active">
+        <span class="demo-pulse-dot"></span>
+        <span>DEMO MODE</span>
       </div>
     </div>
   </header>
 
-  <!-- ====================================================================
-       APEX EXECUTIVE OVERVIEW FOR HEAD OF DISASTER MANAGEMENT
-       ==================================================================== -->
-  <section class="apex-executive-banner">
-    <div class="exec-banner-header">
-      <div class="exec-title">
-        <span class="exec-shield-icon">🇮🇳</span>
-        <div>
-          <strong style="color:#ffffff; font-size: 0.95rem; letter-spacing: 0.5px;">APEX NATIONAL DISASTER SITUATIONAL REPORT</strong>
-          <span style="font-size: 0.75rem; color:#94a3b8; display:block;">Executive Dashboard for Cabinet Committee on Disaster Management & NDMA Vice-Chairman</span>
-        </div>
-      </div>
-      <div class="exec-sync-badge">
-        <span class="live-blink-circle"></span>
-        <span id="exec-live-clock">LIVE MULTI-PLATFORM SYNC: 100% HEALTHY</span>
-      </div>
-    </div>
+  <!-- Prototype Notice Bar -->
+  <div class="demo-disclaimer-banner">
+    <span>⚠️ <strong>PROTOTYPE DEMONSTRATION:</strong> AEGIS ALERT is a student innovation platform (SIH26001–SIH26192). Risk scores and alerts are generated from simulated demo models and must NOT be used for real-world emergency decision-making.</span>
+  </div>
 
-    <!-- Top 5 Executive Dials -->
-    <div class="exec-kpi-grid">
-      <div class="exec-kpi-card">
-        <span class="exec-kpi-label">NATIONAL CRISIS LEVEL</span>
-        <strong id="exec-crisis-level" class="exec-kpi-val" style="color:#ef4444;">LEVEL 4 (RED)</strong>
-        <span class="exec-kpi-sub">National Alert Declared</span>
+  <!-- Emergency Scenario Progress Tracker Modal / Bar (Hidden by default) -->
+  <div id="scenario-tracker-bar" class="scenario-tracker-bar hidden">
+    <div class="scenario-tracker-inner">
+      <div class="tracker-meta">
+        <strong id="tracker-title">🚨 SIMULATION ACTIVE: Heavy Rainfall ➔ Flash Flood ➔ Evacuation</strong>
+        <span id="tracker-phase-text">Phase 1: Convective Precipitation Onset</span>
       </div>
-      <div class="exec-kpi-card">
-        <span class="exec-kpi-label">POPULATION MONITORED</span>
-        <strong id="exec-pop-val" class="exec-kpi-val" style="color:#f59e0b;">7,80,000 Souls</strong>
-        <span class="exec-kpi-sub">Under Live Evacuation Watch</span>
+      <div class="tracker-progress-track">
+        <div id="tracker-progress-fill" class="tracker-progress-fill" style="width: 0%;"></div>
       </div>
-      <div class="exec-kpi-card">
-        <span class="exec-kpi-label">ARMED FORCES & NDRF</span>
-        <strong id="exec-ndrf-val" class="exec-kpi-val" style="color:#38bdf8;">16 Bns + IAF HADR</strong>
-        <span class="exec-kpi-sub">Army Engineers Airborne</span>
-      </div>
-      <div class="exec-kpi-card">
-        <span class="exec-kpi-label">CWC 5,300+ DAMS</span>
-        <strong id="exec-dam-val" class="exec-kpi-val" style="color:#10b981;">94.0% Safe Disch.</strong>
-        <span class="exec-kpi-sub">Regulated Spillways</span>
-      </div>
-      <div class="exec-kpi-card">
-        <span class="exec-kpi-label">LIVE DATA PLATFORMS</span>
-        <strong id="exec-platforms-val" class="exec-kpi-val" style="color:#10b981;">6 Streams ACTIVE</strong>
-        <span class="exec-kpi-sub">Open-Meteo • USGS • NASA</span>
+      <div class="tracker-controls">
+        <span id="tracker-timer">T+00:00</span>
+        <button id="btn-stop-scenario" class="btn-stop-sim">⏹️ Stop Scenario</button>
       </div>
     </div>
+  </div>
 
-    <!-- State-by-State Posture Strip for Quick Review -->
-    <div class="state-posture-strip">
-      <span class="posture-strip-label">STATE-BY-STATE DISASTER POSTURE:</span>
-      <div class="state-pills-row" id="state-posture-pills">
-        <!-- Rendered dynamically -->
-      </div>
-    </div>
-  </section>
+  <!-- =========================================================================
+       MAIN APPLICATION VIEWS CONTAINER
+       ========================================================================= -->
+  <main class="main-content-container">
 
-  <!-- ====================================================================
-       LIVE DISASTER DRILL & REAL-TIME CRISIS SIMULATOR COCKPIT
-       ==================================================================== -->
-  <section class="live-drill-cockpit" id="live-drill-cockpit">
-    <div class="drill-top-row">
-      <div class="drill-title-col">
-        <div class="drill-badge-pulse">● LIVE DISASTER DRILL</div>
-        <div class="drill-headline">
-          <strong>Real-Time Crisis Progression & Incident Playback Engine</strong>
-          <span>Watch the dynamic second-by-second escalation of a real natural disaster in real-time</span>
-        </div>
-      </div>
-
-      <div class="drill-controls-group">
-        <button id="btn-drill-toggle" class="btn-drill-action btn-drill-start">
-          <span id="drill-icon">▶️</span> <span id="drill-text">START LIVE DRILL</span>
-        </button>
-        <button id="btn-drill-speed" class="btn-drill-sub" title="Toggle simulation speed: 1x, 5x, 10x">
-          Speed: <strong id="val-drill-speed">1x</strong>
-        </button>
-        <button id="btn-drill-reset" class="btn-drill-sub" title="Reset crisis drill to initial conditions">
-          🔄 Reset
-        </button>
-      </div>
-
-      <div class="drill-metrics-strip">
-        <div class="drill-clock-box">
-          <span class="drill-clock-lbl">CRISIS ELAPSED TIME</span>
-          <strong id="drill-timer-val" class="drill-clock-val">T+00:00:00</strong>
-        </div>
-        <div class="drill-stage-box">
-          <span class="drill-stage-lbl">DISASTER ESCALATION PHASE</span>
-          <strong id="drill-phase-val" class="drill-stage-val phase-watch">PHASE 1: MONITORING</strong>
-        </div>
-      </div>
-    </div>
-
-    <!-- Live Real-Time Problem Injectors (Chaos Engineering for Demo) -->
-    <div class="drill-injectors-row">
-      <span class="injectors-title">⚡ REAL-TIME PROBLEM INJECTORS (LIVE DEMO TESTING):</span>
-      <div class="injectors-buttons">
-        <button class="btn-inject-chaos" data-type="blackout" title="Trigger immediate power grid collapse">
-          ⚡ Inject Power Blackout
-        </button>
-        <button class="btn-inject-chaos" data-type="tower_down" title="Trigger cell tower destruction">
-          📶 Inject Cell Tower Collapse
-        </button>
-        <button class="btn-inject-chaos" data-type="breach" title="Trigger catastrophic embankment overtopping">
-          🌊 Inject Embankment Breach
-        </button>
-        <button class="btn-inject-chaos" data-type="citizen_sos" title="Inject urgent trapped family SOS">
-          🆘 Inject Urgent Citizen SOS
-        </button>
-        <button class="btn-inject-chaos" data-type="rockslide" title="Inject sudden highway rockslide cutoff">
-          ⛰️ Inject Highway Rockslide
-        </button>
-        <button id="btn-drill-voice-announcer" class="btn-inject-chaos announcer-toggle" title="Toggle emergency voice announcements">
-          🗣️ Voice: ON
-        </button>
-      </div>
-    </div>
-  </section>
-
-  <!-- ====================================================================
-       MULTIDISCIPLINARY ROLE SWITCHER BAR (PAN-INDIA APEX)
-       ==================================================================== -->
-  <nav class="role-nav-bar">
-    <button class="role-tab active" data-tab="war-room">
-      <span class="role-icon">🏛️</span>
-      <span class="role-name" id="tab-label-warroom">National Command (NEOC)</span>
-      <span class="role-sub">Cabinet & NDMA War Room</span>
-    </button>
-
-    <button class="role-tab" data-tab="citizen">
-      <span class="role-icon">🧑‍🤝‍🧑</span>
-      <span class="role-name" id="tab-label-citizen">Citizen Survival Hub</span>
-      <span class="role-sub">1-Tap SOS • Offline PWA</span>
-    </button>
-
-    <button class="role-tab" data-tab="responder">
-      <span class="role-icon">🎖️</span>
-      <span class="role-name" id="tab-label-responder">NDRF & Armed Forces (HADR)</span>
-      <span class="role-sub">IAF Airlift & Army Engineers</span>
-    </button>
-
-    <button class="role-tab" data-tab="shelter">
-      <span class="role-icon">🏥</span>
-      <span class="role-name" id="tab-label-shelter">National Relief & Health</span>
-      <span class="role-sub">Camps, Water & Blood Banks</span>
-    </button>
-  </nav>
-
-  <!-- Main Dual-Console Layout -->
-  <main class="main-layout">
-
-    <!-- ====================================================================
-         LEFT COLUMN: Multidisciplinary Dynamic Workspace
-         ==================================================================== -->
-    <section class="war-room-col">
-
-      <!-- TAB 1: National Command War Room -->
-      <div id="view-war-room" class="role-view active">
-        
-        <!-- Regional Theater & Scenario Selector Bar -->
-        <div class="panel-card accent-top" style="margin-bottom: 20px;">
-          <div class="scenario-bar">
-            <div class="selector-group">
-              <label for="scenario-select" class="selector-label">PAN-INDIA THEATER:</label>
-              <select id="scenario-select" class="styled-select">
-                <option value="assam_brahmaputra_surge">🌊 FLOOD: Brahmaputra Basin & Majuli Breach (Assam)</option>
-                <option value="wayanad_mountain_landslide">⛰️ LANDSLIDE: Wayanad Slope Collapse & Mudflow (Kerala)</option>
-                <option value="kedarnath_intense_cloudburst">⛈️ CLOUDBURST: Kedarnath 112mm/hr Mountain Torrent (Uttarakhand)</option>
-                <option value="bay_of_bengal_super_cyclone">🌀 TOOFAN / CYCLONE: Bay of Bengal 185km/h Landfall (Puri / AP)</option>
-                <option value="bengal_violent_tornado">🌪️ TORNADO: Bengal 195km/h Kalbaishakhi Vortex (West Bengal)</option>
-                <option value="rajasthan_extreme_heatwave">☀️ EXTREME HEAT: North-Western 49.4°C Loo Emergency (Rajasthan / Delhi)</option>
-                <option value="himalayan_seismic_rupture">⚡ EARTHQUAKE: Main Central Thrust M7.1 Rupture (Uttarakhand / HP)</option>
-              </select>
-            </div>
-            <div class="live-feed-banner">
-              <span>APEX INGESTION: <strong style="color:var(--accent-blue);">OPEN-METEO • USGS • NASA EONET • CWC • IMD</strong></span>
+    <!-- =======================================================================
+         VIEW 1: MAIN DASHBOARD
+         ======================================================================= -->
+    <section id="view-dashboard" class="app-view active">
+      <!-- Multi-Hazard Situation Overview Hero -->
+      <div class="overview-hero-card">
+        <div class="overview-top-row">
+          <div>
+            <span class="section-eyebrow">MULTI-HAZARD SITUATION OVERVIEW</span>
+            <h2 id="overview-location-name" class="overview-heading">Hyderabad, Telangana</h2>
+            <p id="overview-location-desc" class="overview-subtext">Deccan Plateau Urban Basin • High-density metropolis vulnerable to stormwater drainage bottleneck and lake overtopping.</p>
+          </div>
+          <div class="composite-gauge-box">
+            <span class="gauge-label">AEGIS COMPOSITE RISK SCORE</span>
+            <div id="composite-score-num" class="composite-score-number">78<span class="score-max">/100</span></div>
+            <div id="composite-level-badge" class="risk-badge-pill level-high">HIGH RISK</div>
+            <div class="composite-meter-track">
+              <div id="composite-meter-fill" class="composite-meter-fill" style="width: 78%; background: #ef4444;"></div>
             </div>
           </div>
         </div>
 
-        <!-- Predictive Risk Meter & Telemetry Overview -->
-        <div class="panel-card" style="margin-bottom: 20px;">
-          <div class="card-header">
-            <span class="card-title">
-              <span class="card-title-icon">📊</span>
-              National Disaster Threat Index & Damage-Prevention Pre-Judgment
-            </span>
-            <span id="scenario-title" style="font-size: 0.8rem; font-weight: 700; color: var(--accent-blue);">Brahmaputra Basin (Assam)</span>
-          </div>
+        <div class="ai-overview-reasoning">
+          <span class="reasoning-icon">🧠</span>
+          <span id="overview-ai-explanation" class="reasoning-text">
+            <strong>AI Threat Diagnosis:</strong> Elevated composite risk driven by heavy localized rainfall (68.4 mm/h) combined with Musi river gauge swell to 4.8m (92% of danger mark). Rapid runoff is saturating drainage channels.
+          </span>
+        </div>
+      </div>
 
-          <div class="risk-overview-grid">
-            <div class="risk-gauge-box">
-              <span class="risk-label-sub">National Threat Index</span>
-              <div id="risk-score-value" class="risk-score-big">94/100</div>
-              <div id="risk-level-badge" class="risk-badge" style="background-color: var(--accent-red);">LEVEL 4 NATIONAL CRISIS</div>
-              <div class="meter-track">
-                <div id="risk-meter-bar" class="meter-fill"></div>
-              </div>
-            </div>
-
-            <div class="telemetry-right">
-              <div class="telemetry-metrics-grid">
-                <div class="metric-cell">
-                  <span id="lbl-metric-1" class="metric-cell-label">Telemetry Metric 1</span>
-                  <div id="val-metric-1" class="metric-cell-val">52.0 mm/hr</div>
-                </div>
-                <div class="metric-cell">
-                  <span id="lbl-metric-2" class="metric-cell-label">Telemetry Metric 2</span>
-                  <div id="val-metric-2" class="metric-cell-val">86.8 m (Danger: 85.5m)</div>
-                </div>
-                <div class="metric-cell">
-                  <span id="lbl-metric-3" class="metric-cell-label">Telemetry Metric 3</span>
-                  <div id="val-metric-3" class="metric-cell-val">94.0% Storage</div>
-                </div>
-                <div class="metric-cell">
-                  <span id="lbl-metric-4" class="metric-cell-label">Telemetry Metric 4</span>
-                  <div id="val-metric-4" class="metric-cell-val">38 km/h</div>
-                </div>
-              </div>
-
-              <div class="prediction-box">
-                <div class="prediction-header">
-                  <span>⏱️ APEX PRE-JUDGMENT:</span>
-                  <span id="val-breach-time">~35 Minutes Until Major Breach</span>
-                  <span>• Impacted: <strong id="val-population">142,000 Citizens</strong></span>
-                </div>
-                <div id="val-prevention-action" class="prediction-body">
-                  National Executive Committee (NEC) alert: Task IAF Eastern Air Command (Mi-17s) from Tezpur. Pre-position NDRF 1st & 12th Battalions with 40 inflatable zodiacs.
-                </div>
-              </div>
+      <!-- 6 Dynamic Multi-Hazard Cards Grid -->
+      <div class="hazard-cards-grid">
+        <!-- 1. Rainfall Risk -->
+        <div class="hazard-card" data-hazard="rainfall">
+          <div class="hazard-card-head">
+            <span class="hazard-card-icon">🌧️</span>
+            <div>
+              <strong class="hazard-card-title">Rainfall Risk</strong>
+              <span id="card-rain-trend" class="hazard-trend-tag text-red">↑ +14% (Intensifying)</span>
             </div>
           </div>
+          <div class="hazard-score-row">
+            <span id="card-rain-score" class="hazard-score-val">82%</span>
+            <span id="card-rain-level" class="risk-badge-sm level-high">HIGH</span>
+          </div>
+          <p id="card-rain-desc" class="hazard-card-desc">Rainfall rate at 68.4 mm/h with 24h accumulation reaching 145 mm.</p>
+          <button class="btn-hazard-details" data-hazard="flood">View Flood & Inundation Details →</button>
         </div>
 
-        <!-- Tactical GIS Pan-India Command Map -->
-        <div class="panel-card" style="margin-bottom: 20px;">
+        <!-- 2. Flood Risk -->
+        <div class="hazard-card" data-hazard="flood">
+          <div class="hazard-card-head">
+            <span class="hazard-card-icon">🌊</span>
+            <div>
+              <strong class="hazard-card-title">Flood / Inundation Risk</strong>
+              <span id="card-flood-trend" class="hazard-trend-tag text-red">↑ +18% (Overtopping)</span>
+            </div>
+          </div>
+          <div class="hazard-score-row">
+            <span id="card-flood-score" class="hazard-score-val">78%</span>
+            <span id="card-flood-level" class="risk-badge-sm level-high">HIGH</span>
+          </div>
+          <p id="card-flood-desc" class="hazard-card-desc">Water stage at 4.8m vs 5.2m danger mark (92% capacity).</p>
+          <button class="btn-hazard-details" data-hazard="flood">View Flood & Inundation Details →</button>
+        </div>
+
+        <!-- 3. Landslide Risk -->
+        <div class="hazard-card" data-hazard="landslide">
+          <div class="hazard-card-head">
+            <span class="hazard-card-icon">⛰️</span>
+            <div>
+              <strong class="hazard-card-title">Landslide Risk</strong>
+              <span id="card-landslide-trend" class="hazard-trend-tag text-green">0% (Stable)</span>
+            </div>
+          </div>
+          <div class="hazard-score-row">
+            <span id="card-landslide-score" class="hazard-score-val">24%</span>
+            <span id="card-landslide-level" class="risk-badge-sm level-low">LOW</span>
+          </div>
+          <p id="card-landslide-desc" class="hazard-card-desc">Gentle terrain (4.2° slope) presents minimal debris flow susceptibility.</p>
+          <button class="btn-hazard-details" data-hazard="landslide">View Landslide Details →</button>
+        </div>
+
+        <!-- 4. Lightning Risk -->
+        <div class="hazard-card" data-hazard="lightning">
+          <div class="hazard-card-head">
+            <span class="hazard-card-icon">⚡</span>
+            <div>
+              <strong class="hazard-card-title">Lightning / Thunderstorm</strong>
+              <span id="card-lightning-trend" class="hazard-trend-tag text-amber">↑ +25% (Convective Storm)</span>
+            </div>
+          </div>
+          <div class="hazard-score-row">
+            <span id="card-lightning-score" class="hazard-score-val">61%</span>
+            <span id="card-lightning-level" class="risk-badge-sm level-moderate">MODERATE</span>
+          </div>
+          <p id="card-lightning-desc" class="hazard-card-desc">CAPE energy 2450 J/kg with 18 cloud-to-ground strikes per 10m.</p>
+          <button class="btn-hazard-details" data-hazard="lightning">View Lightning Nowcasting →</button>
+        </div>
+
+        <!-- 5. Heat Risk -->
+        <div class="hazard-card" data-hazard="heat">
+          <div class="hazard-card-head">
+            <span class="hazard-card-icon">🌡️</span>
+            <div>
+              <strong class="hazard-card-title">Heat & Thermal Stress</strong>
+              <span id="card-heat-trend" class="hazard-trend-tag text-green">0% (Moderate)</span>
+            </div>
+          </div>
+          <div class="hazard-score-row">
+            <span id="card-heat-score" class="hazard-score-val">34%</span>
+            <span id="card-heat-level" class="risk-badge-sm level-low">LOW</span>
+          </div>
+          <p id="card-heat-desc" class="hazard-card-desc">Ambient temperature 34.2°C with 78% humidity yields moderate heat index.</p>
+          <button class="btn-hazard-details" data-hazard="heat">View Heat Stress Details →</button>
+        </div>
+
+        <!-- 6. Pollution Risk -->
+        <div class="hazard-card" data-hazard="pollution">
+          <div class="hazard-card-head">
+            <span class="hazard-card-icon">🌫️</span>
+            <div>
+              <strong class="hazard-card-title">Air Pollution Coupled</strong>
+              <span id="card-pollution-trend" class="hazard-trend-tag text-amber">+6% (Stagnant)</span>
+            </div>
+          </div>
+          <div class="hazard-score-row">
+            <span id="card-pollution-score" class="hazard-score-val">48%</span>
+            <span id="card-pollution-level" class="risk-badge-sm level-moderate">MODERATE</span>
+          </div>
+          <p id="card-pollution-desc" class="hazard-card-desc">PM2.5 at 68 µg/m³ (AQI ~138) under 32 km/h wind dispersion.</p>
+          <button class="btn-hazard-details" data-hazard="pollution">View Pollution Details →</button>
+        </div>
+      </div>
+
+      <!-- Tactical Map & Current Environmental Sensors Row -->
+      <div class="dashboard-map-telemetry-row">
+        <!-- Map Panel -->
+        <div class="panel-card map-panel">
           <div class="card-header">
             <span class="card-title">
               <span class="card-title-icon">🗺️</span>
-              Pan-India Tactical GIS Hazard Map & Live Seismology Layer
+              Pan-India Tactical GIS Hazard Map
             </span>
-            <span style="font-size:0.75rem; color:var(--text-muted);">USGS Live Earthquakes • Survey of India • ISRO Satellite</span>
+            <div class="map-layer-toggles-strip">
+              <label><input type="checkbox" id="chk-layer-rain" checked> 🌧️ Rain</label>
+              <label><input type="checkbox" id="chk-layer-flood" checked> 🌊 Flood</label>
+              <label><input type="checkbox" id="chk-layer-landslide" checked> ⛰️ Landslide</label>
+              <label><input type="checkbox" id="chk-layer-lightning" checked> ⚡ Lightning</label>
+              <label><input type="checkbox" id="chk-layer-heat" checked> 🌡️ Heat</label>
+              <label><input type="checkbox" id="chk-layer-pollution" checked> 🌫️ Pollution</label>
+              <label><input type="checkbox" id="chk-layer-redzones" checked> 🚩 Red Zones</label>
+              <label><input type="checkbox" id="chk-layer-stations" checked> 📡 Stations</label>
+            </div>
           </div>
-
           <div class="gis-map-wrapper">
-            <div id="gis-map"></div>
-            <div class="map-floating-legend">
-              <div class="legend-row">
-                <div class="legend-box" style="background:#ef4444; opacity:0.6;"></div>
-                <span>Red Hazard Zone (Mandatory National Evacuation)</span>
-              </div>
-              <div class="legend-row">
-                <div class="legend-box" style="background:#10b981;"></div>
-                <span>Autonomous Warning Station (Zero-Internet Mast)</span>
-              </div>
-              <div class="legend-row">
-                <div class="legend-box" style="background:#38bdf8;"></div>
-                <span>National Disaster Highland Relief Center</span>
-              </div>
-              <div class="legend-row">
-                <div class="legend-box" style="background:#f43f5e; border-radius:50%;"></div>
-                <span>Live USGS Earthquake Epicenter</span>
-              </div>
-            </div>
+            <div id="gis-map-dashboard"></div>
           </div>
         </div>
 
-        <!-- Interactive Citizen Mobile Device Evacuation Alert Simulator -->
-        <div class="panel-card mobile-simulator-card" style="margin-bottom: 20px;">
+        <!-- Current Sensor Conditions Panel -->
+        <div class="panel-card telemetry-panel">
           <div class="card-header">
             <span class="card-title">
-              <span class="card-title-icon">📲</span>
-              Mobile Device Evacuation Alert & SMS Dispatcher (Affected Areas Only)
+              <span class="card-title-icon">📊</span>
+              Current Environmental Variables
             </span>
-            <span class="carrier-broadcast-badge">C-DOT SACHET CELL BROADCAST READY</span>
+            <span class="timestamp-tag" id="sensor-timestamp">LIVE TELEMETRY</span>
           </div>
 
-          <div class="mobile-sim-layout">
-            <div class="mobile-dispatch-form">
-              <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:10px;">
-                Directly sends high-priority evacuation route alerts and life-saving instructions to all resident smartphones located inside the geofenced danger zone:
-              </p>
-              <div class="mobile-input-group">
-                <label>Recipient Resident Phone (Demo):</label>
-                <input type="text" id="sms-phone-input" value="+91 98450 11223" class="sms-input-field" placeholder="+91 XXXXX XXXXX" />
-              </div>
-              <div class="mobile-input-group" style="margin-top:8px;">
-                <label>Target Affected Hazard Zone:</label>
-                <select id="sms-calamity-select" class="sms-select-field">
-                  <option value="CAL-01">Majuli & Jorhat, Assam (Brahmaputra Flood)</option>
-                  <option value="CAL-02">Chooralmala & Meppadi, Kerala (Landslide Mudflow)</option>
-                  <option value="CAL-03">Puri Coastal Belt, Odisha (Severe Cyclone)</option>
-                  <option value="CAL-04">Rudraprayag, Uttarakhand (Cloudburst Torrent)</option>
-                  <option value="CAL-05">Bikaner & Churu, Rajasthan (49.4°C Heatwave)</option>
-                </select>
-              </div>
-              <button id="btn-send-mobile-alert" class="btn-dispatch-sms" style="margin-top:12px;">
-                🚀 Send Evacuation Alert to Affected Mobiles
-              </button>
+          <div class="telemetry-metrics-grid">
+            <div class="metric-cell">
+              <span class="metric-cell-label">Rainfall Rate</span>
+              <div id="val-env-rain" class="metric-cell-val">68.4 mm/h</div>
             </div>
-
-            <!-- Realistic Smartphone Frame Simulator -->
-            <div class="phone-frame-mockup">
-              <div class="phone-notch"></div>
-              <div class="phone-screen">
-                <div class="phone-status-bar">
-                  <span>23:55</span>
-                  <span>📶 5G  🔋 94%</span>
-                </div>
-                <div class="phone-notification-card" id="phone-notification-preview">
-                  <div class="notif-header">
-                    <span class="notif-badge-gov">GOVT EMERGENCY ALERT</span>
-                    <span class="notif-time">NOW</span>
-                  </div>
-                  <strong class="notif-title">🚨 MANDATORY EVACUATION: RED ZONE</strong>
-                  <p class="notif-body" id="phone-notif-body">
-                    Severe hazard in Majuli, Assam. Immediate evacuation ordered. Follow marked highland route to Garmur Camp (+38m). Helpline: 112. Free medical care available.
-                  </p>
-                  <div class="notif-actions">
-                    <span class="notif-btn-nav">🧭 Safe Route</span>
-                    <span class="notif-btn-call">📞 Call 112</span>
-                  </div>
-                </div>
-              </div>
+            <div class="metric-cell">
+              <span class="metric-cell-label">24h Accumulated</span>
+              <div id="val-env-rain24" class="metric-cell-val">145.0 mm</div>
             </div>
-          </div>
-        </div>
-
-        <!-- Multi-Platform Live Data Verification Drawer -->
-        <div class="panel-card" style="margin-bottom: 20px;">
-          <div class="card-header">
-            <span class="card-title">
-              <span class="card-title-icon">🛰️</span>
-              Verified Live Multi-Platform Telemetry Streams
-            </span>
-            <span id="live-platform-count-tag" style="font-size:0.75rem; color:var(--accent-green);">3 Global APIs Connected</span>
-          </div>
-          
-          <div class="live-stream-cards-grid">
-            <div class="stream-card">
-              <div class="stream-card-head">
-                <strong>🌦️ Open-Meteo Global Meteorological</strong>
-                <span class="status-live-pill">LIVE 200 OK</span>
-              </div>
-              <div class="stream-card-body" id="stream-body-weather">
-                Fetching live atmospheric radar...
-              </div>
+            <div class="metric-cell">
+              <span class="metric-cell-label">Temperature</span>
+              <div id="val-env-temp" class="metric-cell-val">34.2 °C</div>
             </div>
-
-            <div class="stream-card">
-              <div class="stream-card-head">
-                <strong>⚡ USGS Global Seismology</strong>
-                <span class="status-live-pill">LIVE 200 OK</span>
-              </div>
-              <div class="stream-card-body" id="stream-body-seismic">
-                Fetching tectonic sub-surface feeds...
-              </div>
+            <div class="metric-cell">
+              <span class="metric-cell-label">Relative Humidity</span>
+              <div id="val-env-humidity" class="metric-cell-val">78 %</div>
             </div>
-
-            <div class="stream-card">
-              <div class="stream-card-head">
-                <strong>🌍 NASA EONET Active Events</strong>
-                <span class="status-live-pill">LIVE 200 OK</span>
-              </div>
-              <div class="stream-card-body" id="stream-body-nasa">
-                Tracking orbital satellite alerts...
-              </div>
+            <div class="metric-cell">
+              <span class="metric-cell-label">Wind Speed</span>
+              <div id="val-env-wind" class="metric-cell-val">32.0 km/h</div>
             </div>
-          </div>
-        </div>
-
-        <!-- Multi-Ministry SOP Action Directives -->
-        <div class="panel-card" style="margin-bottom: 20px;">
-          <div class="card-header">
-            <span class="card-title">
-              <span class="card-title-icon">📋</span>
-              Apex Multi-Ministry Action Directives (NDMA / MHA / MoD SOPs)
-            </span>
-            <span style="font-size:0.75rem; color:var(--accent-amber);">Union Cabinet Approved</span>
-          </div>
-          <ul id="sop-list" class="sop-list"></ul>
-        </div>
-
-        <!-- Sovereign Government Control & Authorization Gateway (NICAS) -->
-        <div class="panel-card sovereign-gov-card" style="margin-bottom: 20px;">
-          <div class="card-header">
-            <span class="card-title">
-              <span class="card-title-icon">🏛️</span>
-              Sovereign National Incident Command Authorization (NICAS)
-            </span>
-            <span class="gov-official-seal">SEC. 10(2)(l) DM ACT 2005</span>
-          </div>
-          <div class="sovereign-auth-grid">
-            <div class="auth-officer-box">
-              <div class="auth-avatar">🎖️</div>
-              <div class="auth-meta">
-                <strong>Incident Commander: Shri R. K. Verma, IAS</strong>
-                <span>Designation: Union Joint Secretary & National Incident Commander</span>
-                <span>Jurisdiction: National Emergency Operations Centre (NEOC), MHA New Delhi</span>
-              </div>
+            <div class="metric-cell">
+              <span class="metric-cell-label">Barometric Pressure</span>
+              <div id="val-env-pressure" class="metric-cell-val">1004.2 hPa</div>
             </div>
-            <div class="auth-seal-box">
-              <span class="seal-label">SOVEREIGN CRYPTOGRAPHIC BROADCAST SEAL</span>
-              <code class="seal-hash">SHA256: 7F4B92C8E109DA3541BF884E0C392A</code>
-              <span class="seal-status">● AUTHORIZATION LOCKED & LEGALLY BINDING</span>
+            <div class="metric-cell">
+              <span class="metric-cell-label">Terrain Elevation</span>
+              <div id="val-env-elevation" class="metric-cell-val">542 m MSL</div>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-cell-label">Terrain Slope</span>
+              <div id="val-env-slope" class="metric-cell-val">4.2 °</div>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-cell-label">Soil Moisture</span>
+              <div id="val-env-soil" class="metric-cell-val">82 %</div>
+            </div>
+            <div class="metric-cell">
+              <span class="metric-cell-label">Air Quality (AQI)</span>
+              <div id="val-env-aqi" class="metric-cell-val">138 (Moderate)</div>
             </div>
           </div>
 
-          <!-- Free Unrestricted Open Data Access for Government Teams -->
-          <div class="gov-open-data-bar">
-            <span class="open-data-label">📂 GOVT UNRESTRICTED DATA ACCESS:</span>
-            <div class="open-data-actions">
-              <a href="/api/gov/export?format=json" target="_blank" class="btn-gov-export" title="Download unrestricted raw disaster telemetry in JSON">
-                📥 Export Telemetry (JSON)
-              </a>
-              <a href="/api/gov/export?format=csv" target="_blank" class="btn-gov-export" title="Download unrestricted tabular disaster records in CSV">
-                📥 Export Report (CSV)
-              </a>
-              <span class="open-data-tag">NO LOGIN WALL • STATUTORY PUBLIC DATA</span>
+          <div class="vulnerability-summary-box">
+            <div class="vuln-stat">
+              <span>Population Exposed:</span>
+              <strong id="val-env-pop">1,85,000</strong>
             </div>
-          </div>
-
-          <!-- Specific Geographical Area Siren Controllers -->
-          <div class="geographical-sirens-section">
-            <span class="geo-siren-title">📢 GEOGRAPHICAL HAZARD SIREN TRIGGER MATRIX (BY AFFECTED AREA):</span>
-            <div class="geo-sirens-grid">
-              <div class="geo-siren-card active" id="siren-card-CAL-01">
-                <div class="geo-siren-info">
-                  <strong>🌊 Majuli Flood Sector (Assam)</strong>
-                  <span>142,000 at risk • Danger Mark 105.7m</span>
-                </div>
-                <button class="btn-toggle-geo-siren btn-siren-active" data-id="CAL-01">
-                  🚨 Siren: ACTIVE (120dB)
-                </button>
-              </div>
-
-              <div class="geo-siren-card active" id="siren-card-CAL-02">
-                <div class="geo-siren-info">
-                  <strong>⛰️ Wayanad Landslide Ridge (Kerala)</strong>
-                  <span>38,000 at risk • 42° Slope Incline</span>
-                </div>
-                <button class="btn-toggle-geo-siren btn-siren-active" data-id="CAL-02">
-                  🚨 Siren: ACTIVE (120dB)
-                </button>
-              </div>
-
-              <div class="geo-siren-card" id="siren-card-CAL-03">
-                <div class="geo-siren-info">
-                  <strong>🌀 Puri Cyclone Coastal Belt (Odisha)</strong>
-                  <span>320,000 at risk • 185km/h Gale</span>
-                </div>
-                <button class="btn-toggle-geo-siren" data-id="CAL-03">
-                  🔈 Siren: STANDBY
-                </button>
-              </div>
-
-              <div class="geo-siren-card" id="siren-card-CAL-04">
-                <div class="geo-siren-info">
-                  <strong>⛈️ Kedarnath Cloudburst Gorge (Uttarakhand)</strong>
-                  <span>18,500 at risk • 112mm/hr Torrent</span>
-                </div>
-                <button class="btn-toggle-geo-siren" data-id="CAL-04">
-                  🔈 Siren: STANDBY
-                </button>
-              </div>
-
-              <div class="geo-siren-card" id="siren-card-CAL-05">
-                <div class="geo-siren-info">
-                  <strong>☀️ Thar Desert Heat Dome (Rajasthan)</strong>
-                  <span>260,000 at risk • 49.4°C Loo</span>
-                </div>
-                <button class="btn-toggle-geo-siren" data-id="CAL-05">
-                  🔈 Siren: STANDBY
-                </button>
-              </div>
+            <div class="vuln-stat">
+              <span>Vulnerable Habitations:</span>
+              <strong id="val-env-habitations">24 Sectors</strong>
             </div>
-          </div>
-        </div>
-
-        <!-- Apex Interoperability & External Software Outsource Gateway -->
-        <div class="panel-card" style="margin-bottom: 20px;">
-          <div class="card-header">
-            <span class="card-title">
-              <span class="card-title-icon">🔄</span>
-              National Interoperability Gateway (Outsources & Unifies Legacy Systems)
-            </span>
-            <span style="font-size:0.75rem; color:var(--accent-cyan);">Standard ITU-T CAP X.1303</span>
-          </div>
-          <p style="font-size:0.78rem; color:var(--text-secondary); margin-bottom:12px;">
-            AegisAlert National acts as the supreme central intelligence engine, capable of outsourcing, overriding, and synchronizing all existing disaster software across India:
-          </p>
-          <div class="interop-channels-grid">
-            <div class="interop-channel-item">
-              <div class="channel-dot online"></div>
-              <div>
-                <strong>C-DOT SACHET Gateway</strong>
-                <span>National Cell Broadcast (2G/3G/4G/5G Over-The-Air)</span>
-              </div>
-              <span class="channel-status-tag">ACTIVE (14ms)</span>
-            </div>
-            <div class="interop-channel-item">
-              <div class="channel-dot online"></div>
-              <div>
-                <strong>ERSS - Pan-India Dial 112</strong>
-                <span>Automated Police & Ambulance Triage Forwarding</span>
-              </div>
-              <span class="channel-status-tag">ACTIVE (9ms)</span>
-            </div>
-            <div class="interop-channel-item">
-              <div class="channel-dot online"></div>
-              <div>
-                <strong>Indian Railways Kavach Sentry</strong>
-                <span>Track Washout & Bridge Submersion Directives</span>
-              </div>
-              <span class="channel-status-tag">ACTIVE (18ms)</span>
-            </div>
-            <div class="interop-channel-item">
-              <div class="channel-dot online"></div>
-              <div>
-                <strong>100+ Smart City ICCC Networks</strong>
-                <span>Urban Drainage Sump & CCTV Overrides</span>
-              </div>
-              <span class="channel-status-tag">SYNCHRONIZED</span>
-            </div>
-            <div class="interop-channel-item">
-              <div class="channel-dot online"></div>
-              <div>
-                <strong>All 28 State SDMA Portals</strong>
-                <span>Central Overwrite & Multi-State Water Basin Sync</span>
-              </div>
-              <span class="channel-status-tag">GOVT APEX GRID</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Media Intelligence & Government Verified Social Sentiment Radar -->
-        <div class="panel-card" style="margin-bottom: 20px;">
-          <div class="card-header">
-            <span class="card-title">
-              <span class="card-title-icon">📰</span>
-              Media Intelligence & Govt Verified Social Sentiment Radar
-            </span>
-            <div style="display:flex; gap:8px; align-items:center;">
-              <span class="pulse-news-indicator">● LIVE MEDIA WIRE</span>
-              <button id="btn-push-media-bulletin" class="btn-action-small" title="Push official fact-check to national press wire">
-                📢 Dispatch Official PIB Fact-Check
-              </button>
-            </div>
-          </div>
-          <p style="font-size:0.78rem; color:var(--text-secondary); margin-bottom:12px;">
-            Real-time feed gathered from national news outlets, All India Radio (Akashvani), DD News, and official Government of India (PIB) fact-checks to prevent public panic:
-          </p>
-          <div id="media-bulletins-stream" class="media-bulletins-grid">
-            <!-- Dynamically populated by OfficialFeeds and App -->
           </div>
         </div>
       </div>
-
-      <!-- TAB 2: Citizen Survival Hub (Offline PWA) -->
-      <div id="view-citizen" class="role-view">
-        <div id="citizen-mount-point"></div>
-      </div>
-
-      <!-- TAB 3: NDRF & Armed Forces Tactical View -->
-      <div id="view-responder" class="role-view">
-        <div id="responder-mount-point"></div>
-      </div>
-
-      <!-- TAB 4: National Relief & Hospital Command -->
-      <div id="view-shelter" class="role-view">
-        <div id="shelter-mount-point"></div>
-      </div>
-
     </section>
 
-    <!-- ====================================================================
-         RIGHT COLUMN: Zero-Internet Alert Simulator & Airwave Broadcast Unit
-         ==================================================================== -->
-    <section class="hardware-col">
-
-      <div class="hardware-visualizer-box">
-        <div class="hw-header-bar">
-          <div class="hw-title">
-            <span>📡</span>
-            <div>
-              <div>AUTONOMOUS ALERT STATION</div>
-              <div style="font-size:0.72rem; color:var(--text-secondary); font-weight:400;">Pan-India Civil Defense Mast (Zero-Internet Simulator)</div>
-            </div>
+    <!-- =======================================================================
+         VIEW 2: LIVE MAP (FULL GIS COMMAND CENTER)
+         ======================================================================= -->
+    <section id="view-map" class="app-view">
+      <div class="panel-card full-map-card">
+        <div class="card-header">
+          <span class="card-title">
+            <span class="card-title-icon">🗺️</span>
+            National Multi-Hazard Tactical GIS & Red-Zone Command Center
+          </span>
+          <div class="map-controls-group">
+            <span class="subtle-label">Toggle Multi-Hazard Layers:</span>
+            <label><input type="checkbox" id="chk-fullmap-rain" checked> 🌧️ Rainfall</label>
+            <label><input type="checkbox" id="chk-fullmap-flood" checked> 🌊 Flood</label>
+            <label><input type="checkbox" id="chk-fullmap-landslide" checked> ⛰️ Landslide</label>
+            <label><input type="checkbox" id="chk-fullmap-lightning" checked> ⚡ Lightning</label>
+            <label><input type="checkbox" id="chk-fullmap-heat" checked> 🌡️ Heatwave</label>
+            <label><input type="checkbox" id="chk-fullmap-pollution" checked> 🌫️ Pollution</label>
+            <label><input type="checkbox" id="chk-fullmap-redzones" checked> 🚩 Red Zones</label>
+            <label><input type="checkbox" id="chk-fullmap-stations" checked> 📡 Weather Stations</label>
           </div>
-          <span id="hw-status-pill" class="status-pill standby">STANDBY</span>
         </div>
-
-        <!-- Physical Assembly Diagram -->
-        <div class="physical-mast-diagram">
-
-          <!-- 360° Rotating Strobe Light -->
-          <div class="strobe-assembly">
-            <div id="hw-strobe-lamp" class="strobe-lamp idle-amber" title="360° Visual Alert for deaf individuals or night storms"></div>
-            <div class="strobe-caption">360° High-Intensity Optical Strobe Array</div>
-          </div>
-
-          <!-- 120dB Directional Acoustic Horn -->
-          <div class="acoustic-horn-unit">
-            <div class="horn-icon">📢</div>
-            <div id="hw-siren-indicator" class="indicator-box">
-              🔈 Siren: Standby (120dB Acoustic Horn)
-            </div>
-          </div>
-
-          <!-- Alphanumeric High-Contrast LED Ticker -->
-          <div class="led-matrix-wrapper">
-            <div id="hw-led-ticker" class="led-ticker-text">
-              राष्ट्रीय आपदा प्रबंधन ग्रिड सक्रिय • सतर्क रहें • सुरक्षित स्थान पर जाएं
-            </div>
-          </div>
-
-          <!-- Node Telemetry & Power Management Display -->
-          <div class="hw-telemetry-row">
-            <div class="hw-telemetry-cell">
-              <span>Battery Storage</span>
-              <strong id="hw-battery-pct">98% (LiFePO4)</strong>
-            </div>
-            <div class="hw-telemetry-cell">
-              <span>Solar Input</span>
-              <strong id="hw-solar-watts">48W Solar</strong>
-            </div>
-            <div class="hw-telemetry-cell">
-              <span>Satellite Link</span>
-              <strong style="color:var(--accent-green);">ISRO NavIC (OK)</strong>
-            </div>
-          </div>
-
+        <div class="full-gis-wrapper">
+          <div id="gis-map-full"></div>
         </div>
+      </div>
+    </section>
 
-        <!-- Blackout & Grid Simulator Controls -->
-        <div class="test-controls-group">
-          <button id="toggle-grid-power" class="btn-toggle-switch" title="Simulate total electricity grid failure">
-            ⚡ Grid Power: BLACKOUT (CUT)
-          </button>
-          <button id="toggle-cellular" class="btn-toggle-switch" title="Simulate cellular tower collapse">
-            📶 Cell Tower: DESTROYED (0 BARS)
-          </button>
-          <button id="toggle-mute" class="btn-toggle-switch" title="Toggle siren sound for presentation">
-            🔊 Audio: LIVE (120dB SIREN)
-          </button>
-        </div>
+    <!-- =======================================================================
+         VIEW 3: HAZARDS DEEP-DIVE
+         ======================================================================= -->
+    <section id="view-hazards" class="app-view">
+      <div class="hazard-subnav">
+        <button class="hazard-subnav-btn active" data-sub="sub-flood">🌊 Flood & Inundation</button>
+        <button class="hazard-subnav-btn" data-sub="sub-landslide">⛰️ Landslide Risk</button>
+        <button class="hazard-subnav-btn" data-sub="sub-lightning">⚡ Lightning & Thunderstorm</button>
+        <button class="hazard-subnav-btn" data-sub="sub-heat">🌡️ Heatwave & Thermal Stress</button>
+        <button class="hazard-subnav-btn" data-sub="sub-pollution">🌫️ Air Pollution Coupled</button>
+        <button class="hazard-subnav-btn" data-sub="sub-stations">📡 Weather Station Anomalies</button>
+      </div>
 
-        <!-- Main Action Buttons -->
-        <div class="action-buttons-box" style="margin-top: 20px;">
-          <button id="btn-broadcast-zero-signal" class="btn-hero-broadcast">
-            <span>🛰️</span>
-            <span>TRANSMIT PAN-INDIA AIRWAVE BROADCAST</span>
-          </button>
+      <!-- Sub-Tab 1: Flood -->
+      <div id="sub-flood" class="hazard-subview active">
+        <div class="hazard-detail-grid">
+          <div class="panel-card">
+            <h3 class="panel-heading">🌊 Flood & Inundation Prediction (SIH26071, SIH26085, SIH26192)</h3>
+            <div class="hazard-metric-row">
+              <div class="metric-chip">
+                <span>Current River Stage</span>
+                <strong id="flood-metric-stage">4.8 m</strong>
+              </div>
+              <div class="metric-chip">
+                <span>Danger Mark Line</span>
+                <strong id="flood-metric-danger">5.2 m</strong>
+              </div>
+              <div class="metric-chip">
+                <span>Flood Probability</span>
+                <strong id="flood-metric-prob">78 %</strong>
+              </div>
+              <div class="metric-chip">
+                <span>Inundation Velocity</span>
+                <strong>4.2 km/h</strong>
+              </div>
+            </div>
+            <p class="hazard-explanation-text">
+              <strong>Mathematical Model:</strong> Inundation risk is calculated as a coupled function of instantaneous precipitation flux, 24h accumulated infiltration saturation, and digital elevation model (DEM) drainage bottlenecks.
+            </p>
+            <div class="shelter-callout">
+              <strong>🧭 Designated Safe Highland Evacuation Center:</strong>
+              <span>Garmur Elevated Community Complex (+38m Above Base Inundation Line)</span>
+            </div>
+          </div>
 
-          <button id="btn-targeted-red-siren" class="btn-hero-broadcast btn-targeted-siren-override" style="margin-top: 10px; background: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 100%); border-color: #ef4444;" title="Sends sub-GHz radio pulse specifically targeting autonomous siren masts within the Red Hazard Polygon">
-            <span>🚨</span>
-            <span>TRANSMIT TARGETED OFFLINE SIREN (RED ZONE ONLY)</span>
-          </button>
-
-          <div class="sub-actions-row">
-            <button id="btn-silence" class="btn-secondary">
-              <span>🔇</span> Silence Siren
-            </button>
-            <button id="btn-inspect-packet" class="btn-secondary">
-              <span>📦</span> Inspect 32-Byte Packet
-            </button>
+          <div class="panel-card">
+            <h3 class="panel-heading">📈 6-Hour Flood Risk & Rainfall Projection</h3>
+            <div class="chart-box-wrapper">
+              <canvas id="chart-flood-detail"></canvas>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Transmission Terminal Log -->
+      <!-- Sub-Tab 2: Landslide -->
+      <div id="sub-landslide" class="hazard-subview">
+        <div class="hazard-detail-grid">
+          <div class="panel-card">
+            <h3 class="panel-heading">⛰️ Landslide Early Warning & Slope Stability (SIH26001)</h3>
+            <div class="hazard-metric-row">
+              <div class="metric-chip">
+                <span>Slope Angle (θ)</span>
+                <strong id="landslide-metric-slope">28.5 °</strong>
+              </div>
+              <div class="metric-chip">
+                <span>72h Rainfall</span>
+                <strong id="landslide-metric-rain72">182.0 mm</strong>
+              </div>
+              <div class="metric-chip">
+                <span>Soil Saturation</span>
+                <strong id="landslide-metric-soil">94 %</strong>
+              </div>
+              <div class="metric-chip">
+                <span>Shear Failure Risk</span>
+                <strong id="landslide-metric-shear" class="text-red">HIGH (76%)</strong>
+              </div>
+            </div>
+            <p class="hazard-explanation-text">
+              <strong>Mohr-Coulomb Failure Criteria:</strong> Continuous heavy precipitation increases pore-water pressure ($\mu$), reducing normal effective stress ($\sigma' = \sigma - \mu$). Slopes exceeding 25° with $>85\%$ saturation trigger debris flow warnings.
+            </p>
+          </div>
+          <div class="panel-card">
+            <h3 class="panel-heading">🏘️ Vulnerable Highland Habitations</h3>
+            <ul class="clean-bullet-list">
+              <li>Chooralmala Upper Tea Settlement — <strong>CRITICAL SHEAR ZONE</strong> (Evacuate 350 residents)</li>
+              <li>Meppadi Valley Access Road Feeder — <strong>CULVERT DEBRIS BLOCKAGE</strong></li>
+              <li>Mundakkai Ridge Habitational Cluster — <strong>HIGH PORE PRESSURE</strong></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sub-Tab 3: Lightning -->
+      <div id="sub-lightning" class="hazard-subview">
+        <div class="hazard-detail-grid">
+          <div class="panel-card">
+            <h3 class="panel-heading">⚡ Thunderstorm & Lightning Nowcasting (SIH26072, SIH26084)</h3>
+            <div class="hazard-metric-row">
+              <div class="metric-chip">
+                <span>CAPE Energy</span>
+                <strong id="lightning-metric-cape">2450 J/kg</strong>
+              </div>
+              <div class="metric-chip">
+                <span>Strikes / 10 Mins</span>
+                <strong id="lightning-metric-strikes">18 Strikes</strong>
+              </div>
+              <div class="metric-chip">
+                <span>Cloud Top Temp</span>
+                <strong>-58 °C</strong>
+              </div>
+              <div class="metric-chip">
+                <span>Cloudburst Risk</span>
+                <strong class="text-amber">MODERATE (62%)</strong>
+              </div>
+            </div>
+            <p class="hazard-explanation-text">
+              Convective Available Potential Energy (CAPE) exceeding 2,000 J/kg indicates violent updrafts capable of producing frequent cloud-to-ground lightning strikes and localized cloudburst precipitation cores (>100 mm/h).
+            </p>
+          </div>
+          <div class="panel-card">
+            <h3 class="panel-heading">⚡ 1–6 Hour Lightning Nowcast Track</h3>
+            <p class="hazard-explanation-text">Convective cell moving North-East at 38 km/h. High strike probability over open agricultural fields and elevated transmission lines.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sub-Tab 4: Heatwave -->
+      <div id="sub-heat" class="hazard-subview">
+        <div class="hazard-detail-grid">
+          <div class="panel-card">
+            <h3 class="panel-heading">🌡️ Extreme Heatwave & Human Thermal Stress (SIH26083)</h3>
+            <div class="hazard-metric-row">
+              <div class="metric-chip">
+                <span>Ambient Temp</span>
+                <strong id="heat-metric-temp">34.2 °C</strong>
+              </div>
+              <div class="metric-chip">
+                <span>Relative Humidity</span>
+                <strong id="heat-metric-humidity">78 %</strong>
+              </div>
+              <div class="metric-chip">
+                <span>Heat Index (Apparent)</span>
+                <strong id="heat-metric-index">41.8 °C</strong>
+              </div>
+              <div class="metric-chip">
+                <span>WBGT Stress Category</span>
+                <strong class="text-amber">MODERATE STRESS</strong>
+              </div>
+            </div>
+            <p class="hazard-explanation-text">
+              Calculates Wet Bulb Globe Temperature (WBGT) and human physiological thermal stress. When ambient temperatures exceed 40°C with high humidity, natural evaporative cooling ceases, drastically increasing heat exhaustion and heatstroke risk.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sub-Tab 5: Air Pollution -->
+      <div id="sub-pollution" class="hazard-subview">
+        <div class="hazard-detail-grid">
+          <div class="panel-card">
+            <h3 class="panel-heading">🌫️ Air Pollution–Weather Coupled Forecasting (SIH26082)</h3>
+            <div class="hazard-metric-row">
+              <div class="metric-chip">
+                <span>Air Quality Index (AQI)</span>
+                <strong id="poll-metric-aqi">138 (Moderate)</strong>
+              </div>
+              <div class="metric-chip">
+                <span>PM2.5 Concentration</span>
+                <strong id="poll-metric-pm25">68 µg/m³</strong>
+              </div>
+              <div class="metric-chip">
+                <span>PM10 Concentration</span>
+                <strong id="poll-metric-pm10">112 µg/m³</strong>
+              </div>
+              <div class="metric-chip">
+                <span>Boundary Layer Height</span>
+                <strong>420 m (Inversion)</strong>
+              </div>
+            </div>
+            <p class="hazard-explanation-text">
+              Couples chemical transport modeling with micro-meteorological variables (wind stagnation, thermal inversions, relative humidity) to predict toxic particulate accumulation and human health exposure.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sub-Tab 6: Weather Station Anomalies -->
+      <div id="sub-stations" class="hazard-subview">
+        <div class="hazard-detail-grid">
+          <div class="panel-card">
+            <h3 class="panel-heading">📡 Automated Weather Station Anomaly Detection (SIH26073)</h3>
+            <p class="hazard-explanation-text">
+              Real-time statistical anomaly detection flagging sensor drift, frozen readings, transmission packet dropouts, and out-of-range sensor variance across 10 national Automated Weather Stations (AWS).
+            </p>
+            <div class="chart-box-wrapper" style="height: 220px;">
+              <canvas id="chart-sensor-variance"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         VIEW 4: 6-HOUR PREDICTIVE FORECAST
+         ======================================================================= -->
+    <section id="view-forecast" class="app-view">
       <div class="panel-card">
         <div class="card-header">
           <span class="card-title">
-            <span class="card-title-icon">💻</span>
-            National Emergency Broadcast Log
+            <span class="card-title-icon">⏱️</span>
+            6-Hour Demonstration Predictive Forecast (10:00 AM – 03:00 PM)
           </span>
-          <span style="font-size:0.75rem; color:var(--accent-blue);">NEOC Terminal Stream</span>
+          <span class="badge-accent">SIH26077 / SIH26080</span>
         </div>
-        <div id="transmission-log" class="transmission-console">
-          <div class="log-entry">
-            <span class="log-time">[BOOT]</span> National Emergency Operations Centre (NEOC) Grid initialized.
+
+        <div class="chart-box-wrapper" style="height: 300px; margin-bottom: 20px;">
+          <canvas id="chart-forecast-main"></canvas>
+        </div>
+
+        <!-- 6-Hour Timeline Forecast Grid -->
+        <div class="forecast-timeline-grid">
+          <div class="forecast-time-card">
+            <span class="time-label">10:00 AM</span>
+            <div class="forecast-icon">🌦️</div>
+            <strong>18 mm/h</strong>
+            <span>Flood: <strong class="text-blue">35% (LOW)</strong></span>
+            <span>Lightning: <strong class="text-green">LOW</strong></span>
           </div>
-          <div class="log-entry">
-            <span class="log-time">[BOOT]</span> Integrated: Open-Meteo, USGS, NASA EONET, CWC, IMD, NCS.
+
+          <div class="forecast-time-card">
+            <span class="time-label">11:00 AM</span>
+            <div class="forecast-icon">🌧️</div>
+            <strong>48 mm/h</strong>
+            <span>Flood: <strong class="text-blue">58% (MOD)</strong></span>
+            <span>Lightning: <strong class="text-amber">MOD</strong></span>
+          </div>
+
+          <div class="forecast-time-card">
+            <span class="time-label">12:00 PM</span>
+            <div class="forecast-icon">⛈️</div>
+            <strong>65 mm/h</strong>
+            <span>Flood: <strong class="text-red">74% (HIGH)</strong></span>
+            <span>Lightning: <strong class="text-amber">MOD</strong></span>
+          </div>
+
+          <div class="forecast-time-card warning-peak">
+            <span class="time-label">01:00 PM (PEAK)</span>
+            <div class="forecast-icon">⛈️⚡</div>
+            <strong>82 mm/h</strong>
+            <span>Flood: <strong class="text-red">88% (CRIT)</strong></span>
+            <span>Lightning: <strong class="text-red">HIGH</strong></span>
+          </div>
+
+          <div class="forecast-time-card warning-peak">
+            <span class="time-label">02:00 PM (PEAK)</span>
+            <div class="forecast-icon">⛈️⚡</div>
+            <strong>70 mm/h</strong>
+            <span>Flood: <strong class="text-red">85% (CRIT)</strong></span>
+            <span>Lightning: <strong class="text-red">CRIT</strong></span>
+          </div>
+
+          <div class="forecast-time-card">
+            <span class="time-label">03:00 PM</span>
+            <div class="forecast-icon">🌧️</div>
+            <strong>35 mm/h</strong>
+            <span>Flood: <strong class="text-amber">62% (MOD)</strong></span>
+            <span>Lightning: <strong class="text-green">LOW</strong></span>
           </div>
         </div>
       </div>
+    </section>
 
+    <!-- =======================================================================
+         VIEW 5: HISTORICAL ANALYTICS & RISK PROFILES
+         ======================================================================= -->
+    <section id="view-analytics" class="app-view">
+      <div class="analytics-layout-grid">
+        <div class="panel-card">
+          <div class="card-header">
+            <span class="card-title">
+              <span class="card-title-icon">📈</span>
+              Multi-Hazard Temporal Trend Analytics
+            </span>
+            <div class="time-range-picker">
+              <button class="time-range-btn active" data-range="24h">24 Hours</button>
+              <button class="time-range-btn" data-range="7d">7 Days</button>
+              <button class="time-range-btn" data-range="30d">30 Days</button>
+            </div>
+          </div>
+          <div class="chart-box-wrapper" style="height: 320px;">
+            <canvas id="chart-analytics-main"></canvas>
+          </div>
+        </div>
+
+        <div class="panel-card">
+          <div class="card-header">
+            <span class="card-title">
+              <span class="card-title-icon">🎯</span>
+              Multi-Hazard Threat Profile Radar
+            </span>
+          </div>
+          <div class="chart-box-wrapper" style="height: 320px;">
+            <canvas id="chart-risk-radar"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         VIEW 6: VULNERABILITY & RED ZONES (SIH26191)
+         ======================================================================= -->
+    <section id="view-vulnerability" class="app-view">
+      <div class="panel-card">
+        <div class="card-header">
+          <span class="card-title">
+            <span class="card-title-icon">🏘️</span>
+            Hazard-Based Red Zones & Vulnerable Habitations Register (SIH26191)
+          </span>
+          <span class="badge-accent">Statutory Hazard Register</span>
+        </div>
+        <p class="section-intro">
+          Identifies highly vulnerable habitations, population exposures, critical infrastructure assets, and designated highland evacuation corridors across national disaster theaters:
+        </p>
+        
+        <div class="table-responsive-wrapper">
+          <table class="styled-table">
+            <thead>
+              <tr>
+                <th>Zone / Sector Name</th>
+                <th>Location</th>
+                <th>Population Exposure</th>
+                <th>Vulnerable Habitations</th>
+                <th>Flood Risk</th>
+                <th>Landslide Risk</th>
+                <th>Composite Category</th>
+                <th>Evacuation Corridor</th>
+              </tr>
+            </thead>
+            <tbody id="red-zones-table-body">
+              <!-- Dynamically populated from VULNERABILITY_RED_ZONES -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         VIEW 7: ALERT CENTER
+         ======================================================================= -->
+    <section id="view-alerts" class="app-view">
+      <div class="panel-card">
+        <div class="card-header">
+          <span class="card-title">
+            <span class="card-title-icon">🚨</span>
+            National Emergency Alert Center & Broadcast Directives
+          </span>
+          <span class="badge-accent">CAP X.1303 Protocol Ready</span>
+        </div>
+
+        <div class="alerts-feed-list" id="alerts-feed-container">
+          <!-- Alert 1: Critical Flood -->
+          <div class="alert-item alert-critical">
+            <div class="alert-head">
+              <div class="alert-badge-group">
+                <span class="alert-tag tag-critical">CRITICAL</span>
+                <span class="alert-hazard-type">🌊 FLASH FLOOD & INUNDATION</span>
+              </div>
+              <span class="alert-time">10 Mins Ago</span>
+            </div>
+            <strong class="alert-title">Mandatory Evacuation Ordered: River Embankment Threshold Exceeded</strong>
+            <p class="alert-text">
+              <strong>Location:</strong> Majuli & Jorhat Sector, Assam<br/>
+              <strong>Scientific Rationale:</strong> Brahmaputra river level has reached 106.8m, exceeding the statutory danger threshold of 105.7m, combined with sustained upstream inflow of 68.4 mm/h.<br/>
+              <strong>Action Directive:</strong> Evacuate low-lying river islands immediately. Follow marked highland beacon routes to Garmur Relief Complex (+38m MSL).
+            </p>
+          </div>
+
+          <!-- Alert 2: Critical Landslide -->
+          <div class="alert-item alert-critical">
+            <div class="alert-head">
+              <div class="alert-badge-group">
+                <span class="alert-tag tag-critical">CRITICAL</span>
+                <span class="alert-hazard-type">⛰️ LANDSLIDE & DEBRIS SHEAR</span>
+              </div>
+              <span class="alert-time">25 Mins Ago</span>
+            </div>
+            <strong class="alert-title">High-Velocity Slope Failure Warning: Valley Clearance Triggered</strong>
+            <p class="alert-text">
+              <strong>Location:</strong> Chooralmala & Meppadi Hills, Wayanad, Kerala<br/>
+              <strong>Scientific Rationale:</strong> 72-hour cumulative precipitation reached 580mm on a 42° slope with 98% soil moisture saturation, causing pore-water pressure failure.<br/>
+              <strong>Action Directive:</strong> Immediate valley floor evacuation. Avoid roads near mountain streams.
+            </p>
+          </div>
+
+          <!-- Alert 3: High Thunderstorm -->
+          <div class="alert-item alert-high">
+            <div class="alert-head">
+              <div class="alert-badge-group">
+                <span class="alert-tag tag-high">HIGH</span>
+                <span class="alert-hazard-type">⚡ SEVERE THUNDERSTORM & LIGHTNING</span>
+              </div>
+              <span class="alert-time">45 Mins Ago</span>
+            </div>
+            <strong class="alert-title">Convective Storm Core & Intense Cloudburst Nowcasting</strong>
+            <p class="alert-text">
+              <strong>Location:</strong> Kedarnath Mandakini Gorge, Uttarakhand<br/>
+              <strong>Scientific Rationale:</strong> CAPE energy exceeding 3,100 J/kg with violent cloud-to-ground strike frequency (>34 strikes/10m).<br/>
+              <strong>Action Directive:</strong> Suspend pilgrim trekking routes. Move to designated masonry shelters.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         VIEW 8: ASK AEGIS (AI ASSISTANT - SIH26068 WEATHERGPT)
+         ======================================================================= -->
+    <section id="view-ai" class="app-view">
+      <div class="ai-assistant-container">
+        <div class="panel-card ai-chat-card">
+          <div class="card-header">
+            <span class="card-title">
+              <span class="card-title-icon">🤖</span>
+              Ask AEGIS — AI Multi-Hazard Intelligence Assistant (SIH26068 WeatherGPT)
+            </span>
+            <span class="ai-badge-online">● STATE-AWARE AI ONLINE</span>
+          </div>
+
+          <!-- Quick Suggested Prompts -->
+          <div class="ai-prompt-chips">
+            <button class="ai-chip" data-prompt="What is the current flood risk?">🌊 What is the current flood risk?</button>
+            <button class="ai-chip" data-prompt="Which hazard is highest?">⚠️ Which hazard is highest?</button>
+            <button class="ai-chip" data-prompt="Why is the flood risk high?">🧠 Why is the flood risk high?</button>
+            <button class="ai-chip" data-prompt="Which areas are vulnerable?">🏘️ Which areas are vulnerable?</button>
+            <button class="ai-chip" data-prompt="What is the expected risk in the next 6 hours?">⏱️ 6-Hour Forecast?</button>
+            <button class="ai-chip" data-prompt="Explain the weather station anomaly (SIH26073)">📡 Weather Station Anomaly (SIH26073)?</button>
+            <button class="ai-chip" data-prompt="Explain the current situation.">🛡️ Explain current situation</button>
+          </div>
+
+          <!-- Chat History Message Stream -->
+          <div class="ai-chat-thread" id="ai-chat-thread">
+            <!-- Messages inserted dynamically by AegisAiAssistant -->
+          </div>
+
+          <!-- Input Bar -->
+          <div class="ai-chat-input-bar">
+            <input type="text" id="ai-user-input" class="ai-input-field" placeholder="Ask AEGIS about flood risk, landslides, forecast, or safety protocols..." />
+            <button id="btn-send-ai" class="btn-send-query">Send →</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         VIEW 9: ABOUT & SIH PROBLEM STATEMENTS DOSSIER
+         ======================================================================= -->
+    <section id="view-about" class="app-view">
+      <div class="panel-card">
+        <div class="card-header">
+          <span class="card-title">
+            <span class="card-title-icon">📖</span>
+            AEGIS ALERT — Student Innovation Project Dossier (SIH26001 – SIH26192)
+          </span>
+          <span class="badge-accent">Smart India Hackathon Grand Finale</span>
+        </div>
+
+        <div class="dossier-grid">
+          <div>
+            <h3 class="panel-heading">🎓 Project Identity & Academic Context</h3>
+            <p class="section-intro">
+              <strong>AEGIS ALERT</strong> is a 5-member student engineering project designed to showcase how unified artificial intelligence, cyber-physical sensor telemetry, and geographical risk fusion can transform multi-hazard disaster management across India.
+            </p>
+            <div class="responsible-ai-box">
+              <strong>⚖️ Responsible AI & Prototype Disclaimer:</strong>
+              <p>
+                AEGIS ALERT is a student prototype developed for demonstration and research purposes. Risk scores, projections, and alerts shown in Demo Mode are derived from synthetic mathematical formulas and must not be treated as official weather predictions or certified government evacuation orders.
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="panel-heading">🏆 15 SIH Problem Statements Solved</h3>
+            <ul class="sih-statement-list">
+              <li><strong>SIH26001:</strong> AI-Based Early Warning & Landslide Risk Monitoring</li>
+              <li><strong>SIH26068:</strong> WeatherGPT (Ask AEGIS Conversational Assistant)</li>
+              <li><strong>SIH26069:</strong> National Weather Big Data Analytics</li>
+              <li><strong>SIH26071:</strong> Heavy Rainfall Early Warning & Inundation Prediction</li>
+              <li><strong>SIH26072:</strong> Thunderstorm & Lightning Nowcasting</li>
+              <li><strong>SIH26073:</strong> Weather Station Anomaly Detection</li>
+              <li><strong>SIH26077:</strong> Hyperlocal Severe Weather Early Warning</li>
+              <li><strong>SIH26078:</strong> Spatio-Temporal Extreme Weather Tracking</li>
+              <li><strong>SIH26080:</strong> Monsoon Rainfall Forecast Post-Processing</li>
+              <li><strong>SIH26082:</strong> Air Pollution–Weather Coupled Forecasting</li>
+              <li><strong>SIH26083:</strong> Extreme Heatwave & Human Thermal Stress</li>
+              <li><strong>SIH26084:</strong> Thunderstorm, Hail & Cloudburst Nowcasting</li>
+              <li><strong>SIH26085:</strong> Urban Flood Nowcasting</li>
+              <li><strong>SIH26191:</strong> Hazard-Based Red Zones & Vulnerable Habitations</li>
+              <li><strong>SIH26192:</strong> Flash Flood Prediction for Hilly Regions</li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </section>
 
   </main>
 
-  <!-- ====================================================================
-       MODAL: 32-Byte Compact Radio Packet Inspector
-       ==================================================================== -->
-  <div id="packet-modal" class="modal-overlay">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3><span>📦</span> 32-Byte Zero-Internet National Radio Frame Specification</h3>
-        <button id="modal-close" class="close-btn">&times;</button>
-      </div>
-
-      <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 12px;">
-        Transmitted via ISRO NavIC satellite messaging and Sub-GHz airwaves across affected geographic polygons.
-      </p>
-
-      <div class="raw-hex-box" id="packet-hex-display">
-        AE 61 01 01 03 00 65 00 11 D4 A8 00 48 A3 A0 0F 01 02 66 D5 10 20 05 43 41 4D 50 30 31 20 4A 9B
-      </div>
-
-      <table class="packet-table">
-        <thead>
-          <tr>
-            <th>Offset (Bytes)</th>
-            <th>Field Name</th>
-            <th>Hex Value</th>
-            <th>Decoded Description</th>
-          </tr>
-        </thead>
-        <tbody id="packet-breakdown-rows"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- Leaflet Tactical GIS Map JS -->
+  <!-- Leaflet Tactical GIS JS Library -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  
-  <!-- Master Application Script -->
+
+  <!-- Application Main Controller (ES Module) -->
   <script type="module" src="src/app.js"></script>
-
-  <!-- PWA Service Worker Registration -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-          .then(reg => console.log('[PWA] National Service Worker registered:', reg.scope))
-          .catch(err => console.warn('[PWA] Service Worker registration failed:', err));
-      });
-    }
-  </script>
-
 </body>
 </html>

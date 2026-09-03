@@ -1,239 +1,277 @@
 /**
- * AegisAlert Pan-India Tactical GIS Map Controller
- * Leaflet-powered situational awareness for the Head of National Disaster Management
- * Integrates live multi-calamity hazard polygons, evacuation routes, and area siren triggers.
+ * AEGIS ALERT - Tactical Multi-Hazard GIS Map Controller
+ * Leaflet-powered GIS engine with 8 dynamic hazard layer controls, location selection, and red zones.
+ * Inspired by SIH26001, SIH26071, SIH26073, SIH26078, SIH26085, SIH26191.
+ *
+ * NOTE: PROTOTYPE DEMO GIS - NOT FOR REAL-WORLD EMERGENCY DECISION MAKING
  */
 
-import { CONFIG } from "../config.js";
+import { LOCATIONS_DATA, VULNERABILITY_RED_ZONES, WEATHER_STATIONS_DATA } from "../data/locations_data.js";
 
 export class MapController {
-  constructor(mapContainerId) {
+  constructor(mapContainerId, onLocationSelected) {
     this.containerId = mapContainerId;
+    this.onLocationSelected = onLocationSelected;
     this.map = null;
-    this.beaconLayer = null;
-    this.hazardCircle = null;
-    this.shelterMarker = null;
-    this.evacPath = null;
-    this.seismicLayer = null;
-    this.calamitiesLayer = null;
-    this.waveInterval = null;
+
+    // Layer Groups
+    this.layers = {
+      rainfall: null,
+      flood: null,
+      landslide: null,
+      lightning: null,
+      heatwave: null,
+      pollution: null,
+      vulnerability: null,
+      stations: null
+    };
+
+    this.activeLayersState = {
+      rainfall: true,
+      flood: true,
+      landslide: true,
+      lightning: true,
+      heatwave: true,
+      pollution: true,
+      vulnerability: true,
+      stations: true
+    };
   }
 
   initMap() {
-    if (this.map) return;
+    if (this.map || !document.getElementById(this.containerId)) return;
 
-    // Dark Tactical Basemap from CartoDB
+    // Center on India
     this.map = L.map(this.containerId, {
       zoomControl: true,
       attributionControl: false
-    }).setView(CONFIG.DEFAULT_MAP_CENTER, CONFIG.DEFAULT_ZOOM);
+    }).setView([20.5937, 78.9629], 5);
 
+    // Dark Tactical CartoDB Basemap
     L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
       maxZoom: 18,
       subdomains: "abcd"
     }).addTo(this.map);
 
-    this.beaconLayer = L.layerGroup().addTo(this.map);
-    this.seismicLayer = L.layerGroup().addTo(this.map);
-    this.calamitiesLayer = L.layerGroup().addTo(this.map);
-
-    this.renderDeployedBeacons();
-  }
-
-  renderDeployedBeacons() {
-    this.beaconLayer.clearLayers();
-
-    const beaconIcon = L.divIcon({
-      className: "beacon-gis-marker",
-      html: `<div class="beacon-pulse-icon">📡</div>`,
-      iconSize: [28, 28],
-      iconAnchor: [14, 14]
+    // Initialize Layer Groups
+    Object.keys(this.layers).forEach(key => {
+      this.layers[key] = L.layerGroup().addTo(this.map);
     });
 
-    CONFIG.DEPLOYED_BEACONS.forEach(b => {
-      const marker = L.marker([b.lat, b.lng], { icon: beaconIcon })
-        .bindPopup(`
-          <div style="color:#0f172a; font-family:sans-serif; font-size:12px;">
-            <strong style="color:#0284c7;">${b.name}</strong><br/>
-            <span>Theater: ${b.theater}</span><br/>
-            <span>Status: <strong style="color:#10b981;">${b.status}</strong> (${b.battery}% Batt)</span><br/>
-            <em>Autonomous Zero-Internet Mast</em>
-          </div>
-        `);
-      this.beaconLayer.addLayer(marker);
-    });
+    this.renderAllLayers();
   }
 
-  renderLiveEarthquakes(earthquakes) {
-    if (!this.seismicLayer) return;
-    this.seismicLayer.clearLayers();
+  renderAllLayers() {
+    this.renderLocations();
+    this.renderFloodLayer();
+    this.renderRainfallLayer();
+    this.renderLandslideLayer();
+    this.renderLightningLayer();
+    this.renderHeatwaveLayer();
+    this.renderPollutionLayer();
+    this.renderVulnerabilityLayer();
+    this.renderWeatherStationsLayer();
+  }
 
-    earthquakes.forEach(eq => {
-      if (!eq.coordinates) return;
-      const [lat, lng] = eq.coordinates;
-
-      const circle = L.circleMarker([lat, lng], {
-        radius: Math.max(eq.mag * 3, 6),
-        fillColor: eq.mag >= 5.0 ? "#ef4444" : "#f59e0b",
-        color: "#ffffff",
-        weight: 1,
-        opacity: 1,
-        fillOpacity: 0.7
+  renderLocations() {
+    LOCATIONS_DATA.forEach(loc => {
+      const isSelected = loc.id === "LOC-HYD";
+      const icon = L.divIcon({
+        className: "location-hub-pin",
+        html: `<div class="loc-pin-badge ${isSelected ? 'selected' : ''}">📍 <span>${loc.name}</span></div>`,
+        iconSize: [80, 28],
+        iconAnchor: [40, 14]
       });
 
-      circle.bindPopup(`
-        <div style="color:#0f172a; font-family:sans-serif; font-size:12px;">
-          <strong style="color:#e11d48;">⚡ SEISMIC EVENT M${eq.mag}</strong><br/>
-          <span>${eq.place}</span><br/>
-          <span>Depth: ${eq.depthKm} km | Reported: ${eq.time}</span><br/>
-          <em style="color:#64748b;">USGS & National Center for Seismology</em>
+      const marker = L.marker(loc.coordinates, { icon: icon });
+      marker.on("click", () => {
+        if (this.onLocationSelected) {
+          this.onLocationSelected(loc);
+        }
+      });
+      marker.bindPopup(`
+        <div style="color:#0f172a; font-family:sans-serif; font-size:12px; min-width:200px;">
+          <strong style="color:#0284c7; font-size:13px;">📍 ${loc.name}, ${loc.state}</strong><br/>
+          <span style="color:#475569;">Terrain: ${loc.terrain}</span><br/>
+          <div style="margin:6px 0; padding:6px; background:#f1f5f9; border-radius:4px;">
+            <span>Current Rain: <strong>${loc.current.rainfall_mmh} mm/h</strong></span><br/>
+            <span>Water Level: <strong>${loc.current.water_level_m}m</strong> / ${loc.current.danger_mark_m}m</span><br/>
+            <span>Exposed Population: <strong>${loc.current.population_exposed.toLocaleString("en-IN")}</strong></span>
+          </div>
+          <button onclick="window.__selectLocation('${loc.id}')" style="background:#0284c7; color:#fff; border:none; padding:5px 10px; border-radius:4px; font-size:11px; cursor:pointer; width:100%;">
+            🔎 View Full Environmental Dossier
+          </button>
         </div>
       `);
-      this.seismicLayer.addLayer(circle);
+      this.layers.flood.addLayer(marker);
     });
   }
 
-  renderAllCalamityPins(calamities, onSirenToggle, onMobileAlert) {
-    if (!this.calamitiesLayer) return;
-    this.calamitiesLayer.clearLayers();
-
-    const iconsMap = {
-      FLASH_FLOOD: "🌊",
-      LANDSLIDE: "⛰️",
-      CYCLONE: "🌀",
-      CLOUDBURST: "⛈️",
-      HEATWAVE: "☀️"
-    };
-
-    calamities.forEach(c => {
-      const iconText = iconsMap[c.type] || "⚠️";
-      const markerIcon = L.divIcon({
-        className: "calamity-pin-marker",
-        html: `<div class="calamity-pin-body ${c.siren_active ? 'siren-pulsing' : ''}">${iconText}</div>`,
-        iconSize: [34, 34],
-        iconAnchor: [17, 17]
+  renderFloodLayer() {
+    this.layers.flood.clearLayers();
+    LOCATIONS_DATA.forEach(loc => {
+      const circle = L.circle(loc.coordinates, {
+        color: "#0284c7",
+        fillColor: "#38bdf8",
+        fillOpacity: 0.25,
+        radius: 35000,
+        weight: 2
       });
+      circle.bindPopup(`<strong>🌊 Flood Basin: ${loc.name}</strong><br/>Water Level: ${loc.current.water_level_m}m (Danger: ${loc.current.danger_mark_m}m)`);
+      this.layers.flood.addLayer(circle);
+    });
+  }
 
-      const marker = L.marker(c.coordinates, { icon: markerIcon });
+  renderRainfallLayer() {
+    this.layers.rainfall.clearLayers();
+    LOCATIONS_DATA.forEach(loc => {
+      const rain = loc.current.rainfall_mmh;
+      if (rain > 20) {
+        const circle = L.circle(loc.coordinates, {
+          color: "#10b981",
+          fillColor: "#10b981",
+          fillOpacity: 0.2,
+          radius: 45000,
+          weight: 1,
+          dashArray: "4, 4"
+        });
+        circle.bindPopup(`<strong>🌧️ Precipitation Zone: ${loc.name}</strong><br/>Intensity: ${rain} mm/h (24h: ${loc.current.accumulated_24h_mm} mm)`);
+        this.layers.rainfall.addLayer(circle);
+      }
+    });
+  }
+
+  renderLandslideLayer() {
+    this.layers.landslide.clearLayers();
+    LOCATIONS_DATA.filter(l => l.current.slope_deg > 15).forEach(loc => {
+      const polygonCoords = [
+        [loc.coordinates[0] + 0.12, loc.coordinates[1] - 0.10],
+        [loc.coordinates[0] + 0.15, loc.coordinates[1] + 0.12],
+        [loc.coordinates[0] - 0.10, loc.coordinates[1] + 0.14],
+        [loc.coordinates[0] - 0.12, loc.coordinates[1] - 0.08]
+      ];
+      const poly = L.polygon(polygonCoords, {
+        color: "#d97706",
+        fillColor: "#f59e0b",
+        fillOpacity: 0.35,
+        weight: 2
+      });
+      poly.bindPopup(`<strong>⛰️ Landslide Shear Zone: ${loc.name}</strong><br/>Slope Angle: ${loc.current.slope_deg}° | Soil Moisture: ${loc.current.soil_moisture_pct}%`);
+      this.layers.landslide.addLayer(poly);
+    });
+  }
+
+  renderLightningLayer() {
+    this.layers.lightning.clearLayers();
+    LOCATIONS_DATA.filter(l => l.current.lightning_strikes_10m > 10).forEach(loc => {
+      const icon = L.divIcon({
+        className: "lightning-flash-icon",
+        html: `<div class="lightning-strike-anim">⚡</div>`,
+        iconSize: [24, 24],
+        iconAnchor: [12, 12]
+      });
+      const marker = L.marker([loc.coordinates[0] + 0.05, loc.coordinates[1] + 0.05], { icon });
+      marker.bindPopup(`<strong>⚡ Lightning Activity: ${loc.name}</strong><br/>Strikes: ${loc.current.lightning_strikes_10m} / 10 min | CAPE: ${loc.current.cape_index} J/kg`);
+      this.layers.lightning.addLayer(marker);
+    });
+  }
+
+  renderHeatwaveLayer() {
+    this.layers.heatwave.clearLayers();
+    LOCATIONS_DATA.filter(l => l.current.temperature_c >= 38).forEach(loc => {
+      const circle = L.circle(loc.coordinates, {
+        color: "#ef4444",
+        fillColor: "#f97316",
+        fillOpacity: 0.3,
+        radius: 60000,
+        weight: 1
+      });
+      circle.bindPopup(`<strong>🌡️ Heatwave Dome: ${loc.name}</strong><br/>Temperature: ${loc.current.temperature_c}°C | Humidity: ${loc.current.humidity_pct}%`);
+      this.layers.heatwave.addLayer(circle);
+    });
+  }
+
+  renderPollutionLayer() {
+    this.layers.pollution.clearLayers();
+    LOCATIONS_DATA.filter(l => l.current.pm25 > 60).forEach(loc => {
+      const circle = L.circle([loc.coordinates[0] - 0.08, loc.coordinates[1] + 0.06], {
+        color: "#a855f7",
+        fillColor: "#7e22ce",
+        fillOpacity: 0.25,
+        radius: 25000,
+        weight: 1,
+        dashArray: "3, 3"
+      });
+      circle.bindPopup(`<strong>🌫️ Air Pollution Plume: ${loc.name}</strong><br/>PM2.5: ${loc.current.pm25} µg/m³ | AQI: ${loc.current.aqi}`);
+      this.layers.pollution.addLayer(circle);
+    });
+  }
+
+  renderVulnerabilityLayer() {
+    this.layers.vulnerability.clearLayers();
+    VULNERABILITY_RED_ZONES.forEach(zone => {
+      const icon = L.divIcon({
+        className: "red-zone-pin",
+        html: `<div class="red-zone-badge">🚩 <span>${zone.name.split("–")[0]}</span></div>`,
+        iconSize: [90, 24],
+        iconAnchor: [45, 12]
+      });
+      const marker = L.marker(zone.coordinates, { icon });
       marker.bindPopup(`
         <div style="color:#0f172a; font-family:sans-serif; font-size:12px; min-width:220px;">
-          <strong style="color:#b91c1c; font-size:13px;">${iconText} ${c.type.replace('_', ' ')} [${c.severity}]</strong><br/>
-          <strong>${c.title}</strong><br/>
-          <span style="color:#475569;">📍 ${c.region}</span><br/>
-          <div style="margin:6px 0; padding:6px; background:#f1f5f9; border-radius:4px;">
-            <span>At-Risk Population: <strong>${c.affected_population.toLocaleString('en-IN')}</strong></span><br/>
-            <span>Evacuation: <strong style="color:#0284c7;">${c.evacuation_status}</strong></span><br/>
-            <span>Relief Camp: <strong>${c.safe_shelter}</strong></span>
+          <strong style="color:#b91c1c; font-size:13px;">🚩 RED ZONE: ${zone.name}</strong><br/>
+          <span style="color:#475569;">📍 ${zone.location}</span><br/>
+          <div style="margin:6px 0; padding:6px; background:#fee2e2; border-radius:4px; color:#991b1b;">
+            <span>Population Exposure: <strong>${zone.population_exposure.toLocaleString("en-IN")}</strong></span><br/>
+            <span>Vulnerable Habitations: <strong>${zone.vulnerable_habitations} Sectors</strong></span><br/>
+            <span>Composite Threat: <strong>${zone.composite_risk}</strong></span>
           </div>
-          <div style="display:flex; gap:6px; margin-top:8px;">
-            <button class="btn-popup-siren" onclick="window.__triggerAreaSiren('${c.id}')" style="background:${c.siren_active ? '#ef4444' : '#0284c7'}; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer;">
-              ${c.siren_active ? '🔇 Silence Area Siren' : '🚨 Trigger Area Siren'}
-            </button>
-            <button class="btn-popup-sms" onclick="window.__openMobileModal('${c.region}', '${c.safe_shelter}')" style="background:#10b981; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer;">
-              📲 Send Mobile Evac SMS
-            </button>
-          </div>
+          <span style="font-size:11px; color:#15803d;">🧭 Safe Evacuation: ${zone.evacuation_corridor}</span>
         </div>
       `);
-      this.calamitiesLayer.addLayer(marker);
+      this.layers.vulnerability.addLayer(marker);
     });
   }
 
-  focusScenario(scenario) {
-    if (!this.map) return;
+  renderWeatherStationsLayer() {
+    this.layers.stations.clearLayers();
+    WEATHER_STATIONS_DATA.forEach(stn => {
+      const isAnomaly = stn.anomaly_detected;
+      const icon = L.divIcon({
+        className: "weather-station-pin",
+        html: `<div class="station-dot ${isAnomaly ? 'anomaly-pulse' : 'healthy-dot'}">${isAnomaly ? '⚠️' : '📡'}</div>`,
+        iconSize: [22, 22],
+        iconAnchor: [11, 11]
+      });
+      const marker = L.marker([stn.lat, stn.lng], { icon });
+      marker.bindPopup(`
+        <div style="color:#0f172a; font-family:sans-serif; font-size:12px;">
+          <strong style="color:${isAnomaly ? '#ef4444' : '#059669'};">${stn.name}</strong><br/>
+          <span>ID: <code>${stn.id}</code> | Status: <strong>${stn.status}</strong></span><br/>
+          <span>Temp: ${stn.temp_c}°C | Rain: ${stn.rain_mmh} mm/h | Wind: ${stn.wind_kmh} km/h</span><br/>
+          ${isAnomaly ? `<div style="margin-top:4px; padding:4px; background:#fee2e2; border-radius:3px; color:#b91c1c;"><strong>⚠️ ANOMALY DETECTED (SIH26073):</strong><br/>${stn.anomaly_type}</div>` : `<span style="color:#10b981;">✅ Quality Control: Sensor Calibration Verified (99.2%)</span>`}
+        </div>
+      `);
+      this.layers.stations.addLayer(marker);
+    });
+  }
 
-    this.map.flyTo(scenario.coordinates, scenario.zoom, {
+  toggleLayer(layerKey, isVisible) {
+    this.activeLayersState[layerKey] = isVisible;
+    if (this.layers[layerKey]) {
+      if (isVisible) {
+        this.map.addLayer(this.layers[layerKey]);
+      } else {
+        this.map.removeLayer(this.layers[layerKey]);
+      }
+    }
+  }
+
+  flyToLocation(loc) {
+    if (!this.map) return;
+    this.map.flyTo(loc.coordinates, 10, {
       animate: true,
       duration: 1.2
     });
-
-    if (this.hazardCircle) {
-      this.map.removeLayer(this.hazardCircle);
-    }
-    if (this.shelterMarker) {
-      this.map.removeLayer(this.shelterMarker);
-    }
-    if (this.evacPath) {
-      this.map.removeLayer(this.evacPath);
-    }
-
-    // Red Hazard Zone (Red Polygon)
-    this.hazardCircle = L.circle(scenario.coordinates, {
-      color: "#ef4444",
-      fillColor: "#ef4444",
-      fillOpacity: 0.3,
-      radius: 16000,
-      weight: 2,
-      dashArray: "6, 6"
-    }).addTo(this.map);
-
-    this.hazardCircle.bindPopup(`
-      <div style="color:#0f172a; font-family:sans-serif; font-size:12px;">
-        <strong style="color:#ef4444;">🚨 CODE RED HAZARD ZONE</strong><br/>
-        <span>${scenario.title}</span><br/>
-        <span>At-Risk Population: <strong>${scenario.preJudgement.impactedPopulation.toLocaleString("en-IN")}</strong></span>
-      </div>
-    `);
-
-    // Elevated Safe Shelter Point (+Offset from hazard)
-    const shelterCoords = [
-      scenario.coordinates[0] + 0.12,
-      scenario.coordinates[1] + 0.14
-    ];
-
-    const shelterIcon = L.divIcon({
-      className: "shelter-gis-marker",
-      html: `<div class="shelter-flag-icon">🏕️</div>`,
-      iconSize: [30, 30],
-      iconAnchor: [15, 15]
-    });
-
-    this.shelterMarker = L.marker(shelterCoords, { icon: shelterIcon }).addTo(this.map);
-    this.shelterMarker.bindPopup(`
-      <div style="color:#0f172a; font-family:sans-serif; font-size:12px;">
-        <strong style="color:#0284c7;">✅ DESIGNATED SAFE HIGHLAND CAMP</strong><br/>
-        <span>${scenario.preJudgement.safeShelter}</span><br/>
-        <span>Capacity: <strong>1,200 Highland Beds</strong></span><br/>
-        <span>Elevation: <strong>+38m Above Danger Line</strong></span>
-      </div>
-    `);
-
-    // Evacuation Route Line connecting Danger Epicenter to Safe Camp
-    this.evacPath = L.polyline([scenario.coordinates, shelterCoords], {
-      color: "#10b981",
-      weight: 4,
-      opacity: 0.85,
-      dashArray: "8, 10"
-    }).addTo(this.map);
-  }
-
-  animateRadioBroadcast(centerCoords, radiusKm = 25) {
-    if (!this.map) return;
-
-    let currentRadius = 1000;
-    const maxRadius = radiusKm * 1000;
-
-    const radioWave = L.circle(centerCoords, {
-      color: "#38bdf8",
-      fillColor: "#0284c7",
-      fillOpacity: 0.35,
-      radius: currentRadius,
-      weight: 2
-    }).addTo(this.map);
-
-    if (this.waveInterval) clearInterval(this.waveInterval);
-
-    this.waveInterval = setInterval(() => {
-      currentRadius += 2500;
-      radioWave.setRadius(currentRadius);
-      radioWave.setStyle({
-        fillOpacity: Math.max(0, 0.35 - (currentRadius / maxRadius) * 0.35)
-      });
-
-      if (currentRadius >= maxRadius) {
-        clearInterval(this.waveInterval);
-        setTimeout(() => this.map.removeLayer(radioWave), 400);
-      }
-    }, 50);
   }
 }
