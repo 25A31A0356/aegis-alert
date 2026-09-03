@@ -3,7 +3,7 @@
  * Network-First Strategy: Always serves fresh files from server when online
  */
 
-const CACHE_NAME = "aegis-alert-v6.0-live";
+const CACHE_NAME = "aegis-alert-v7.0-live";
 const ASSETS_TO_CACHE = [
   "./",
   "./index.html",

@@ -33,46 +33,58 @@ class AegisApp {
   async init() {
     console.log("Initializing AEGIS ALERT Multilingual Multi-Hazard Platform...");
 
-    // 0. Apply Saved/Initial Language
-    this.applyLanguage(this.currentLanguage, false);
+    try {
+      // 1. Calculate Initial Multi-Hazard Risk Fusion FIRST
+      this.updateRiskCalculations();
 
-    // 1. Calculate Initial Multi-Hazard Risk Fusion
-    this.updateRiskCalculations();
+      // 2. Apply Saved/Initial Language
+      this.applyLanguage(this.currentLanguage, false);
 
-    // 2. Initialize GIS Maps
-    this.initMaps();
+      // 3. Initialize GIS Maps
+      this.initMaps();
 
-    // 3. Render Dashboard Metrics & Red Zones Table
-    this.renderDashboard();
-    this.renderRedZonesTable();
+      // 4. Render Dashboard Metrics & Red Zones Table
+      this.renderDashboard();
+      this.renderRedZonesTable();
 
-    // 4. Initialize Interactive Charts
-    setTimeout(() => {
-      this.chartsCtrl.renderForecastChart("chart-forecast-main", this.currentLocation);
-      this.chartsCtrl.renderForecastChart("chart-flood-detail", this.currentLocation);
-      this.chartsCtrl.renderAnalyticsTrends("chart-analytics-main", "24h");
-      this.chartsCtrl.renderRiskRadar("chart-risk-radar", this.currentRisks);
-      this.chartsCtrl.renderSensorVarianceChart("chart-sensor-variance");
-    }, 200);
+      // 5. Initialize Interactive Charts
+      setTimeout(() => {
+        try {
+          this.chartsCtrl.renderForecastChart("chart-forecast-main", this.currentLocation);
+          this.chartsCtrl.renderForecastChart("chart-flood-detail", this.currentLocation);
+          this.chartsCtrl.renderAnalyticsTrends("chart-analytics-main", "24h");
+          this.chartsCtrl.renderRiskRadar("chart-risk-radar", this.currentRisks);
+          this.chartsCtrl.renderSensorVarianceChart("chart-sensor-variance");
+        } catch (err) {
+          console.warn("Charts render caught:", err);
+        }
+      }, 200);
 
-    // 5. Setup Global Event Listeners & Navigation
-    this.setupEventListeners();
+      // 6. Setup Global Event Listeners & Navigation
+      this.setupEventListeners();
 
-    // 6. Render Initial AI Chat Stream
-    this.renderAiChat();
+      // 7. Render Initial AI Chat Stream
+      this.renderAiChat();
 
-    // 7. Register Global Helpers
-    window.__selectLocation = (locId) => this.selectLocation(locId);
+      // 8. Register Global Helpers
+      window.__selectLocation = (locId) => this.selectLocation(locId);
+    } catch (e) {
+      console.error("Critical app.js init error:", e);
+    }
   }
 
   initMaps() {
-    if (document.getElementById("gis-map-dashboard")) {
-      this.mapCtrlDashboard = new MapController("gis-map-dashboard", (loc) => this.selectLocation(loc.id));
-      this.mapCtrlDashboard.initMap();
-    }
-    if (document.getElementById("gis-map-full")) {
-      this.mapCtrlFull = new MapController("gis-map-full", (loc) => this.selectLocation(loc.id));
-      this.mapCtrlFull.initMap();
+    try {
+      if (document.getElementById("gis-map-dashboard")) {
+        this.mapCtrlDashboard = new MapController("gis-map-dashboard", (loc) => this.selectLocation(loc.id));
+        this.mapCtrlDashboard.initMap();
+      }
+      if (document.getElementById("gis-map-full")) {
+        this.mapCtrlFull = new MapController("gis-map-full", (loc) => this.selectLocation(loc.id));
+        this.mapCtrlFull.initMap();
+      }
+    } catch (err) {
+      console.warn("initMaps caught:", err);
     }
   }
 
@@ -88,6 +100,9 @@ class AegisApp {
   }
 
   renderDashboard() {
+    if (!this.currentRisks) {
+      this.updateRiskCalculations();
+    }
     const loc = this.currentLocation;
     const env = { ...loc.current, ...(loc.scenarios?.[this.currentScenario] || {}) };
     const r = this.currentRisks;

@@ -39,26 +39,35 @@ export class MapController {
   }
 
   initMap() {
-    if (this.map || !document.getElementById(this.containerId)) return;
+    const el = document.getElementById(this.containerId);
+    if (this.map || !el || typeof L === 'undefined') return;
 
-    // Center on India
-    this.map = L.map(this.containerId, {
-      zoomControl: true,
-      attributionControl: false
-    }).setView([20.5937, 78.9629], 5);
+    try {
+      if (el._leaflet_id) {
+        el._leaflet_id = null;
+      }
 
-    // Dark Tactical CartoDB Basemap
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-      maxZoom: 18,
-      subdomains: "abcd"
-    }).addTo(this.map);
+      // Center on India
+      this.map = L.map(this.containerId, {
+        zoomControl: true,
+        attributionControl: false
+      }).setView([20.5937, 78.9629], 5);
 
-    // Initialize Layer Groups
-    Object.keys(this.layers).forEach(key => {
-      this.layers[key] = L.layerGroup().addTo(this.map);
-    });
+      // Dark Tactical CartoDB Basemap
+      L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+        maxZoom: 18,
+        subdomains: "abcd"
+      }).addTo(this.map);
 
-    this.renderAllLayers();
+      // Initialize Layer Groups
+      Object.keys(this.layers).forEach(key => {
+        this.layers[key] = L.layerGroup().addTo(this.map);
+      });
+
+      this.renderAllLayers();
+    } catch (err) {
+      console.warn(`Map init error for #${this.containerId}:`, err);
+    }
   }
 
   renderAllLayers() {

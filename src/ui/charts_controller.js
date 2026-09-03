@@ -291,25 +291,60 @@ export class ChartsController {
     });
   }
 
-  renderSvgForecastFallback(container, labels, flood, rain) {
-    container.parentElement.innerHTML = `
-      <div style="padding:15px; color:#cbd5e1; font-family:sans-serif;">
-        <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-weight:bold; font-size:12px;">
-          <span>Timeline (Next 6 Hours)</span>
-          <span>Flood Inundation Risk / Rainfall Rate</span>
-        </div>
-        ${labels.map((l, idx) => `
-          <div style="margin-bottom:8px;">
-            <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:2px;">
-              <span>${l}</span>
-              <span>🌊 Flood: <strong style="color:${flood[idx] > 70 ? '#ef4444' : '#38bdf8'}">${flood[idx]}%</strong> | 🌧️ Rain: ${rain[idx]} mm/h</span>
-            </div>
-            <div style="height:6px; background:#1e293b; border-radius:3px; overflow:hidden;">
-              <div style="height:100%; width:${flood[idx]}%; background:${flood[idx] > 70 ? '#ef4444' : '#0284c7'};"></div>
-            </div>
-          </div>
-        `).join("")}
-      </div>
-    `;
+  renderSvgForecastFallback(canvas, labels, flood, rain) {
+    if (!canvas || !canvas.getContext) return;
+    const ctx = canvas.getContext("2d");
+    const w = canvas.parentElement?.clientWidth || canvas.width || 400;
+    const h = 200;
+    canvas.width = w;
+    canvas.height = h;
+
+    // Background
+    ctx.fillStyle = "#090d16";
+    ctx.fillRect(0, 0, w, h);
+
+    // Draw Grid
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.06)";
+    ctx.lineWidth = 1;
+    for (let i = 0; i < 4; i++) {
+      const y = 30 + (i * 35);
+      ctx.beginPath();
+      ctx.moveTo(40, y);
+      ctx.lineTo(w - 20, y);
+      ctx.stroke();
+    }
+
+    // Draw Flood Line
+    ctx.strokeStyle = "#38bdf8";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    const stepX = (w - 70) / (labels.length - 1);
+    flood.forEach((val, idx) => {
+      const x = 45 + (idx * stepX);
+      const y = h - 45 - (val / 100 * (h - 75));
+      if (idx === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+
+    // Draw Rain Line
+    ctx.strokeStyle = "#10b981";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    rain.forEach((val, idx) => {
+      const x = 45 + (idx * stepX);
+      const y = h - 45 - (val / 100 * (h - 75));
+      if (idx === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+
+    // Draw Points & Labels
+    ctx.fillStyle = "#94a3b8";
+    ctx.font = "10px Inter, sans-serif";
+    labels.forEach((lbl, idx) => {
+      const x = 45 + (idx * stepX);
+      ctx.fillText(lbl.split(" ")[0], x - 12, h - 15);
+    });
   }
 }
