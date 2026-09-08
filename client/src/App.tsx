@@ -226,6 +226,89 @@ function AppContent() {
         {activeView === 'future-updates' && <FutureUpdatesPage />}
       </AppLayout>
 
+      {/* Floating Bottom Navigation Bar (Screen 1 & 2 Reference) */}
+      <nav className="floating-bottom-nav flex items-center justify-around">
+        <button
+          type="button"
+          onClick={() => handleViewChange('home')}
+          className={`flex flex-col items-center justify-center p-2 rounded-2xl transition-all ${
+            activeView === 'home'
+              ? 'text-cyan-500 font-bold scale-105'
+              : 'text-slate-400 hover:text-slate-200'
+          }`}
+        >
+          <div className="relative">
+            <span className="text-lg">🏠</span>
+            {activeView === 'home' && (
+              <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-cyan-500" />
+            )}
+          </div>
+          <span className="text-[10px] font-semibold mt-0.5">Home</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => handleViewChange('safe-evacuation')}
+          className={`flex flex-col items-center justify-center p-2 rounded-2xl transition-all ${
+            activeView === 'safe-evacuation'
+              ? 'text-cyan-500 font-bold scale-105'
+              : 'text-slate-400 hover:text-slate-200'
+          }`}
+        >
+          <div className="relative">
+            <span className="text-lg">🧭</span>
+            {activeView === 'safe-evacuation' && (
+              <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-cyan-500" />
+            )}
+          </div>
+          <span className="text-[10px] font-semibold mt-0.5">Evac</span>
+        </button>
+
+        {/* Center SOS Action */}
+        <button
+          type="button"
+          onClick={() => handleViewChange('sos-beacon')}
+          className={`flex flex-col items-center justify-center p-2 rounded-2xl transition-all ${
+            activeView === 'sos-beacon'
+              ? 'text-red-500 font-bold scale-110'
+              : 'text-slate-400 hover:text-red-400'
+          }`}
+        >
+          <div className="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center text-white shadow-md">
+            <span className="text-sm font-black">SOS</span>
+          </div>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => handleViewChange('community-report')}
+          className={`flex flex-col items-center justify-center p-2 rounded-2xl transition-all ${
+            activeView === 'community-report'
+              ? 'text-cyan-500 font-bold scale-105'
+              : 'text-slate-400 hover:text-slate-200'
+          }`}
+        >
+          <div className="relative">
+            <span className="text-lg">👥</span>
+            {activeView === 'community-report' && (
+              <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-cyan-500" />
+            )}
+          </div>
+          <span className="text-[10px] font-semibold mt-0.5">Report</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setIsSettingsOpen(true)}
+          className="flex flex-col items-center justify-center p-2 rounded-2xl transition-all text-slate-400 hover:text-slate-200"
+        >
+          <div className="relative">
+            <span className="text-lg">👤</span>
+          </div>
+          <span className="text-[10px] font-semibold mt-0.5">Profile</span>
+        </button>
+      </nav>
+
       {/* Hamburger Drawer Menu */}
       <SidebarMenu
         isOpen={isMenuOpen}

@@ -84,73 +84,78 @@ export const SafeEvacuationPage: React.FC<SafeEvacuationPageProps> = ({
 
   return (
     <div className="space-y-6 animate-fadeIn pb-12">
-      {/* 1. Top Bar with Back Button, GPS Sector & State Simulators */}
-      <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 shadow-xl space-y-3">
-        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3">
-          
+      {/* 1. Top Header & Category Filter Pills (Screen 2 Reference) */}
+      <div className="space-y-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <button
+              type="button"
               onClick={() => setActiveView('home')}
-              className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-colors shrink-0"
+              className="p-2.5 rounded-2xl bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 transition-colors shrink-0 shadow-sm"
               title="Return to Home Dashboard"
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
 
             <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-base font-black text-slate-100 flex items-center gap-1.5">
-                  <Navigation className="w-5 h-5 text-cyan-400" />
-                  <span>2. SAFE EVACUATION & HIGH-GROUND PATHFINDER</span>
-                </h2>
-              </div>
-              <div className="text-xs text-slate-400 flex items-center gap-1.5 font-mono mt-0.5">
-                <MapPin className="w-3.5 h-3.5 text-cyan-400" />
-                <span>From: {userLocation.address} (Origin Elev. +4m)</span>
-              </div>
+              <h1 className="text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight">
+                Safe Evacuation
+              </h1>
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+                Book safe high-ground corridors effortlessly
+              </p>
             </div>
           </div>
 
-          {/* Right Tags & Recalculate */}
-          <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto justify-between lg:justify-end">
-            <div className="px-2.5 py-1 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-mono font-bold flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
-              DEMO ELEVATION ENGINE
-            </div>
-
+          <div className="flex items-center gap-2">
             <button
+              type="button"
               onClick={handleRecalculate}
               disabled={isRecalculating}
-              className="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-500 disabled:opacity-50 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-md active:scale-95"
+              className="px-3.5 py-2 bg-cyan-600 hover:bg-cyan-500 disabled:opacity-50 text-white rounded-2xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isRecalculating ? 'animate-spin' : ''}`} />
-              <span>{isRecalculating ? 'Scanning Elevation...' : 'Recalculate Routes'}</span>
+              <span>{isRecalculating ? 'Scanning...' : 'Reroute GPS'}</span>
             </button>
           </div>
         </div>
 
-        {/* State Simulator Switcher Strip */}
-        <div className="pt-2 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
-          <span className="text-slate-400 font-bold">TEST EVACUATION STATES:</span>
-          <div className="flex items-center gap-1.5">
-            {[
-              { id: 'normal', label: 'Normal Routes' },
-              { id: 'loading', label: 'Scanning Radar' },
-              { id: 'no-route', label: 'No Route (Trapped)' },
-              { id: 'error', label: 'Route Error' },
-            ].map((st) => (
+        {/* Category Pills (Matching Screen 2: Charter, Private Jet, Cargo) */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+          {[
+            { id: 'all', label: 'All Shelters', icon: ShieldCheck, color: 'text-emerald-500' },
+            { id: 'high-ground', label: 'High-Ground (>15m)', icon: Layers, color: 'text-cyan-500' },
+            { id: 'medical', label: 'Medical Ready', icon: Activity, color: 'text-red-500' },
+            { id: 'relief', label: 'Food & Water', icon: Sparkles, color: 'text-amber-500' },
+          ].map((pill, idx) => {
+            const Icon = pill.icon;
+            const isSelected = idx === 0;
+            return (
               <button
-                key={st.id}
-                onClick={() => setSimulatedEvacState(st.id as any)}
-                className={`px-2.5 py-1 rounded-lg text-[11px] font-bold border transition-all ${
-                  simulatedEvacState === st.id
-                    ? 'bg-cyan-600 text-white border-cyan-400 shadow-sm'
-                    : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-slate-200'
+                key={pill.id}
+                type="button"
+                className={`px-4 py-2 rounded-2xl text-xs font-bold border transition-all flex items-center gap-2 shrink-0 shadow-sm ${
+                  isSelected
+                    ? 'bg-white dark:bg-slate-900 border-cyan-500 text-slate-900 dark:text-slate-100 font-black ring-2 ring-cyan-500/20'
+                    : 'bg-white/70 dark:bg-slate-900/70 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
                 }`}
               >
-                {st.label}
+                <Icon className={`w-4 h-4 ${pill.color}`} />
+                <span>{pill.label}</span>
               </button>
-            ))}
+            );
+          })}
+        </div>
+
+        {/* Search / Corridor Filter Bar (Screen 2 Reference) */}
+        <div className="w-full bg-slate-100/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-2xl px-4 py-3 flex items-center justify-between text-slate-400 shadow-sm">
+          <div className="flex items-center gap-2.5 flex-1">
+            <Navigation className="w-4 h-4 text-cyan-500 shrink-0" />
+            <input
+              type="text"
+              placeholder="Search evacuation route, shelter name or ward..."
+              className="w-full bg-transparent text-xs sm:text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none"
+            />
           </div>
         </div>
       </div>
