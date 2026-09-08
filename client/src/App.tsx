@@ -26,7 +26,6 @@ import { RecentEventsPage } from './pages/RecentEventsPage';
 import { HistoryPage } from './pages/HistoryPage';
 import { DownloadsPage } from './pages/DownloadsPage';
 import { FutureUpdatesPage } from './pages/FutureUpdatesPage';
-import { PresentationPage } from './pages/PresentationPage';
 
 const VALID_VIEWS: ActiveView[] = [
   'home',
@@ -41,7 +40,6 @@ const VALID_VIEWS: ActiveView[] = [
   'history',
   'downloads',
   'future-updates',
-  'presentation',
 ];
 
 function getInitialView(): ActiveView {
@@ -161,10 +159,6 @@ function AppContent() {
       setViewMode('focus');
     }
   };
-
-  if (activeView === 'presentation') {
-    return <PresentationPage setActiveView={handleViewChange} />;
-  }
 
   return (
     <>

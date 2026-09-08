@@ -105,12 +105,6 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({
       icon: Sparkles,
       description: 'Upcoming multi-language and satellite features',
     },
-    {
-      id: 'presentation',
-      label: 'SIH Presentation Deck',
-      icon: Layers,
-      description: '4-Slide hackathon presentation pitch (Proposed Solution, Tech, Viability, Impact)',
-    },
   ];
 
   const handleSelect = (id: ActiveView) => {

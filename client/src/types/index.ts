@@ -10,8 +10,7 @@ export type ActiveView =
   | 'recent-events'
   | 'history'
   | 'downloads'
-  | 'future-updates'
-  | 'presentation';
+  | 'future-updates';
 
 export type AppTheme = 'dark' | 'light';
 
