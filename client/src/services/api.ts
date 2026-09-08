@@ -74,12 +74,16 @@ export const ApiService = {
     }),
 
   // Ask Aegis Chat
-  sendChatMessage: (message: string, forceOffline = true) =>
+  sendChatMessage: (message: string, forceOffline = false) =>
     fetchJson<ChatMessage>('/chat', {
       method: 'POST',
       body: JSON.stringify({ message, forceOffline }),
     }),
   getChatHistory: () => fetchJson<ChatMessage[]>('/chat/history'),
+  clearChatHistory: () =>
+    fetchJson<{ message: string }>('/chat/history', {
+      method: 'DELETE',
+    }),
 
   // History & Notifications
   getHistory: () => fetchJson<HistoryEvent[]>('/history'),

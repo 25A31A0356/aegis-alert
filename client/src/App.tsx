@@ -122,7 +122,7 @@ function AppContent() {
 
         {activeView === 'safe-evacuation' && <SafeEvacuationPage />}
         {activeView === 'sos-beacon' && <SosBeaconPage />}
-        {activeView === 'ask-aegis' && <AskAegisPage />}
+        {activeView === 'ask-aegis' && <AskAegisPage setActiveView={handleViewChange} />}
         {activeView === 'survival-guide' && <SurvivalGuidePage />}
         {activeView === 'community-report' && <CommunityReportPage />}
         {activeView === 'safe-beacon' && <SafeBeaconPage />}
