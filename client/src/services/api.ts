@@ -8,6 +8,7 @@ import {
   SOSStatus,
   SafeBeacon,
   CommunityReport,
+  CommunityReportStatus,
   ChatMessage,
   HistoryEvent,
   NotificationItem,
@@ -73,11 +74,28 @@ export const ApiService = {
   getLatestSafeBeacon: () => fetchJson<SafeBeacon | null>('/safe-beacon/latest'),
 
   // Community Reports
-  getCommunityReports: () => fetchJson<CommunityReport[]>('/community-reports'),
+  getCommunityReports: (params?: { category?: string; status?: string; severity?: string; search?: string }) => {
+    const query = new URLSearchParams();
+    if (params?.category) query.append('category', params.category);
+    if (params?.status) query.append('status', params.status);
+    if (params?.severity) query.append('severity', params.severity);
+    if (params?.search) query.append('search', params.search);
+    const qs = query.toString() ? `?${query.toString()}` : '';
+    return fetchJson<CommunityReport[]>(`/community-reports${qs}`);
+  },
   submitCommunityReport: (data: Partial<CommunityReport>) =>
     fetchJson<CommunityReport>('/community-reports', {
       method: 'POST',
       body: JSON.stringify(data),
+    }),
+  updateCommunityReportStatus: (id: string, status: CommunityReportStatus, reviewNotes?: string) =>
+    fetchJson<CommunityReport>(`/community-reports/${id}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status, reviewNotes }),
+    }),
+  upvoteCommunityReport: (id: string) =>
+    fetchJson<CommunityReport>(`/community-reports/${id}/upvote`, {
+      method: 'POST',
     }),
 
   // Ask Aegis Chat

@@ -114,6 +114,12 @@ export interface SafeBeacon {
 
 export type CommunityReportCategory =
   | 'Flooding'
+  | 'Road blockage'
+  | 'Fallen trees'
+  | 'Infrastructure damage'
+  | 'People needing assistance'
+  | 'Shelter issues'
+  | 'Other emergency situations'
   | 'Road Blockage'
   | 'Fallen Trees'
   | 'Infrastructure Damage'

@@ -243,6 +243,87 @@ export async function seedDatabase(db: Database): Promise<void> {
       ]
     );
 
+    // 7. Seed Initial Crowdsourced Community Reports
+    await db.run(
+      `INSERT INTO community_reports (
+        id, category, title, description, location, lat, lng, severity, image_url, status, upvotes, timestamp
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        'rep_01',
+        'Flooding',
+        'Beach Road Underpass Submerged Under 1.2m Water',
+        'Vehicular underpass near RK Beach completely inundated. Two small cars stalled; water level rising rapidly due to high tide.',
+        'Beach Road Underpass, Sector 4, Visakhapatnam',
+        17.7125,
+        83.3218,
+        'CRITICAL',
+        'https://images.unsplash.com/photo-1547683905-f686c993aae5?auto=format&fit=crop&w=600&q=80',
+        'Submitted',
+        4,
+        new Date(Date.now() - 1800000).toISOString(),
+      ]
+    );
+
+    await db.run(
+      `INSERT INTO community_reports (
+        id, category, title, description, location, lat, lng, severity, image_url, status, upvotes, timestamp
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        'rep_02',
+        'Fallen trees',
+        'Large Banyan Tree Blocking Hilltop Evacuation Arterial',
+        'Gale wind gust uprooted old banyan tree across both lanes. Emergency ambulances currently rerouting through narrow bypass.',
+        'Hilltop Rd, Kailasagiri Sector, Visakhapatnam',
+        17.7412,
+        83.3365,
+        'HIGH',
+        'https://images.unsplash.com/photo-1516214104703-d870798883c5?auto=format&fit=crop&w=600&q=80',
+        'Under Review',
+        7,
+        new Date(Date.now() - 3600000).toISOString(),
+      ]
+    );
+
+    await db.run(
+      `INSERT INTO community_reports (
+        id, category, title, description, location, lat, lng, severity, image_url, status, upvotes, timestamp
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        'rep_03',
+        'Road blockage',
+        'Mudslide Debris on Coastal Highway Ridge',
+        'Hillside soil slump deposited 30cm of slick mud on highway. SDRF bulldozer team has arrived on site for clearing.',
+        'Coastal Highway KM 14, Visakhapatnam',
+        17.765,
+        83.3512,
+        'MEDIUM',
+        'https://images.unsplash.com/photo-1579829366248-204fe8413f31?auto=format&fit=crop&w=600&q=80',
+        'Verified',
+        12,
+        new Date(Date.now() - 7200000).toISOString(),
+      ]
+    );
+
+    await db.run(
+      `INSERT INTO community_reports (
+        id, category, title, description, location, lat, lng, severity, image_url, status, upvotes, timestamp
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        'rep_04',
+        'Infrastructure damage',
+        'Fallen High-Voltage Transformer Cable De-energized and Cleared',
+        'Municipal power board electrical crew successfully disconnected live wire and secured utility pole.',
+        'Old Town High Street, Visakhapatnam',
+        17.695,
+        83.295,
+        'LOW',
+        null,
+        'Resolved',
+        15,
+        new Date(Date.now() - 14400000).toISOString(),
+      ]
+    );
+
     console.log('[DATABASE] Initial realistic data seeded successfully.');
   } catch (error: any) {
     console.error('[DATABASE] Seed failed:', error.message);
