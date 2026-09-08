@@ -5,6 +5,7 @@ import {
   Shelter,
   EvacuationRoute,
   SOSRequest,
+  SOSStatus,
   SafeBeacon,
   CommunityReport,
   ChatMessage,
@@ -56,6 +57,12 @@ export const ApiService = {
       body: JSON.stringify(data),
     }),
   getSosStatus: (id: string) => fetchJson<SOSRequest>(`/sos/${id}`),
+  getLatestSos: () => fetchJson<SOSRequest | null>('/sos/latest'),
+  updateSosStatus: (id: string, status: SOSStatus) =>
+    fetchJson<SOSRequest>(`/sos/${id}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status }),
+    }),
 
   // Safe Beacon
   sendSafeBeacon: (data: Partial<SafeBeacon>) =>
