@@ -9,6 +9,7 @@ import { SettingsModal } from './components/common/SettingsModal';
 import { AppLayout } from './layouts/AppLayout';
 import { ActiveView } from './types';
 import { NotificationItem } from '@shared';
+import { ApiService } from './services/api';
 
 // Page Imports
 import { ThreeZoneDashboard } from './pages/ThreeZoneDashboard';
@@ -36,27 +37,77 @@ function AppContent() {
     {
       id: 'notif_01',
       type: 'DISASTER_ALERT',
-      title: 'RED ALERT: Flood Risk High in Your Sector',
-      message: 'Severe rainfall warning active for next 24 hours. Check nearby shelter availability.',
+      title: 'RED ALERT: Flash Flood Inundation in Coastal Ward 12',
+      message: 'Severe rainfall warning active for next 24 hours. Check nearby shelter availability and move to high ground.',
       severity: 'CRITICAL',
       timestamp: new Date().toISOString(),
       isRead: false,
+      linkAction: 'safe_evacuation',
     },
     {
       id: 'notif_02',
+      type: 'EVACUATION_WARNING',
+      title: 'MANDATORY EVACUATION: Move to High-Ground Shelters',
+      message: 'Cyclone landfall expected within 6 hours. High-ridge routes are open; low-lying underpasses closed.',
+      severity: 'HIGH',
+      timestamp: new Date(Date.now() - 1800000).toISOString(),
+      isRead: false,
+      linkAction: 'safe_evacuation',
+    },
+    {
+      id: 'notif_03',
       type: 'SHELTER_UPDATE',
-      title: 'APSDMA Central Shelter has 610 beds open',
-      message: 'Drinking water, medical triage, and power backup fully operational.',
+      title: 'APSDMA Kailasagiri Shelter: 610 Beds & Water Open',
+      message: 'Drinking water, emergency medical triage, and power backup fully operational at central shelter.',
       severity: 'LOW',
       timestamp: new Date(Date.now() - 3600000).toISOString(),
       isRead: true,
+      linkAction: 'safe_evacuation',
+    },
+    {
+      id: 'notif_04',
+      type: 'COMMUNITY_UPDATE',
+      title: 'Road Cleared: Harbor Bridge Underpass cleared by SDRF',
+      message: 'Debris and waterlogging pumped out. Light vehicles can resume cautious transit.',
+      severity: 'MEDIUM',
+      timestamp: new Date(Date.now() - 7200000).toISOString(),
+      isRead: true,
+      linkAction: 'community_report',
+    },
+    {
+      id: 'notif_05',
+      type: 'SYSTEM',
+      title: 'Offline Knowledge Base Updated (NDMA 2026 Protocol)',
+      message: 'All 7 disaster survival protocols and topographic shelter packs cached for 100% offline access.',
+      severity: 'LOW',
+      timestamp: new Date(Date.now() - 14400000).toISOString(),
+      isRead: true,
+      linkAction: 'survival_guide',
     },
   ]);
 
   const handleMarkRead = (id: string) => {
     setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
+      prev.map((n) => (n.id === id ? { ...n, isRead: !n.isRead } : n))
     );
+    ApiService.markNotificationRead(id);
+  };
+
+  const handleMarkAllRead = () => {
+    setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+    ApiService.markAllNotificationsRead();
+  };
+
+  const handleClearNotification = (id: string) => {
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
+    ApiService.clearNotification(id);
+  };
+
+  const handleClearAll = () => {
+    if (window.confirm('Clear all emergency notifications?')) {
+      setNotifications([]);
+      ApiService.clearAllNotifications();
+    }
   };
 
   const handleViewChange = (view: ActiveView) => {
@@ -147,6 +198,10 @@ function AppContent() {
         onClose={() => setIsNotificationsOpen(false)}
         notifications={notifications}
         onMarkRead={handleMarkRead}
+        onMarkAllRead={handleMarkAllRead}
+        onClearNotification={handleClearNotification}
+        onClearAll={handleClearAll}
+        onNavigate={handleViewChange}
       />
 
       {/* Settings Modal */}

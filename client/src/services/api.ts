@@ -118,6 +118,18 @@ export const ApiService = {
     fetchJson<{ id: string; isRead: boolean }>(`/notifications/${id}/read`, {
       method: 'PATCH',
     }),
+  markAllNotificationsRead: () =>
+    fetchJson<{ message: string }>('/notifications/read-all', {
+      method: 'PATCH',
+    }),
+  clearNotification: (id: string) =>
+    fetchJson<{ id: string; deleted: boolean }>(`/notifications/${id}`, {
+      method: 'DELETE',
+    }),
+  clearAllNotifications: () =>
+    fetchJson<{ message: string }>('/notifications', {
+      method: 'DELETE',
+    }),
 
   // User Profile
   getProfile: () => fetchJson<UserProfile>('/profile'),

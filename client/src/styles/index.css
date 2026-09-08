@@ -19,6 +19,61 @@
   }
 }
 
+/* ==========================================================================
+   LIGHT THEME GLOBAL ADAPTATIONS (High-Contrast Daylight Clarity)
+   ========================================================================== */
+html.light body,
+html:not(.dark) body {
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
+html.light .bg-slate-900,
+html:not(.dark) .bg-slate-900 {
+  background-color: #ffffff !important;
+  color: #0f172a;
+}
+
+html.light .bg-slate-950,
+html:not(.dark) .bg-slate-950 {
+  background-color: #f1f5f9 !important;
+  color: #0f172a;
+}
+
+html.light .bg-slate-800,
+html.light .bg-slate-850,
+html:not(.dark) .bg-slate-800 {
+  background-color: #e2e8f0 !important;
+  color: #1e293b;
+}
+
+html.light .border-slate-800,
+html.light .border-slate-700,
+html:not(.dark) .border-slate-800,
+html:not(.dark) .border-slate-700 {
+  border-color: #cbd5e1 !important;
+}
+
+html.light .text-slate-100,
+html:not(.dark) .text-slate-100 {
+  color: #0f172a !important;
+}
+
+html.light .text-slate-200,
+html:not(.dark) .text-slate-200 {
+  color: #1e293b !important;
+}
+
+html.light .text-slate-300,
+html:not(.dark) .text-slate-300 {
+  color: #334155 !important;
+}
+
+html.light .text-slate-400,
+html:not(.dark) .text-slate-400 {
+  color: #64748b !important;
+}
+
 @layer components {
   /* Tactical Glass Cards */
   .aegis-card {
