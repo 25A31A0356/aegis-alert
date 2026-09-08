@@ -45,13 +45,15 @@ export const SosConfirmationModal: React.FC<SosConfirmationModalProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const safeTrappedCount = Math.max(1, Math.floor(trappedCount) || 1);
+    const safeWaterLevel = Math.max(0, waterLevelMeters || 0);
     onConfirm({
       emergencyType,
-      trappedCount,
+      trappedCount: safeTrappedCount,
       hasElderlyOrInfants,
       hasMedicalEmergency,
-      waterLevelMeters,
-      notes,
+      waterLevelMeters: safeWaterLevel,
+      notes: notes.trim(),
     });
   };
 
@@ -75,7 +77,9 @@ export const SosConfirmationModal: React.FC<SosConfirmationModalProps> = ({
           </div>
 
           <button
+            type="button"
             onClick={onClose}
+            aria-label="Close distress modal"
             className="p-1.5 text-slate-400 hover:text-white rounded-lg transition-colors"
           >
             <X className="w-5 h-5" />

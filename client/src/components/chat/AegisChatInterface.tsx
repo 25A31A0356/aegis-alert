@@ -255,6 +255,7 @@ export const AegisChatInterface: React.FC<AegisChatInterfaceProps> = ({ setActiv
           {/* Mode Switcher Buttons */}
           <div className="flex items-center p-1 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold">
             <button
+              type="button"
               onClick={() => setChatMode('auto')}
               className={`px-2.5 py-1 rounded-lg transition-all ${
                 chatMode === 'auto'
@@ -266,6 +267,7 @@ export const AegisChatInterface: React.FC<AegisChatInterfaceProps> = ({ setActiv
               Auto
             </button>
             <button
+              type="button"
               onClick={() => setChatMode('offline')}
               className={`px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all ${
                 chatMode === 'offline'
@@ -278,6 +280,7 @@ export const AegisChatInterface: React.FC<AegisChatInterfaceProps> = ({ setActiv
               <span>Offline</span>
             </button>
             <button
+              type="button"
               onClick={() => setChatMode('online')}
               className={`px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all ${
                 chatMode === 'online'
@@ -293,6 +296,7 @@ export const AegisChatInterface: React.FC<AegisChatInterfaceProps> = ({ setActiv
 
           {/* Clear Button */}
           <button
+            type="button"
             onClick={handleClearHistory}
             className="p-2 rounded-xl bg-slate-900 hover:bg-red-500/20 text-slate-400 hover:text-red-400 border border-slate-800 transition-colors"
             title="Clear Chat History"
@@ -367,6 +371,7 @@ export const AegisChatInterface: React.FC<AegisChatInterfaceProps> = ({ setActiv
                     </div>
 
                     <button
+                      type="button"
                       onClick={() => handleCopy(msg.text, msg.id)}
                       className="p-1 text-slate-400 hover:text-slate-200 rounded transition-colors flex items-center gap-1"
                       title="Copy response"
@@ -395,6 +400,7 @@ export const AegisChatInterface: React.FC<AegisChatInterfaceProps> = ({ setActiv
                       {msg.actionRecommendations.map((act, i) => (
                         <button
                           key={i}
+                          type="button"
                           onClick={() => handleActionClick(act)}
                           className="px-2.5 py-1 bg-slate-900 hover:bg-cyan-600/30 text-slate-300 hover:text-cyan-200 border border-slate-800 hover:border-cyan-500/40 rounded-lg text-[11px] font-medium transition-colors flex items-center gap-1"
                         >
@@ -457,6 +463,7 @@ export const AegisChatInterface: React.FC<AegisChatInterfaceProps> = ({ setActiv
         {SUGGESTED_QUERIES.map((item, idx) => (
           <button
             key={idx}
+            type="button"
             onClick={() => handleSendMessage(item.query)}
             className="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white rounded-lg text-xs font-medium border border-slate-800 hover:border-cyan-500/30 whitespace-nowrap transition-all active:scale-95"
           >

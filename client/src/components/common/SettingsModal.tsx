@@ -137,6 +137,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
             </div>
 
             <button
+              type="button"
               onClick={() => setActiveTab('profile')}
               className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-left transition-all ${
                 activeTab === 'profile'
@@ -149,6 +150,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
             </button>
 
             <button
+              type="button"
               onClick={() => setActiveTab('language')}
               className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-left transition-all ${
                 activeTab === 'language'
@@ -161,6 +163,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
             </button>
 
             <button
+              type="button"
               onClick={() => setActiveTab('theme')}
               className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-left transition-all ${
                 activeTab === 'theme'
@@ -173,6 +176,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
             </button>
 
             <button
+              type="button"
               onClick={() => setActiveTab('weblink')}
               className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-left transition-all ${
                 activeTab === 'weblink'
@@ -185,6 +189,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
             </button>
 
             <button
+              type="button"
               onClick={() => setActiveTab('help')}
               className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold text-left transition-all ${
                 activeTab === 'help'
@@ -199,6 +204,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
 
           <div className="hidden md:block pt-3 border-t border-slate-800">
             <button
+              type="button"
               onClick={() => setShowSignoutConfirm(true)}
               className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-red-400 hover:bg-red-500/15 border border-transparent hover:border-red-500/30 transition-all text-left"
             >
@@ -224,6 +230,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
               </span>
             </div>
             <button
+              type="button"
               onClick={onClose}
               aria-label="Close settings"
               className="p-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-100 transition-colors"
@@ -423,6 +430,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
                     return (
                       <button
                         key={lang.code}
+                        type="button"
                         onClick={() => setLanguage(lang.code)}
                         className={`p-3.5 rounded-2xl border text-left flex items-center justify-between transition-all ${
                           isSelected
@@ -458,6 +466,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <button
+                    type="button"
                     onClick={() => setTheme('dark')}
                     className={`p-5 rounded-3xl border-2 flex flex-col items-center gap-3 transition-all ${
                       theme === 'dark'
@@ -480,6 +489,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
                   </button>
 
                   <button
+                    type="button"
                     onClick={() => setTheme('light')}
                     className={`p-5 rounded-3xl border-2 flex flex-col items-center gap-3 transition-all ${
                       theme === 'light'
@@ -522,6 +532,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
                       {webLink}
                     </span>
                     <button
+                      type="button"
                       onClick={handleCopyWebLink}
                       className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded-lg font-mono font-bold flex items-center gap-1 border border-slate-700 transition-colors shrink-0"
                     >
@@ -622,12 +633,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
 
             <div className="grid grid-cols-2 gap-2 pt-2">
               <button
+                type="button"
                 onClick={() => setShowSignoutConfirm(false)}
                 className="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs"
               >
                 Cancel
               </button>
               <button
+                type="button"
                 onClick={logout}
                 className="py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs shadow-red-glow"
               >

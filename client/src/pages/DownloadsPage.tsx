@@ -1,50 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import { Download, CheckCircle2, HardDriveDownload, RefreshCw, BookOpen, MapPin, CheckSquare, Trash2 } from 'lucide-react';
+import {
+  Download,
+  CheckCircle2,
+  HardDriveDownload,
+  RefreshCw,
+  BookOpen,
+  MapPin,
+  CheckSquare,
+  Trash2,
+  Inbox,
+} from 'lucide-react';
 import { DownloadResource } from '@shared';
 import { ApiService } from '../services/api';
 
 export const DownloadsPage: React.FC = () => {
   const [downloads, setDownloads] = useState<DownloadResource[]>([]);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     loadDownloads();
   }, []);
 
   const loadDownloads = async () => {
-    const res = await ApiService.getDownloads();
-    if (res.success && res.data && res.data.length > 0) {
-      setDownloads(res.data);
-    } else {
-      setDownloads([
-        {
-          id: 'dl_01',
-          title: 'NDMA Flood & Cyclone Offline Survival Protocols',
-          category: 'Survival Guide',
-          sizeBytes: 1048576,
-          sizeFormatted: '1.0 MB',
-          status: 'Downloaded',
-          lastUpdated: new Date().toISOString(),
-        },
-        {
-          id: 'dl_02',
-          title: 'Visakhapatnam District Offline Topographic & Shelter Map',
-          category: 'Offline Maps',
-          sizeBytes: 3670016,
-          sizeFormatted: '3.5 MB',
-          status: 'Available',
-          lastUpdated: new Date().toISOString(),
-        },
-        {
-          id: 'dl_03',
-          title: '72-Hour Family Disaster Emergency Checklist',
-          category: 'Emergency Checklist',
-          sizeBytes: 524288,
-          sizeFormatted: '512 KB',
-          status: 'Downloaded',
-          lastUpdated: new Date().toISOString(),
-        },
-      ]);
+    setIsLoading(true);
+    try {
+      const res = await ApiService.getDownloads();
+      if (res.success && res.data) {
+        setDownloads(res.data);
+      }
+    } catch {
+      // Local fallback
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -62,7 +50,7 @@ export const DownloadsPage: React.FC = () => {
     } catch (err) {
       console.error(err);
     } finally {
-      setTimeout(() => setUpdatingId(null), 500);
+      setTimeout(() => setUpdatingId(null), 400);
     }
   };
 
@@ -82,7 +70,7 @@ export const DownloadsPage: React.FC = () => {
     .reduce((acc, curr) => acc + curr.sizeBytes, 0);
 
   return (
-    <div className="space-y-6 animate-fadeIn">
+    <div className="space-y-6 animate-fadeIn pb-12">
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-2xl bg-slate-900 border border-slate-800 gap-3">
         <div>
@@ -95,68 +83,103 @@ export const DownloadsPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="text-xs font-mono px-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700 text-slate-200">
-          Device Cache: <span className="text-cyan-400 font-bold">{(totalCachedBytes / (1024 * 1024)).toFixed(1)} MB</span>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={loadDownloads}
+            disabled={isLoading}
+            aria-label="Refresh download list"
+            className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-colors"
+            title="Refresh list"
+          >
+            <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+          </button>
+          <div className="text-xs font-mono px-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700 text-slate-200">
+            Device Cache: <span className="text-cyan-400 font-bold">{(totalCachedBytes / (1024 * 1024)).toFixed(1)} MB</span>
+          </div>
         </div>
       </div>
 
       {/* Downloads List */}
-      <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
-        {downloads.map((item) => {
-          const isDownloaded = item.status === 'Downloaded';
-          const isUpdating = updatingId === item.id;
-          return (
-            <div
-              key={item.id}
-              className="p-4 rounded-xl bg-slate-850/60 border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 hover:border-slate-700 transition-all"
-            >
-              <div className="flex items-center gap-3.5">
-                <div className="p-2.5 rounded-xl bg-slate-800 border border-slate-700">
-                  {getCategoryIcon(item.category)}
-                </div>
-                <div>
-                  <div className="flex items-center gap-2 mb-0.5">
-                    <span className="font-bold text-sm text-slate-100">{item.title}</span>
-                    <span
-                      className={`text-[9px] font-bold px-1.5 py-0.2 rounded ${
-                        isDownloaded ? 'badge-green' : 'badge-cyan'
-                      }`}
-                    >
-                      {item.status}
-                    </span>
-                  </div>
-                  <div className="text-xs text-slate-400 font-mono">
-                    Category: {item.category} • Size: {item.sizeFormatted}
-                  </div>
-                </div>
-              </div>
-
-              <button
-                onClick={() => handleToggle(item.id)}
-                disabled={isUpdating}
-                className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all ${
-                  isDownloaded
-                    ? 'bg-slate-800 hover:bg-red-500/20 text-slate-300 hover:text-red-300 border border-slate-700'
-                    : 'bg-cyan-500 hover:bg-cyan-400 text-slate-950 shadow-cyan-glow'
-                }`}
-              >
-                {isUpdating ? (
-                  <RefreshCw className="w-4 h-4 animate-spin" />
-                ) : isDownloaded ? (
-                  <>
-                    <Trash2 className="w-3.5 h-3.5" />
-                    <span>Remove Cache</span>
-                  </>
-                ) : (
-                  <>
-                    <HardDriveDownload className="w-3.5 h-3.5" />
-                    <span>Download to Device</span>
-                  </>
-                )}
-              </button>
+      <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800">
+        {isLoading ? (
+          <div className="py-16 text-center text-slate-400 space-y-3">
+            <RefreshCw className="w-8 h-8 text-cyan-400 animate-spin mx-auto" />
+            <div className="font-mono text-xs text-slate-300">Loading cached resource inventory...</div>
+          </div>
+        ) : downloads.length === 0 ? (
+          <div className="py-16 text-center space-y-3 max-w-sm mx-auto">
+            <div className="w-14 h-14 rounded-2xl bg-slate-800/80 border border-slate-700 text-slate-400 flex items-center justify-center mx-auto shadow-inner">
+              <Inbox className="w-7 h-7 text-slate-500" />
             </div>
-          );
-        })}
+            <div>
+              <h3 className="font-black text-sm text-slate-200">No Resources Available</h3>
+              <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                Offline survival guides and topographic map packs will appear here.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {downloads.map((item) => {
+              const isDownloaded = item.status === 'Downloaded';
+              const isUpdating = updatingId === item.id;
+              return (
+                <div
+                  key={item.id}
+                  className="p-4 rounded-xl bg-slate-850/60 border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 hover:border-slate-700 transition-all"
+                >
+                  <div className="flex items-center gap-3.5">
+                    <div className="p-2.5 rounded-xl bg-slate-800 border border-slate-700 shrink-0">
+                      {getCategoryIcon(item.category)}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <span className="font-bold text-sm text-slate-100">{item.title}</span>
+                        <span
+                          className={`text-[9px] font-bold px-1.5 py-0.2 rounded ${
+                            isDownloaded ? 'badge-green' : 'badge-cyan'
+                          }`}
+                        >
+                          {item.status}
+                        </span>
+                      </div>
+                      <div className="text-xs text-slate-400 font-mono">
+                        Category: {item.category} • Size: {item.sizeFormatted}
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => handleToggle(item.id)}
+                    disabled={isUpdating}
+                    aria-label={isDownloaded ? `Remove ${item.title} from cache` : `Download ${item.title} to device`}
+                    className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shrink-0 ${
+                      isDownloaded
+                        ? 'bg-slate-800 hover:bg-red-500/20 text-slate-300 hover:text-red-300 border border-slate-700'
+                        : 'bg-cyan-500 hover:bg-cyan-400 text-slate-950 shadow-cyan-glow'
+                    }`}
+                  >
+                    {isUpdating ? (
+                      <RefreshCw className="w-4 h-4 animate-spin" />
+                    ) : isDownloaded ? (
+                      <>
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>Remove Cache</span>
+                      </>
+                    ) : (
+                      <>
+                        <HardDriveDownload className="w-3.5 h-3.5" />
+                        <span>Download to Device</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );

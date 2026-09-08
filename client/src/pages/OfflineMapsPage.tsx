@@ -130,6 +130,7 @@ export const OfflineMapsPage: React.FC = () => {
               </div>
 
               <button
+                type="button"
                 onClick={() => toggleSector(sec.id)}
                 className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all ${
                   sec.isCached

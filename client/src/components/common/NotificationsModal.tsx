@@ -135,6 +135,7 @@ export const NotificationsModal: React.FC<NotificationsModalProps> = ({
 
           <div className="flex items-center gap-1.5">
             <button
+              type="button"
               onClick={onClose}
               aria-label="Close notifications modal"
               className="p-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-100 transition-colors"
@@ -161,6 +162,7 @@ export const NotificationsModal: React.FC<NotificationsModalProps> = ({
               return (
                 <button
                   key={tab.id}
+                  type="button"
                   onClick={() => setSelectedFilter(tab.id)}
                   className={`px-2.5 py-1 rounded-lg transition-all ${
                     isSelected
@@ -178,6 +180,7 @@ export const NotificationsModal: React.FC<NotificationsModalProps> = ({
           <div className="flex items-center gap-1.5 text-[11px]">
             {unreadCount > 0 && (
               <button
+                type="button"
                 onClick={onMarkAllRead}
                 className="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 font-mono transition-colors flex items-center gap-1"
                 title="Mark all notifications as read"
@@ -189,6 +192,7 @@ export const NotificationsModal: React.FC<NotificationsModalProps> = ({
 
             {notifications.length > 0 && (
               <button
+                type="button"
                 onClick={onClearAll}
                 className="px-2 py-1 rounded-lg bg-slate-800 hover:bg-red-500/20 text-slate-400 hover:text-red-300 border border-slate-700 font-mono transition-colors flex items-center gap-1"
                 title="Clear all notifications"
@@ -253,6 +257,7 @@ export const NotificationsModal: React.FC<NotificationsModalProps> = ({
                       <div className="flex items-center gap-2">
                         {notif.linkAction && (
                           <button
+                            type="button"
                             onClick={() => handleActionClick(notif.linkAction)}
                             className="text-cyan-400 hover:text-cyan-300 font-bold flex items-center gap-1"
                           >
@@ -262,6 +267,7 @@ export const NotificationsModal: React.FC<NotificationsModalProps> = ({
                         )}
 
                         <button
+                          type="button"
                           onClick={() => onMarkRead(notif.id)}
                           className="hover:text-cyan-300 transition-colors"
                         >
@@ -269,6 +275,7 @@ export const NotificationsModal: React.FC<NotificationsModalProps> = ({
                         </button>
 
                         <button
+                          type="button"
                           onClick={() => onClearNotification(notif.id)}
                           className="text-slate-500 hover:text-red-400 transition-colors p-1"
                           title="Dismiss notification"
@@ -288,6 +295,7 @@ export const NotificationsModal: React.FC<NotificationsModalProps> = ({
         <div className="p-3 border-t border-slate-800 bg-slate-900/80 text-center flex items-center justify-between px-4 text-xs font-mono">
           <span className="text-slate-500">AegisAlert CAP-Compliant Notification Engine</span>
           <button
+            type="button"
             onClick={onClose}
             className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-xl transition-colors"
           >

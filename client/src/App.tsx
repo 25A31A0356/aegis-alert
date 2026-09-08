@@ -26,12 +26,49 @@ import { HistoryPage } from './pages/HistoryPage';
 import { DownloadsPage } from './pages/DownloadsPage';
 import { FutureUpdatesPage } from './pages/FutureUpdatesPage';
 
+const VALID_VIEWS: ActiveView[] = [
+  'home',
+  'safe-evacuation',
+  'sos-beacon',
+  'ask-aegis',
+  'survival-guide',
+  'community-report',
+  'safe-beacon',
+  'offline-maps',
+  'recent-events',
+  'history',
+  'downloads',
+  'future-updates',
+];
+
+function getInitialView(): ActiveView {
+  if (typeof window !== 'undefined' && window.location.hash) {
+    const hash = window.location.hash.replace('#', '') as ActiveView;
+    if (VALID_VIEWS.includes(hash)) {
+      return hash;
+    }
+  }
+  return 'home';
+}
+
 function AppContent() {
-  const [activeView, setActiveView] = useState<ActiveView>('home');
+  const [activeView, setActiveView] = useState<ActiveView>(getInitialView);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'3zone' | 'focus'>('3zone');
+
+  // Sync state with URL hash
+  React.useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '') as ActiveView;
+      if (VALID_VIEWS.includes(hash)) {
+        setActiveView(hash);
+      }
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
 
   const [notifications, setNotifications] = useState<NotificationItem[]>([
     {
@@ -112,6 +149,9 @@ function AppContent() {
 
   const handleViewChange = (view: ActiveView) => {
     setActiveView(view);
+    if (typeof window !== 'undefined') {
+      window.location.hash = view;
+    }
     if (view === 'home') {
       // Keep 3-zone mode for home dashboard
     } else {
@@ -141,6 +181,7 @@ function AppContent() {
               </span>
               <div className="flex items-center gap-1.5">
                 <button
+                  type="button"
                   onClick={() => setViewMode('3zone')}
                   className={`px-3 py-1 rounded-lg font-bold transition-all ${
                     viewMode === '3zone'
@@ -151,6 +192,7 @@ function AppContent() {
                   3-Zone Command Layout
                 </button>
                 <button
+                  type="button"
                   onClick={() => setViewMode('focus')}
                   className={`px-3 py-1 rounded-lg font-bold transition-all ${
                     viewMode === 'focus'

@@ -133,6 +133,7 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({
             </div>
           </div>
           <button
+            type="button"
             onClick={onClose}
             aria-label="Close menu"
             className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-100 transition-colors"
@@ -149,6 +150,7 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({
             return (
               <button
                 key={item.id}
+                type="button"
                 onClick={() => handleSelect(item.id)}
                 className={`w-full flex items-center justify-between p-3 rounded-xl text-left transition-all ${
                   isActive

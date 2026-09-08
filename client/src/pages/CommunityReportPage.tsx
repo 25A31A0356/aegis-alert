@@ -408,6 +408,7 @@ export const CommunityReportPage: React.FC<CommunityReportPageProps> = ({
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <button
+              type="button"
               onClick={() => setActiveView('home')}
               className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-colors shrink-0"
               title="Return to Home Dashboard"
@@ -437,6 +438,7 @@ export const CommunityReportPage: React.FC<CommunityReportPageProps> = ({
             {/* Mobile View Switcher */}
             <div className="flex lg:hidden rounded-xl bg-slate-950 p-1 border border-slate-800 text-xs font-bold">
               <button
+                type="button"
                 onClick={() => setActiveTab('feed')}
                 className={`px-3 py-1 rounded-lg transition-all ${
                   activeTab === 'feed'
@@ -447,6 +449,7 @@ export const CommunityReportPage: React.FC<CommunityReportPageProps> = ({
                 Incident Feed
               </button>
               <button
+                type="button"
                 onClick={() => setActiveTab('report')}
                 className={`px-3 py-1 rounded-lg transition-all ${
                   activeTab === 'report'
@@ -801,6 +804,7 @@ export const CommunityReportPage: React.FC<CommunityReportPageProps> = ({
                 return (
                   <button
                     key={tab.id}
+                    type="button"
                     onClick={() => setActiveStatusFilter(tab.id)}
                     className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
                       isSelected
@@ -942,6 +946,7 @@ export const CommunityReportPage: React.FC<CommunityReportPageProps> = ({
                       <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
                         {/* Upvote / Hazard Confirmation */}
                         <button
+                          type="button"
                           onClick={(e) => handleUpvote(report.id, e)}
                           className="px-2.5 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 text-slate-300 hover:text-cyan-300 border border-slate-800 transition-colors flex items-center gap-1 text-[11px] font-bold"
                           title="Confirm this hazard observation"
