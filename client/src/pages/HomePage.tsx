@@ -87,12 +87,17 @@ export const HomePage: React.FC<HomePageProps> = ({ setActiveView }) => {
           </p>
         </div>
 
-        {/* Citizen Avatar with Live Signal Indicator */}
+        {/* Citizen Avatar with Live Signal Indicator (Screen 1 Reference Match) */}
         <div className="relative">
-          <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 p-0.5 shadow-md flex items-center justify-center">
-            <div className="w-full h-full rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-200 font-black text-sm">
-              {profile?.name ? profile.name.charAt(0).toUpperCase() : <User className="w-5 h-5 text-cyan-500" />}
-            </div>
+          <div className="w-12 h-12 rounded-full p-0.5 shadow-md flex items-center justify-center bg-slate-200 dark:bg-slate-700 overflow-hidden ring-2 ring-slate-200 dark:ring-slate-800">
+            <img
+              src="/avatar-alex.png"
+              alt="Citizen Avatar"
+              className="w-full h-full object-cover rounded-full"
+              onError={(e) => {
+                (e.target as HTMLElement).style.display = 'none';
+              }}
+            />
           </div>
           <span
             className={`absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-slate-900 ${
