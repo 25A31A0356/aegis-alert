@@ -1,125 +1,159 @@
-# 🛡️ AEGIS ALERT: AI-Powered Multi-Hazard Early Warning & Situational Awareness Platform
+# 🛡️ AEGISALERT — Disaster Management & Emergency Response Platform
 
-> **"See the Risk. Understand the Threat. Act Early."**  
-> *5-Member Student Innovation Inspired by Smart India Hackathon (SIH26001 – SIH26192)*
-
----
-
-## 📌 Executive Summary & Responsible AI Disclaimer
-
-**AEGIS ALERT** is an integrated student innovation prototype demonstrating centralized, multi-hazard environmental intelligence across India. The platform unifies mathematical risk fusion, cyber-physical sensor telemetry, automated weather station anomaly detection, 6-hour predictive nowcasting, and an intelligent state-aware conversational assistant (**Ask AEGIS / WeatherGPT**).
-
-> ⚠️ **RESPONSIBLE AI & PROTOTYPE NOTICE:**  
-> AEGIS ALERT is a student innovation prototype developed for demonstration, research, and hackathon presentation purposes. Risk scores, forecasts, and alerts in Demo Mode are generated using synthetic mathematical models and must **NOT** be used for certified emergency management or official public safety operations.
+**AegisAlert** is a high-resilience emergency response and disaster mitigation web platform engineered for citizens before, during, and after severe hazard events (Floods, Cyclones, Earthquakes, Lightning, and Industrial Hazards).
 
 ---
 
-## 🏆 Mapping to Smart India Hackathon Problem Statements
+## 🏗️ Architecture & Technology Stack
 
-AEGIS ALERT directly addresses **15 Smart India Hackathon problem statements**:
+### 1. Frontend (`/client`)
+- **Core**: React 18 + TypeScript + Vite
+- **Styling**: Tailwind CSS + Custom CSS Design Tokens & CSS Variables (`design-tokens.css`)
+- **Theme**: Full Dual-Theme Support (Dark Emergency Tactical Command Mode + High-Contrast Daylight Mode)
+- **Icons**: Lucide React
+- **Architecture**: Responsive Three-Zone Layout (Left Navigation/Action, Central Ask Aegis, Right Safety/Community) + Adaptive Mobile PWA Navigation.
 
-| SIH Problem ID | Problem Statement Title | Implemented Component in AEGIS ALERT |
-|---|---|---|
-| **SIH26001** | AI-Based Early Warning & Landslide Risk Monitoring | Landslide Mohr-Coulomb shear analysis & slope stability engine (`src/telemetry/risk_fusion_engine.js`) |
-| **SIH26068** | WeatherGPT | **Ask AEGIS** state-aware conversational AI assistant (`src/ai/aegis_assistant.js`) |
-| **SIH26069** | National Weather Big Data Analytics | Pan-India Multi-City Telemetry Database (`src/data/locations_data.js`) |
-| **SIH26071** | Heavy Rainfall Early Warning & Inundation Prediction | Inundation prediction & river gauge vs danger threshold analyzer |
-| **SIH26072** | Thunderstorm & Lightning Nowcasting | CAPE index & 1-6 hour convective strike nowcasting |
-| **SIH26073** | Weather Station Anomaly Detection | Automated Weather Station zero-point drift & quality control engine |
-| **SIH26077** | Hyperlocal Severe Weather Early Warning | Precision geofencing & 6-hour localized forecast timeline |
-| **SIH26078** | Spatio-Temporal Extreme Weather Tracking | Leaflet GIS Tactical Map with 8 multi-hazard toggleable layers |
-| **SIH26080** | Monsoon Rainfall Forecast Post-Processing | Precipitation curve post-processing & runoff acceleration modeling |
-| **SIH26082** | Air Pollution–Weather Coupled Forecasting | Coupled PM2.5/PM10 dispersion & thermal inversion modeling |
-| **SIH26083** | Extreme Heatwave & Human Thermal Stress | Wet Bulb Globe Temperature (WBGT) & Steadman Heat Index module |
-| **SIH26084** | Thunderstorm, Hail & Cloudburst Nowcasting | Cloudburst core detection (>100 mm/h) & pilgrim route alarms |
-| **SIH26085** | Urban Flood Nowcasting | Urban drainage bottleneck & stormwater flood prediction (Musi, Mithi) |
-| **SIH26191** | Hazard-Based Red Zones & Vulnerable Habitations | Statutory Red-Zone Habitations Register & evacuation corridors |
-| **SIH26192** | Flash Flood Prediction for Hilly Regions | High-velocity mountain gorge surge & debris flow prediction |
+### 2. Backend (`/server`)
+- **Runtime**: Node.js + Express + TypeScript
+- **Database**: SQLite with `sqlite3` + Type-Safe Query Manager (PostgreSQL Migration-Ready Schema)
+- **Security**: Helmet, CORS, Input Validation, Rate Limiting for emergency endpoints (`/api/sos`, `/api/safe-beacon`)
+- **AI Triage Layer**: Offline Rule-Based Emergency Knowledge Base + Pluggable Online AI Integration Layer
+
+### 3. Shared Contracts (`/shared`)
+- Single source of truth for TypeScript interfaces, Enums, DTOs, and API response envelopes across both frontend and backend.
 
 ---
 
-## 🚀 Key Platform Features & Architecture
+## 📂 Project Structure
 
 ```
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                          AEGIS ALERT PLATFORM ARCHITECTURE                             │
-├────────────────────────────────────────────────────────────────────────────────────────┤
-│ 🛰️ ORBITAL TIER: ISRO NavIC / INSAT-3DR / Radar InSAR Direct Downlink                  │
-│                        │ (S-Band / C-Band Transponders)                                │
-│                        ▼                                                               │
-│ 🏛️ COMMAND TIER: Disaster Management Offices (NEOC / MHA / SDMA)                       │
-│                        │ (Sovereign SHA-256 Cryptographic Authorization)               │
-│        ┌───────────────┴───────────────────────────────┐                               │
-│        ▼                                               ▼                               │
-│ 📶 CELLULAR TOWER TETHERING (C-DOT SACHET)     📡 DIRECT AIRWAVE & SATELLITE (868MHz)  │
-│        │                                               │                               │
-│        ▼                                               ▼                               │
-│ 📱 DEVICES WITH INTERNET:                      📢 DEVICES WITHOUT INTERNET (OFFLINE):  │
-│ • 4G/5G Smartphones (PWA Push)                 • Autonomous 120dB Siren Masts (LoRa)   │
-│ • Smart City Highway LED Billboards            • 2G Feature Phones (Cell Broadcast)    │
-│ • Indian Railways PIDS Displays                • ISRO NavIC Village Terminals          │
-│ • Hospital Trauma Influx Boards                • FM Radio 100.1MHz Carrier Override    │
-│ • Television & OTT Red Crawl Overlays          • Village Panchayat RF Loudspeakers     │
-└────────────────────────────────────────────────────────────────────────────────────────┘
+Aegis-alert/
+├── client/                     # Frontend Application (React + Vite + TypeScript)
+│   ├── public/
+│   │   ├── favicon.svg
+│   │   └── manifest.json
+│   ├── src/
+│   │   ├── components/         # Reusable emergency UI components
+│   │   │   └── common/         # Header, SidebarMenu, Notifications, Settings
+│   │   ├── layouts/            # AppLayout (Three-Zone & Mobile Responsive)
+│   │   ├── stores/             # ThemeContext, EmergencyContext, SettingsContext
+│   │   ├── services/           # api.ts (Typed API Service with Fallbacks)
+│   │   ├── styles/             # design-tokens.css, index.css
+│   │   ├── types/              # Client-specific UI state types
+│   │   ├── App.tsx             # Root Application Shell
+│   │   └── main.tsx            # DOM Bootstrap
+│   ├── index.html
+│   ├── package.json
+│   ├── tsconfig.json
+│   ├── vite.config.ts
+│   └── tailwind.config.js
+├── server/                     # Backend API (Node.js + Express + TypeScript)
+│   ├── src/
+│   │   ├── config/             # env.ts (Strict environment variables)
+│   │   ├── database/           # schema.sql, db.ts, seed.ts
+│   │   ├── middleware/         # errorHandler.ts, rateLimiter.ts
+│   │   ├── routes/             # alerts, disasters, shelters, sos, safeBeacon, chat, etc.
+│   │   ├── utils/              # response.ts (Standardized JSON envelopes)
+│   │   ├── app.ts              # Express App Factory
+│   │   └── server.ts           # Server Bootstrap
+│   ├── package.json
+│   ├── tsconfig.json
+│   └── .env.example
+├── shared/                     # Shared Data Models & Types
+│   └── index.ts                # TypeScript Interfaces & Contracts
+├── package.json                # Root orchestration
+├── .env.example
+├── .gitignore
+└── README.md
 ```
 
-1. **Multi-Hazard Situation Overview Hero:**
-   - Selected Location selector (Hyderabad, Guwahati, Dehradun, Visakhapatnam, Vijayawada, Shillong, Mumbai, Chennai, Bengaluru).
-   - **AEGIS Composite Risk Score** (0-100) with dynamic risk level (`LOW`, `MODERATE`, `HIGH`, `CRITICAL`).
-   - 6 Dynamic Hazard Cards: Rainfall, Flood, Landslide, Lightning, Heatwave, Air Pollution.
+---
 
-2. **Interactive Tactical GIS Map:**
-   - 8 Layer Checkboxes: Rainfall Radar, Flood Inundation, Landslides, Lightning Nowcast, Heat Domes, Pollution Plumes, Red Zones, Weather Stations.
-   - Interactive popups with live river stages, slope angles, exposed populations, and evacuation routes.
+## 🗄️ Database Design (`server/src/database/schema.sql`)
 
-3. **6-Hour Demonstration Predictive Forecast:**
-   - Visual time-series charts (10:00 AM – 03:00 PM) projecting Rain, Temp, Humidity, Wind, Flood Risk, and Lightning Risk.
-
-4. **Ask AEGIS — AI Assistant (SIH26068 WeatherGPT):**
-   - Natural conversational interface answering questions using active platform telemetry.
-   - Clickable prompt chips for instant viva demonstrations.
-
-5. **One-Click "Run Emergency Scenario" (90-Second Crisis Lifecycle):**
-   - T+00s: Heavy Rainfall onset ➔ T+30s: Flood threshold breached ➔ T+50s: Lightning storm spikes ➔ T+70s: Evacuation alert broadcast ➔ T+90s: AI synthesis report.
+| Table | Purpose |
+| :--- | :--- |
+| `users` | Citizen profiles, medical conditions, blood group, emergency contacts. |
+| `alerts` | CAP-compliant disaster warnings (Red, Orange, Yellow, Green severity tiers). |
+| `disaster_events` | Active & historical disaster incidents across Indian regions. |
+| `sos_requests` | Distress beacons, trapped count, water level, medical emergencies. |
+| `safe_beacons` | "I Am Safe" lightweight (<1KB) family location pings. |
+| `community_reports`| Crowdsourced damage reports (Flooding, fallen trees, blocked roads). |
+| `shelters` | High-ground shelters, bed/food capacity, drinking water, medical station. |
+| `evacuation_routes`| Elevation-aware route waypoints with safety classification. |
+| `notifications` | System warnings, shelter status updates, and broadcast sirens. |
+| `history_events` | User action logs (SOS triggered, pings sent, reports filed). |
+| `chat_messages` | Ask Aegis emergency assistant conversational history. |
+| `downloads` | Cached offline guides, checklists, and local map tiles. |
 
 ---
 
-## 💻 How to Run Locally
+## 📡 API Architecture
 
-1. **Start the Multi-Threaded Server:**
-   ```powershell
-   python server.py
-   ```
-2. **Open in Browser:**  
-   Navigate to `http://localhost:8080` (or `http://127.0.0.1:8080`).
-3. **Verify API Endpoints:**
-   ```powershell
-   curl.exe http://localhost:8080/api/status
-   curl.exe http://localhost:8080/api/locations
-   curl.exe http://localhost:8080/api/gov/export?format=csv
-   ```
-
----
-
-## 📚 Academic Research, Scientific Formulas & Statutory References
-
-Complete publication-grade documentation dossiers have been compiled for hackathon evaluation juries, academic vivas, and national deployment:
-
-* 📄 **[Scientific Research & Statutory References Dossier](presentation/RESEARCH_AND_REFERENCES.md):**  
-  *Detailed mathematical models for Landslide Mohr-Coulomb shear analysis, SCS-CN Flood Inundation, CAPE Lightning Nowcasting, Steadman Heat Stress Index, NDMA Guidelines, IMD SOPs, and 3GPP TS 23.041 Cell Broadcast standards.*
-* 📊 **[Comprehensive Feasibility & Viability Analysis](presentation/FEASIBILITY_AND_VIABILITY_ANALYSIS.md):**  
-  *Technical, economic, operational, and legal viability matrix evaluating indigenous ₹18,500 edge nodes vs ₹3.5L legacy systems.*
-* 🏛️ **[Executive Presentation & SIH Jury Dossier](presentation/PROJECT_PRESENTATION_DOSSIER.md):**  
-  *10-minute presentation guide, 5-member student team roles, and live evaluation walkthrough.*
-* 📡 **[Hardware & Omnichannel Architecture Diagrams](presentation/HARDWARE_ARCHITECTURE_DIAGRAMS.md):**  
-  *Orbital, Command, Tower Tethering, and Output device schematics for zero-internet blackout operations.*
+| Endpoint | Method | Description |
+| :--- | :--- | :--- |
+| `/api/health` | `GET` | Service health status & uptime |
+| `/api/alerts` | `GET` | List active emergency alerts |
+| `/api/disasters` | `GET` | Recent disaster events feed |
+| `/api/shelters` | `GET` | Verified evacuation shelters with live capacity |
+| `/api/routes` | `GET` | Evacuation routes with hazard avoidance |
+| `/api/sos` | `POST` | Trigger emergency SOS beacon (Rate limited) |
+| `/api/sos/:id` | `GET` | Real-time rescue status tracking |
+| `/api/safe-beacon` | `POST` | Send "I Am Safe" location status |
+| `/api/community-reports` | `GET`, `POST` | List and submit crowdsourced hazard reports |
+| `/api/chat` | `POST` | Query Ask Aegis Emergency AI (Offline KB & Online) |
+| `/api/notifications` | `GET`, `PATCH` | Notification center & read status |
+| `/api/profile` | `GET`, `PUT` | User emergency profile & contacts |
+| `/api/downloads` | `GET`, `POST` | Offline resource cache manager |
 
 ---
 
-## 👥 5-Member Student Engineering Team Roles
+## 🚀 How to Run Locally
 
-1. **Member 1 (Team Lead & AI/ML Engineer):** Multi-Hazard Risk Fusion Engine & WeatherGPT Conversational Model.
-2. **Member 2 (GIS & Spatial Systems Lead):** Tactical Leaflet GIS Map, Red Zone Hazard Layers, Inundation Buffers.
-3. **Member 3 (Full-Stack Web Architect):** Real-time Dashboard, 6-Hour Forecast Visualizer & Analytics Charts.
-4. **Member 4 (Embedded & Telecom Specialist):** Sub-GHz 868MHz Siren Masts & C-DOT SACHET Cell Broadcast Bridge.
-5. **Member 5 (Domain & Disaster Protocols Lead):** SOP Formulation, Vulnerable Habitations Register & Statutory Compliance.
+### 1. Install Dependencies
+```bash
+# Install Server Dependencies
+cd server
+npm install
+
+# Install Client Dependencies
+cd ../client
+npm install
+```
+
+### 2. Run Development Servers
+```bash
+# In terminal 1 (Backend API on http://localhost:5000):
+cd server
+npm run dev
+
+# In terminal 2 (Frontend on http://localhost:5173):
+cd client
+npm run dev
+```
+
+### 3. Build for Production
+```bash
+# Build both Server and Client
+npm run build
+```
+
+---
+
+## 📋 Incremental Development Phases
+- [x] **Phase 0**: Architecture, Project Structure, Design Tokens, SQLite Schema & API Base.
+- [ ] **Phase 1**: Core UI Shell & Navigation.
+- [ ] **Phase 2**: Home Dashboard.
+- [ ] **Phase 3**: Ask Aegis Offline AI Assistant.
+- [ ] **Phase 4**: Safe Evacuation & Shelters.
+- [ ] **Phase 5**: SOS Emergency Beacon.
+- [ ] **Phase 6**: Survival Guide & NDMA Protocols.
+- [ ] **Phase 7**: Community Crowdsourced Reports.
+- [ ] **Phase 8**: Safe Beacon ("I Am Safe").
+- [ ] **Phase 9**: Hamburger Drawer Features (Offline Maps, Recent Events, History, Downloads, Roadmap).
+- [ ] **Phase 10**: Notifications & Settings.
+- [ ] **Phase 11**: Full Backend & Database Integration.
+- [ ] **Phase 12**: Frontend-to-Backend Connection.
+- [ ] **Phase 13**: Offline Caching & Service Worker.
+- [ ] **Phase 14**: QA & Automated Verification.
+- [ ] **Phase 15**: UI Polish & Mobile/Tablet Optimization.

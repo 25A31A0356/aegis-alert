@@ -1,0 +1,23 @@
+{
+  "name": "aegisalert",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AegisAlert — Disaster Management and Emergency Response Web Platform",
+  "scripts": {
+    "dev:client": "npm --prefix client run dev",
+    "dev:server": "npm --prefix server run dev",
+    "build:client": "npm --prefix client run build",
+    "build:server": "npm --prefix server run build",
+    "build": "npm run build:server && npm run build:client",
+    "start": "node server/dist/server.js"
+  },
+  "keywords": [
+    "disaster-management",
+    "emergency-response",
+    "sih",
+    "smart-india-hackathon",
+    "aegisalert"
+  ],
+  "author": "25A31A0356",
+  "license": "MIT"
+}
