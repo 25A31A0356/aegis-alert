@@ -125,10 +125,13 @@ router.post('/community-reports', async (req: Request, res: Response) => {
       imageUrl,
     } = req.body;
 
+    const rawCategory = category || req.body.disasterType || req.body.hazardType;
+
     // Field validations
-    if (!category || typeof category !== 'string') {
+    if (!rawCategory || typeof rawCategory !== 'string') {
       return sendError(res, 'Disaster type (category) is required', 400);
     }
+    const safeCategory = rawCategory.trim();
 
     if (!description || typeof description !== 'string' || description.trim().length < 5) {
       return sendError(res, 'Description must be at least 5 characters long', 400);
@@ -148,7 +151,7 @@ router.post('/community-reports', async (req: Request, res: Response) => {
     const reportTitle =
       title && typeof title === 'string' && title.trim().length > 0
         ? title.trim()
-        : `${category} reported at ${location.trim()}`;
+        : `${safeCategory} reported at ${location.trim()}`;
 
     const id = `rep_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
     const now = new Date().toISOString();
@@ -162,7 +165,7 @@ router.post('/community-reports', async (req: Request, res: Response) => {
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         id,
-        category.trim(),
+        safeCategory,
         reportTitle,
         description.trim(),
         location.trim(),
@@ -184,14 +187,14 @@ router.post('/community-reports', async (req: Request, res: Response) => {
         `hist_${Date.now()}`,
         'COMMUNITY_REPORT_SUBMITTED',
         `Incident Filed: ${reportTitle}`,
-        `${category} reported at ${location.trim()} (${reportSeverity} Severity). Status: ${initialStatus}.`,
+        `${safeCategory} reported at ${location.trim()} (${reportSeverity} Severity). Status: ${initialStatus}.`,
         now,
       ]
     );
 
     const createdReport: CommunityReport = {
       id,
-      category: category as CommunityReportCategory,
+      category: safeCategory as CommunityReportCategory,
       title: reportTitle,
       description: description.trim(),
       location: location.trim(),

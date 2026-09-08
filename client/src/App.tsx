@@ -171,8 +171,8 @@ function AppContent() {
           </div>
         )}
 
-        {activeView === 'safe-evacuation' && <SafeEvacuationPage />}
-        {activeView === 'sos-beacon' && <SosBeaconPage />}
+        {activeView === 'safe-evacuation' && <SafeEvacuationPage setActiveView={handleViewChange} />}
+        {activeView === 'sos-beacon' && <SosBeaconPage setActiveView={handleViewChange} />}
         {activeView === 'ask-aegis' && <AskAegisPage setActiveView={handleViewChange} />}
         {activeView === 'survival-guide' && <SurvivalGuidePage setActiveView={handleViewChange} />}
         {activeView === 'community-report' && <CommunityReportPage setActiveView={handleViewChange} />}

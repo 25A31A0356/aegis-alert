@@ -43,6 +43,9 @@ router.put('/profile', async (req: Request, res: Response) => {
     const { name, phone, bloodGroup, medicalConditions, emergencyContact, preferredLanguage, locationPreferences } =
       req.body;
 
+    const safeName = name || req.body.fullName || null;
+    const safeBloodGroup = bloodGroup || req.body.blood_group || null;
+
     await db.run(
       `UPDATE users SET
         name = COALESCE(?, name),
@@ -60,9 +63,9 @@ router.put('/profile', async (req: Request, res: Response) => {
         updated_at = CURRENT_TIMESTAMP
        WHERE id = 'usr_default_01'`,
       [
-        name,
+        safeName,
         phone,
-        bloodGroup,
+        safeBloodGroup,
         medicalConditions ? JSON.stringify(medicalConditions) : null,
         emergencyContact?.name,
         emergencyContact?.phone,
