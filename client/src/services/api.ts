@@ -72,6 +72,7 @@ export const ApiService = {
       body: JSON.stringify(data),
     }),
   getLatestSafeBeacon: () => fetchJson<SafeBeacon | null>('/safe-beacon/latest'),
+  getSafeBeaconHistory: () => fetchJson<SafeBeacon[]>('/safe-beacon/history'),
 
   // Community Reports
   getCommunityReports: (params?: { category?: string; status?: string; severity?: string; search?: string }) => {

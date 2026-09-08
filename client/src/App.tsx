@@ -125,7 +125,7 @@ function AppContent() {
         {activeView === 'ask-aegis' && <AskAegisPage setActiveView={handleViewChange} />}
         {activeView === 'survival-guide' && <SurvivalGuidePage setActiveView={handleViewChange} />}
         {activeView === 'community-report' && <CommunityReportPage setActiveView={handleViewChange} />}
-        {activeView === 'safe-beacon' && <SafeBeaconPage />}
+        {activeView === 'safe-beacon' && <SafeBeaconPage setActiveView={handleViewChange} />}
         {activeView === 'offline-maps' && <OfflineMapsPage />}
         {activeView === 'recent-events' && <RecentEventsPage />}
         {activeView === 'history' && <HistoryPage />}
