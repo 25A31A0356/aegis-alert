@@ -120,13 +120,13 @@ export const SafeEvacuationPage: React.FC<SafeEvacuationPageProps> = ({
           </div>
         </div>
 
-        {/* Category Pills (Matching Screen 2: Charter, Private Jet, Cargo) */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+        {/* Category Pills (Direct Screen 2 Reference Match: Charter, Private Jet, Cargo) */}
+        <div className="flex items-center gap-2.5 overflow-x-auto pb-1 scrollbar-none">
           {[
-            { id: 'all', label: 'All Shelters', icon: ShieldCheck, color: 'text-emerald-500' },
-            { id: 'high-ground', label: 'High-Ground (>15m)', icon: Layers, color: 'text-cyan-500' },
-            { id: 'medical', label: 'Medical Ready', icon: Activity, color: 'text-red-500' },
-            { id: 'relief', label: 'Food & Water', icon: Sparkles, color: 'text-amber-500' },
+            { id: 'all', label: 'All Shelters', icon: ShieldCheck, bg: 'bg-[#617e4d]', iconColor: 'text-white' },
+            { id: 'high-ground', label: 'High-Ground (>15m)', icon: Layers, bg: 'bg-[#b85b5b]', iconColor: 'text-white' },
+            { id: 'medical', label: 'Medical Ready', icon: Activity, bg: 'bg-[#4f80b8]', iconColor: 'text-white' },
+            { id: 'relief', label: 'Food & Water', icon: Sparkles, bg: 'bg-[#c9823e]', iconColor: 'text-white' },
           ].map((pill, idx) => {
             const Icon = pill.icon;
             const isSelected = idx === 0;
@@ -134,13 +134,15 @@ export const SafeEvacuationPage: React.FC<SafeEvacuationPageProps> = ({
               <button
                 key={pill.id}
                 type="button"
-                className={`px-4 py-2 rounded-2xl text-xs font-bold border transition-all flex items-center gap-2 shrink-0 shadow-sm ${
+                className={`px-3.5 py-2 rounded-2xl text-xs font-bold border transition-all flex items-center gap-2 shrink-0 shadow-xs ${
                   isSelected
                     ? 'bg-white dark:bg-slate-900 border-cyan-500 text-slate-900 dark:text-slate-100 font-black ring-2 ring-cyan-500/20'
-                    : 'bg-white/70 dark:bg-slate-900/70 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+                    : 'bg-white/80 dark:bg-slate-900/80 text-slate-600 dark:text-slate-400 border-slate-200/80 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
                 }`}
               >
-                <Icon className={`w-4 h-4 ${pill.color}`} />
+                <div className={`w-5 h-5 rounded-lg ${pill.bg} ${pill.iconColor} flex items-center justify-center shrink-0`}>
+                  <Icon className="w-3 h-3 text-white" />
+                </div>
                 <span>{pill.label}</span>
               </button>
             );

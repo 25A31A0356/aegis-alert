@@ -30,6 +30,7 @@ import { HomeHeroStatus } from '../components/home/HomeHeroStatus';
 import { QuickActionGrid } from '../components/home/QuickActionGrid';
 import { NearbySheltersList } from '../components/home/NearbySheltersList';
 import { ActiveAlertsFeed } from '../components/home/ActiveAlertsFeed';
+import { MountainHeroIllustration } from '../components/common/ScenicIllustrations';
 
 interface HomePageProps {
   setActiveView: (view: ActiveView) => void;
@@ -140,30 +141,31 @@ export const HomePage: React.FC<HomePageProps> = ({ setActiveView }) => {
           </button>
         </div>
 
-        {/* Featured Atmospheric Hero Card */}
+        {/* Featured Atmospheric Hero Card (Screen 1 Reference Match) */}
         <div
           onClick={() => setActiveView('safe-evacuation')}
-          className="relative rounded-[28px] overflow-hidden bg-gradient-to-br from-cyan-950 via-slate-900 to-slate-950 border border-cyan-500/30 p-6 sm:p-8 text-white shadow-xl cursor-pointer group transition-transform active:scale-99"
+          className="relative rounded-[32px] overflow-hidden bg-slate-100 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-md cursor-pointer group transition-transform active:scale-99 h-[220px] sm:h-[260px]"
         >
-          {/* Subtle Mountain / Coastal Silhouette Backdrop */}
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-cyan-600/20 via-transparent to-transparent opacity-80" />
-          
-          <div className="relative z-10 flex flex-col justify-between h-48 sm:h-52">
+          {/* Scenic Mountain Background Illustration */}
+          <div className="absolute inset-0 z-0">
+            <MountainHeroIllustration className="w-full h-full object-cover" />
+          </div>
+
+          {/* Foreground Overlay Content */}
+          <div className="relative z-10 p-5 sm:p-7 flex flex-col justify-between h-full">
             <div className="flex items-center justify-between">
-              <span className="px-3 py-1 rounded-full bg-cyan-500/20 border border-cyan-400/40 text-cyan-300 text-[10px] font-mono font-black tracking-wider uppercase backdrop-blur-md">
-                HIGH-GROUND EVACUATION
+              <span className="px-3 py-1 rounded-full bg-white/80 dark:bg-slate-900/80 border border-slate-200/60 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-[10px] font-bold tracking-wider uppercase backdrop-blur-md shadow-xs">
+                Monsoon Evacuation Guide
               </span>
-              <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white backdrop-blur-md group-hover:scale-110 transition-transform">
-                <Compass className="w-4 h-4 text-cyan-300" />
+              <div className="w-8 h-8 rounded-full bg-white/90 dark:bg-slate-900/90 shadow-sm flex items-center justify-center text-slate-700 dark:text-slate-200 backdrop-blur-md group-hover:scale-110 transition-transform">
+                <Compass className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
               </div>
             </div>
 
-            <div className="space-y-2 max-w-lg">
-              <h3 className="text-lg sm:text-xl font-black text-slate-100 tracking-tight leading-tight">
-                Your ultimate disaster response companion awaits with Aegis
-              </h3>
-              <p className="text-xs text-slate-300 line-clamp-2 leading-relaxed font-medium">
-                Real-time elevation mapping, safe high-ground corridors, and verified NDMA relief centers.
+            {/* Bottom Text Matching Screen 1 Typography */}
+            <div className="bg-gradient-to-t from-white/95 via-white/80 to-transparent dark:from-slate-950/95 dark:via-slate-950/80 dark:to-transparent -mx-5 -mb-5 sm:-mx-7 sm:-mb-7 p-5 sm:p-7 pt-10">
+              <p className="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 leading-snug">
+                Your ultimate safety companion awaits with Aegis, offering verified high-ground evacuation routes.
               </p>
             </div>
           </div>

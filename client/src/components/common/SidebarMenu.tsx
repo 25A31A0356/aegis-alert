@@ -13,6 +13,7 @@ import {
   Users,
   Radio,
   ChevronRight,
+  Layers,
 } from 'lucide-react';
 import { ActiveView } from '../../types';
 
@@ -103,6 +104,12 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({
       label: 'Future Updates (Roadmap)',
       icon: Sparkles,
       description: 'Upcoming multi-language and satellite features',
+    },
+    {
+      id: 'presentation',
+      label: 'SIH Presentation Deck',
+      icon: Layers,
+      description: '4-Slide hackathon presentation pitch (Proposed Solution, Tech, Viability, Impact)',
     },
   ];
 

@@ -10,6 +10,7 @@ import { AppLayout } from './layouts/AppLayout';
 import { ActiveView } from './types';
 import { NotificationItem } from '@shared';
 import { ApiService } from './services/api';
+import { Home, Compass, ShieldAlert, AlertTriangle, User } from 'lucide-react';
 
 // Page Imports
 import { ThreeZoneDashboard } from './pages/ThreeZoneDashboard';
@@ -25,6 +26,7 @@ import { RecentEventsPage } from './pages/RecentEventsPage';
 import { HistoryPage } from './pages/HistoryPage';
 import { DownloadsPage } from './pages/DownloadsPage';
 import { FutureUpdatesPage } from './pages/FutureUpdatesPage';
+import { PresentationPage } from './pages/PresentationPage';
 
 const VALID_VIEWS: ActiveView[] = [
   'home',
@@ -39,6 +41,7 @@ const VALID_VIEWS: ActiveView[] = [
   'history',
   'downloads',
   'future-updates',
+  'presentation',
 ];
 
 function getInitialView(): ActiveView {
@@ -159,6 +162,10 @@ function AppContent() {
     }
   };
 
+  if (activeView === 'presentation') {
+    return <PresentationPage setActiveView={handleViewChange} />;
+  }
+
   return (
     <>
       <Header
@@ -226,24 +233,24 @@ function AppContent() {
         {activeView === 'future-updates' && <FutureUpdatesPage />}
       </AppLayout>
 
-      {/* Floating Bottom Navigation Bar (Screen 1 & 2 Reference) */}
+      {/* Floating Bottom Navigation Bar (Direct Screen 1 Reference Match) */}
       <nav className="floating-bottom-nav flex items-center justify-around">
         <button
           type="button"
           onClick={() => handleViewChange('home')}
           className={`flex flex-col items-center justify-center p-2 rounded-2xl transition-all ${
             activeView === 'home'
-              ? 'text-cyan-500 font-bold scale-105'
-              : 'text-slate-400 hover:text-slate-200'
+              ? 'text-slate-900 dark:text-slate-100 font-bold scale-105'
+              : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
           }`}
         >
           <div className="relative">
-            <span className="text-lg">🏠</span>
+            <Home className="w-5 h-5" />
             {activeView === 'home' && (
-              <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-cyan-500" />
+              <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-slate-900 dark:bg-slate-100" />
             )}
           </div>
-          <span className="text-[10px] font-semibold mt-0.5">Home</span>
+          <span className="text-[10px] font-semibold mt-1">Home</span>
         </button>
 
         <button
@@ -251,32 +258,33 @@ function AppContent() {
           onClick={() => handleViewChange('safe-evacuation')}
           className={`flex flex-col items-center justify-center p-2 rounded-2xl transition-all ${
             activeView === 'safe-evacuation'
-              ? 'text-cyan-500 font-bold scale-105'
-              : 'text-slate-400 hover:text-slate-200'
+              ? 'text-slate-900 dark:text-slate-100 font-bold scale-105'
+              : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
           }`}
         >
           <div className="relative">
-            <span className="text-lg">🧭</span>
+            <Compass className="w-5 h-5" />
             {activeView === 'safe-evacuation' && (
-              <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-cyan-500" />
+              <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-slate-900 dark:bg-slate-100" />
             )}
           </div>
-          <span className="text-[10px] font-semibold mt-0.5">Evac</span>
+          <span className="text-[10px] font-semibold mt-1">Explore</span>
         </button>
 
-        {/* Center SOS Action */}
+        {/* Center SOS Beacon Action */}
         <button
           type="button"
           onClick={() => handleViewChange('sos-beacon')}
-          className={`flex flex-col items-center justify-center p-2 rounded-2xl transition-all ${
+          className={`flex flex-col items-center justify-center p-1.5 rounded-2xl transition-all ${
             activeView === 'sos-beacon'
-              ? 'text-red-500 font-bold scale-110'
-              : 'text-slate-400 hover:text-red-400'
+              ? 'text-red-600 dark:text-red-400 font-bold scale-105'
+              : 'text-slate-400 hover:text-red-500'
           }`}
         >
-          <div className="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center text-white shadow-md">
-            <span className="text-sm font-black">SOS</span>
+          <div className="w-9 h-9 rounded-full bg-[#b85b5b] dark:bg-[#a64848] flex items-center justify-center text-white shadow-sm hover:scale-105 transition-transform">
+            <ShieldAlert className="w-4.5 h-4.5 text-white" />
           </div>
+          <span className="text-[10px] font-bold mt-0.5">SOS</span>
         </button>
 
         <button
@@ -284,28 +292,28 @@ function AppContent() {
           onClick={() => handleViewChange('community-report')}
           className={`flex flex-col items-center justify-center p-2 rounded-2xl transition-all ${
             activeView === 'community-report'
-              ? 'text-cyan-500 font-bold scale-105'
-              : 'text-slate-400 hover:text-slate-200'
+              ? 'text-slate-900 dark:text-slate-100 font-bold scale-105'
+              : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
           }`}
         >
           <div className="relative">
-            <span className="text-lg">👥</span>
+            <AlertTriangle className="w-5 h-5" />
             {activeView === 'community-report' && (
-              <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-cyan-500" />
+              <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-slate-900 dark:bg-slate-100" />
             )}
           </div>
-          <span className="text-[10px] font-semibold mt-0.5">Report</span>
+          <span className="text-[10px] font-semibold mt-1">Reports</span>
         </button>
 
         <button
           type="button"
           onClick={() => setIsSettingsOpen(true)}
-          className="flex flex-col items-center justify-center p-2 rounded-2xl transition-all text-slate-400 hover:text-slate-200"
+          className="flex flex-col items-center justify-center p-2 rounded-2xl transition-all text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
         >
           <div className="relative">
-            <span className="text-lg">👤</span>
+            <User className="w-5 h-5" />
           </div>
-          <span className="text-[10px] font-semibold mt-0.5">Profile</span>
+          <span className="text-[10px] font-semibold mt-1">Profile</span>
         </button>
       </nav>
 
