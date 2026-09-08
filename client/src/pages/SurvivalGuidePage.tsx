@@ -1,413 +1,313 @@
 import React, { useState } from 'react';
 import {
   BookOpen,
+  ArrowLeft,
+  Search,
   Waves,
   Wind,
   Activity,
   Zap,
-  Sun,
   Mountain,
+  Sun,
+  ShieldCheck,
   CheckCircle2,
   XCircle,
   Clock,
-  ShieldCheck,
-  CheckSquare,
-  Square,
   Sparkles,
+  Layers,
+  PhoneCall,
+  CheckSquare,
+  AlertTriangle,
 } from 'lucide-react';
-import { HazardType } from '@shared';
+import { ActiveView } from '../types';
+import { SURVIVAL_GUIDE_DATA, GuideCategory } from '../data/survivalGuideData';
+import { DosAndDontsMatrix } from '../components/guide/DosAndDontsMatrix';
+import { SurvivalChecklist } from '../components/guide/SurvivalChecklist';
 
-interface GuideData {
-  title: string;
-  hazardType: HazardType | 'Heatwave' | 'Landslide';
-  icon: React.FC<{ className?: string }>;
-  color: string;
-  before: string[];
-  during: string[];
-  after: string[];
-  dos: string[];
-  donts: string[];
-  checklist: string[];
+interface SurvivalGuidePageProps {
+  setActiveView?: (view: ActiveView) => void;
 }
 
-const SURVIVAL_GUIDES: GuideData[] = [
-  {
-    title: 'Floods & Coastal Inundation',
-    hazardType: 'Flood',
-    icon: Waves,
-    color: 'text-cyan-400',
-    before: [
-      'Identify local high ground evacuation shelters and highest terrain nearby.',
-      'Seal valuable identification documents (Aadhaar, property deeds) in waterproof ziploc pouches.',
-      'Install check-valves in building sewer traps to prevent flood backflow.',
-    ],
-    during: [
-      'Turn off the main electrical breaker and LPG cylinder regulators before evacuating.',
-      'NEVER attempt to walk, swim, or drive through flowing water (15cm sweeps people; 30cm floats cars).',
-      'Move to top floors of multi-story reinforced concrete structures if trapped.',
-    ],
-    after: [
-      'Boil all tap/well water for at least 10 minutes or use chlorine water-purification tablets.',
-      'Watch out for displaced poisonous snakes, scorpions, and sharp submerged debris.',
-      'Do not turn on electrical appliances until inspected by a certified electrician.',
-    ],
-    dos: [
-      'Drink only boiled or bottled water.',
-      'Keep your emergency phone on battery saver mode.',
-      'Cooperate with NDRF and SDRF rescue boat teams.',
-    ],
-    donts: [
-      'Do not touch fallen electric wires or poles.',
-      'Do not eat food that has touched flood water.',
-      'Do not wade through water with open cuts or sores.',
-    ],
-    checklist: [
-      '3 Liters water per person per day',
-      'Ready-to-eat high-energy dry rations',
-      'LED flashlight with spare batteries',
-      'Waterproof first-aid medical kit',
-    ],
-  },
-  {
-    title: 'Cyclones & Severe Gales',
-    hazardType: 'Cyclone',
-    icon: Wind,
-    color: 'text-orange-400',
-    before: [
-      'Trim dead or overhang tree branches that could crash onto house roofs.',
-      'Store 72 hours of emergency food and water for the entire family.',
-      'Secure or move indoors loose outdoor furniture, tin roofing, and debris.',
-    ],
-    during: [
-      'Stay indoors in the strongest, innermost room without exterior windows.',
-      'If the eye of the cyclone arrives (calm period), DO NOT step outside; violent reverse winds will strike shortly.',
-      'Protect head and chest with heavy mattresses if roof shows structural fatigue.',
-    ],
-    after: [
-      'Strictly avoid fallen power cables and water pools near utility poles.',
-      'Report gas leaks or structural building cracks to local ward authorities.',
-      'Clear standing water quickly around home to prevent dengue/malaria breeding.',
-    ],
-    dos: [
-      'Keep mobile devices and emergency power banks fully charged.',
-      'Monitor official IMD and SDMA weather sirens.',
-      'Anchor loose tin sheets with sandbags.',
-    ],
-    donts: [
-      'Do not spread unverified social media rumors.',
-      'Do not venture out to sea or coastal beaches during orange/red alert.',
-      'Do not park cars under old trees or giant billboards.',
-    ],
-    checklist: [
-      'Battery-powered AM/FM radio',
-      'Emergency whistle',
-      'Prescription medications',
-      'Cash in small denomination currency',
-    ],
-  },
-  {
-    title: 'Earthquakes & Structural Tremors',
-    hazardType: 'Earthquake',
-    icon: Activity,
-    color: 'text-red-400',
-    before: [
-      'Fasten heavy shelves, water heaters, and mirrors securely to wall studs.',
-      'Locate safe spots in each room: under sturdy wooden desks or against interior walls.',
-      'Conduct family Drop, Cover, and Hold On practice drills.',
-    ],
-    during: [
-      'DROP to hands and knees immediately to prevent being knocked down.',
-      'COVER head and neck under a sturdy table; if no desk is nearby, cover against interior wall.',
-      'HOLD ON to the shelter until shaking completely ceases.',
-    ],
-    after: [
-      'Expect aftershocks which can trigger additional damage to compromised structures.',
-      'Evacuate via stairwells only; NEVER use elevators during or following tremors.',
-      'Check yourself and family for bleeding wounds and apply pressure bandage.',
-    ],
-    dos: [
-      'Drop, Cover, and Hold On.',
-      'Cover your face with cloth to avoid inhaling dust and pulverized cement.',
-      'Tap on pipes or use a whistle if trapped under debris.',
-    ],
-    donts: [
-      'Do not rush outside while tremors are active (falling glass/brick danger).',
-      'Do not light matches or lighters in case of ruptured gas mains.',
-      'Do not enter visibly cracked buildings.',
-    ],
-    checklist: [
-      'Sturdy closed-toe shoes and leather gloves',
-      'Dust masks (N95)',
-      'First aid burn & wound kit',
-      'Emergency multi-tool with pliers',
-    ],
-  },
-  {
-    title: 'Severe Lightning & Thunderstorms',
-    hazardType: 'Lightning',
-    icon: Zap,
-    color: 'text-yellow-400',
-    before: [
-      'Check local radar warnings for thunderstorm development.',
-      'Unplug sensitive electronics and modems before storm reaches vicinity.',
-      'Identify fully enclosed metal-roof buildings or enclosed vehicles.',
-    ],
-    during: [
-      'Follow the 30-30 Rule: If time between flash and bang is <30s, seek shelter.',
-      'Stay off corded phones, computers, and away from plumbing fixtures.',
-      'If trapped in open field, crouch down into ball on soles of feet with hands on knees.',
-    ],
-    after: [
-      'Wait at least 30 minutes after the last thunderclap before leaving shelter.',
-      'Provide immediate CPR to lightning victims (they do NOT carry electrical charge).',
-      'Inspect roof and trees for fire sparks.',
-    ],
-    dos: [
-      'Stay inside enclosed hard-top vehicles.',
-      'Keep clear of wire fences, metal poles, and railroad tracks.',
-      'Stay low and avoid being the tallest object in open fields.',
-    ],
-    donts: [
-      'Do not shelter under isolated tall trees or tin-roof sheds.',
-      'Do not swim or take showers during active lightning.',
-      'Do not lie flat on the wet ground.',
-    ],
-    checklist: [
-      'Non-conductive emergency shoes',
-      'Emergency phone with lightning radar app',
-      'Insulated emergency blanket',
-    ],
-  },
-];
+export type GuidePhase = 'all' | 'before' | 'during' | 'after' | 'dos-donts' | 'checklist';
 
-export const SurvivalGuidePage: React.FC = () => {
-  const [selectedGuideIndex, setSelectedGuideIndex] = useState(0);
-  const [activeTab, setActiveTab] = useState<'timeline' | 'dos' | 'checklist'>('timeline');
-  const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
+export const SurvivalGuidePage: React.FC<SurvivalGuidePageProps> = ({
+  setActiveView = () => {},
+}) => {
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>('flood');
+  const [activePhase, setActivePhase] = useState<GuidePhase>('all');
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
-  const guide = SURVIVAL_GUIDES[selectedGuideIndex];
-  const GuideIcon = guide.icon;
+  const currentCategory: GuideCategory =
+    SURVIVAL_GUIDE_DATA.find((c) => c.id === selectedCategoryId) || SURVIVAL_GUIDE_DATA[0];
 
-  const toggleChecklist = (item: string) => {
-    setCheckedItems((prev) => ({ ...prev, [item]: !prev[item] }));
+  // Helper icon resolver
+  const getCategoryIcon = (iconName: string) => {
+    switch (iconName) {
+      case 'Waves':
+        return Waves;
+      case 'Wind':
+        return Wind;
+      case 'Activity':
+        return Activity;
+      case 'Zap':
+        return Zap;
+      case 'Mountain':
+        return Mountain;
+      case 'Sun':
+        return Sun;
+      default:
+        return ShieldCheck;
+    }
+  };
+
+  const CurrentIcon = getCategoryIcon(currentCategory.iconName);
+
+  // Search filtering
+  const matchesSearch = (text: string) => {
+    if (!searchQuery.trim()) return true;
+    return text.toLowerCase().includes(searchQuery.toLowerCase().trim());
   };
 
   return (
-    <div className="space-y-6 animate-fadeIn">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-2xl bg-slate-900 border border-slate-800 gap-3">
-        <div>
-          <div className="flex items-center gap-2 text-cyan-400 font-bold text-sm">
-            <BookOpen className="w-5 h-5" />
-            <span>5. OFFLINE SURVIVAL GUIDE & NDMA SAFETY PROTOCOLS</span>
+    <div className="space-y-6 animate-fadeIn pb-12">
+      {/* 1. Top Header & Search Bar */}
+      <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 shadow-xl space-y-3">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3">
+          
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setActiveView('home')}
+              className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-colors shrink-0"
+              title="Return to Home Dashboard"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-base font-black text-slate-100 flex items-center gap-1.5">
+                  <BookOpen className="w-5 h-5 text-cyan-400" />
+                  <span>5. NDMA DISASTER SURVIVAL GUIDE</span>
+                </h2>
+              </div>
+              <p className="text-xs text-slate-400 font-mono mt-0.5">
+                Official life-saving instructions before, during, and after natural disasters
+              </p>
+            </div>
           </div>
-          <p className="text-xs text-slate-400 mt-0.5">
-            100% offline-cached survival instructions, Do's & Don'ts, and 72-hour family disaster kits.
-          </p>
+
+          <div className="flex items-center gap-2">
+            <div className="px-2.5 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-bold flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+              OFFLINE CACHED • ZERO DATA REQUIRED
+            </div>
+          </div>
         </div>
 
-        <span className="badge-green px-3 py-1 rounded-xl text-xs font-mono font-bold">
-          OFFLINE CACHED
-        </span>
+        {/* Search Input Bar */}
+        <div className="relative pt-1">
+          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search survival instructions (e.g. 'boil water', 'eye of storm', '30-30 rule', 'drop cover hold')..."
+            className="w-full bg-slate-950 border border-slate-700 focus:border-cyan-500 rounded-xl pl-10 pr-4 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none"
+          />
+        </div>
       </div>
 
-      {/* Disaster Category Selector Tabs */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-        {SURVIVAL_GUIDES.map((item, idx) => {
-          const Icon = item.icon;
-          const isSelected = selectedGuideIndex === idx;
+      {/* 2. Horizontal Category Selector Pills */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+        {SURVIVAL_GUIDE_DATA.map((cat) => {
+          const Icon = getCategoryIcon(cat.iconName);
+          const isSelected = selectedCategoryId === cat.id;
+
           return (
             <button
-              key={idx}
-              onClick={() => setSelectedGuideIndex(idx)}
-              className={`p-3.5 rounded-2xl border flex items-center gap-3 text-left transition-all ${
+              key={cat.id}
+              onClick={() => {
+                setSelectedCategoryId(cat.id);
+                setActivePhase('all');
+              }}
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold border transition-all flex items-center gap-2 shrink-0 ${
                 isSelected
-                  ? 'bg-slate-850 border-cyan-500/60 shadow-cyan-glow text-slate-100'
-                  : 'bg-slate-900 border-slate-800 text-slate-400 hover:bg-slate-850 hover:text-slate-200'
+                  ? 'bg-cyan-600 text-white border-cyan-400 shadow-md'
+                  : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-slate-200 hover:border-slate-700'
               }`}
             >
-              <div
-                className={`p-2 rounded-xl ${
-                  isSelected ? 'bg-cyan-500/20 text-cyan-400' : 'bg-slate-800 text-slate-400'
-                }`}
-              >
-                <Icon className="w-4 h-4" />
-              </div>
-              <span className="text-xs font-bold leading-tight">{item.title}</span>
+              <Icon className="w-4 h-4" />
+              <span>{cat.title.split(' & ')[0]}</span>
             </button>
           );
         })}
       </div>
 
-      {/* Main Guide Content Panel */}
-      <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-6">
-        {/* Guide Title Banner */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
+      {/* 3. Category Banner & Phase Navigation Tabs */}
+      <div className={`p-6 rounded-3xl bg-gradient-to-r ${currentCategory.bgGradient} border border-slate-800 shadow-2xl space-y-4`}>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-slate-800/80">
           <div className="flex items-center gap-3">
-            <div className="p-3 rounded-2xl bg-slate-800 border border-slate-700 text-cyan-400">
-              <GuideIcon className="w-6 h-6" />
+            <div className="w-12 h-12 rounded-2xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shrink-0 shadow-cyan-glow">
+              <CurrentIcon className="w-7 h-7" />
             </div>
             <div>
-              <div className="text-[11px] font-mono text-cyan-400 font-bold uppercase">
-                NATIONAL DISASTER MANAGEMENT GUIDELINE (NDMA)
-              </div>
-              <h2 className="text-lg font-black text-slate-100">{guide.title}</h2>
+              <h1 className="text-xl md:text-2xl font-black text-slate-100">
+                {currentCategory.title}
+              </h1>
+              <p className="text-xs text-slate-300 font-mono mt-0.5">
+                {currentCategory.tagline}
+              </p>
             </div>
-          </div>
-
-          {/* Sub-Tabs: Timeline / Do's & Don'ts / Checklist */}
-          <div className="flex items-center gap-1.5 p-1 rounded-xl bg-slate-950 border border-slate-800 text-xs">
-            <button
-              onClick={() => setActiveTab('timeline')}
-              className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
-                activeTab === 'timeline' ? 'bg-cyan-500/20 text-cyan-300' : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              Before / During / After
-            </button>
-            <button
-              onClick={() => setActiveTab('dos')}
-              className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
-                activeTab === 'dos' ? 'bg-cyan-500/20 text-cyan-300' : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              Do's & Don'ts
-            </button>
-            <button
-              onClick={() => setActiveTab('checklist')}
-              className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
-                activeTab === 'checklist' ? 'bg-cyan-500/20 text-cyan-300' : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              72h Kit Checklist
-            </button>
           </div>
         </div>
 
-        {/* Tab 1: Timeline (Before, During, After) */}
-        {activeTab === 'timeline' && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-            {/* Before */}
-            <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 space-y-3">
-              <div className="font-bold text-amber-400 uppercase tracking-wider font-mono flex items-center gap-1.5">
-                <Clock className="w-4 h-4" /> 1. BEFORE DISASTER
-              </div>
-              <ul className="space-y-2 text-slate-300 leading-relaxed">
-                {guide.before.map((item, idx) => (
-                  <li key={idx} className="flex items-start gap-2">
-                    <span className="text-amber-400 mt-0.5">•</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+        {/* Phase Navigation Tabs */}
+        <div className="flex flex-wrap items-center gap-1.5 pt-1">
+          {[
+            { id: 'all', label: 'All Protocols' },
+            { id: 'before', label: '1. BEFORE (Preparedness)' },
+            { id: 'during', label: '2. DURING (Life-Safety)' },
+            { id: 'after', label: '3. AFTER (Safe Return)' },
+            { id: 'dos-donts', label: "4. DO'S & DON'TS MATRIX" },
+            { id: 'checklist', label: '5. 72H CHECKLIST' },
+          ].map((phase) => (
+            <button
+              key={phase.id}
+              onClick={() => setActivePhase(phase.id as GuidePhase)}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                activePhase === phase.id
+                  ? 'bg-cyan-500 text-slate-950 font-black shadow-md'
+                  : 'bg-slate-950/70 text-slate-300 border border-slate-800 hover:text-white'
+              }`}
+            >
+              {phase.label}
+            </button>
+          ))}
+        </div>
+      </div>
 
-            {/* During */}
-            <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 space-y-3">
-              <div className="font-bold text-red-400 uppercase tracking-wider font-mono flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4" /> 2. DURING DISASTER
-              </div>
-              <ul className="space-y-2 text-slate-300 leading-relaxed">
-                {guide.during.map((item, idx) => (
-                  <li key={idx} className="flex items-start gap-2">
-                    <span className="text-red-400 mt-0.5">•</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+      {/* 4. Phase-Specific Content Sections */}
 
-            {/* After */}
-            <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 space-y-3">
-              <div className="font-bold text-emerald-400 uppercase tracking-wider font-mono flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4" /> 3. AFTER DISASTER
+      {/* A. 72H SURVIVAL CHECKLIST VIEW */}
+      {activePhase === 'checklist' ? (
+        <SurvivalChecklist />
+      ) : activePhase === 'dos-donts' ? (
+        /* B. DO'S & DON'TS MATRIX VIEW */
+        <DosAndDontsMatrix
+          dos={currentCategory.dos}
+          donts={currentCategory.donts}
+          hazardTitle={currentCategory.title}
+        />
+      ) : (
+        /* C. BEFORE / DURING / AFTER PHASE CARDS VIEW */
+        <div className="space-y-4">
+          {/* Phase 1: BEFORE */}
+          {(activePhase === 'all' || activePhase === 'before') && (
+            <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-xl space-y-3">
+              <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+                <div className="flex items-center gap-2 text-cyan-400 font-bold text-sm uppercase font-mono">
+                  <span className="w-2 h-2 rounded-full bg-cyan-400"></span>
+                  <span>PHASE 1: BEFORE DISASTER (ADVANCE PREPARATION)</span>
+                </div>
+                <span className="text-[10px] font-mono bg-cyan-500/10 text-cyan-400 px-2 py-0.5 rounded border border-cyan-500/20">
+                  Readiness
+                </span>
               </div>
-              <ul className="space-y-2 text-slate-300 leading-relaxed">
-                {guide.after.map((item, idx) => (
-                  <li key={idx} className="flex items-start gap-2">
-                    <span className="text-emerald-400 mt-0.5">•</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        )}
 
-        {/* Tab 2: Do's & Don'ts */}
-        {activeTab === 'dos' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-            {/* DO's */}
-            <div className="p-4 rounded-xl bg-emerald-950/20 border border-emerald-500/30 space-y-3">
-              <div className="font-bold text-emerald-400 uppercase tracking-wider font-mono flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4" /> WHAT TO DO (RECOMMENDED)
+              <div className="space-y-2">
+                {currentCategory.before
+                  .filter((item) => matchesSearch(item))
+                  .map((item, idx) => (
+                    <div key={idx} className="flex items-start gap-3 p-3 rounded-xl bg-slate-950 border border-slate-800/80 text-xs text-slate-200">
+                      <span className="w-5 h-5 rounded-lg bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 text-[11px] font-mono font-bold flex items-center justify-center shrink-0 mt-0.5">
+                        {idx + 1}
+                      </span>
+                      <span className="leading-relaxed">{item}</span>
+                    </div>
+                  ))}
               </div>
-              <ul className="space-y-2.5 text-slate-200 leading-relaxed">
-                {guide.dos.map((item, idx) => (
-                  <li key={idx} className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
             </div>
+          )}
 
-            {/* DON'Ts */}
-            <div className="p-4 rounded-xl bg-red-950/20 border border-red-500/30 space-y-3">
-              <div className="font-bold text-red-400 uppercase tracking-wider font-mono flex items-center gap-1.5">
-                <XCircle className="w-4 h-4" /> WHAT NOT TO DO (AVOID)
+          {/* Phase 2: DURING */}
+          {(activePhase === 'all' || activePhase === 'during') && (
+            <div className="p-5 rounded-2xl bg-red-950/20 border border-red-500/40 shadow-red-glow space-y-3">
+              <div className="flex items-center justify-between pb-2 border-b border-red-500/30">
+                <div className="flex items-center gap-2 text-red-400 font-bold text-sm uppercase font-mono">
+                  <span className="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+                  <span>PHASE 2: DURING DISASTER (IMMEDIATE LIFE-SAFETY ACTION)</span>
+                </div>
+                <span className="text-[10px] font-mono bg-red-500/15 text-red-400 px-2 py-0.5 rounded border border-red-500/30 font-bold uppercase">
+                  High Priority
+                </span>
               </div>
-              <ul className="space-y-2.5 text-slate-200 leading-relaxed">
-                {guide.donts.map((item, idx) => (
-                  <li key={idx} className="flex items-start gap-2">
-                    <XCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        )}
 
-        {/* Tab 3: 72-Hour Kit Checklist */}
-        {activeTab === 'checklist' && (
-          <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 space-y-4 text-xs">
-            <div>
-              <div className="font-bold text-cyan-400 uppercase tracking-wider font-mono mb-1">
-                72-Hour Survival Go-Bag Checklist
+              <div className="space-y-2">
+                {currentCategory.during
+                  .filter((item) => matchesSearch(item))
+                  .map((item, idx) => (
+                    <div key={idx} className="flex items-start gap-3 p-3 rounded-xl bg-slate-950 border border-red-500/30 text-xs text-slate-100">
+                      <span className="w-5 h-5 rounded-lg bg-red-500/20 text-red-400 border border-red-500/40 text-[11px] font-mono font-bold flex items-center justify-center shrink-0 mt-0.5">
+                        {idx + 1}
+                      </span>
+                      <span className="leading-relaxed font-medium">{item}</span>
+                    </div>
+                  ))}
               </div>
-              <p className="text-slate-400">
-                Tick off essentials as you pack them. This list is saved locally on your device.
-              </p>
             </div>
+          )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              {guide.checklist.map((item, idx) => {
-                const isChecked = Boolean(checkedItems[item]);
-                return (
-                  <button
-                    key={idx}
-                    onClick={() => toggleChecklist(item)}
-                    className={`p-3 rounded-xl border flex items-center gap-3 text-left transition-all ${
-                      isChecked
-                        ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-300'
-                        : 'bg-slate-900 border-slate-800 text-slate-300 hover:bg-slate-850'
-                    }`}
-                  >
-                    {isChecked ? (
-                      <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" />
-                    ) : (
-                      <Square className="w-4 h-4 text-slate-500 shrink-0" />
-                    )}
-                    <span className={isChecked ? 'line-through text-slate-400' : 'font-semibold'}>
-                      {item}
-                    </span>
-                  </button>
-                );
-              })}
+          {/* Phase 3: AFTER */}
+          {(activePhase === 'all' || activePhase === 'after') && (
+            <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-xl space-y-3">
+              <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+                <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm uppercase font-mono">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+                  <span>PHASE 3: AFTER DISASTER (RECOVERY & CLEAN WATER PROTOCOLS)</span>
+                </div>
+                <span className="text-[10px] font-mono bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20">
+                  Recovery
+                </span>
+              </div>
+
+              <div className="space-y-2">
+                {currentCategory.after
+                  .filter((item) => matchesSearch(item))
+                  .map((item, idx) => (
+                    <div key={idx} className="flex items-start gap-3 p-3 rounded-xl bg-slate-950 border border-slate-800/80 text-xs text-slate-200">
+                      <span className="w-5 h-5 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[11px] font-mono font-bold flex items-center justify-center shrink-0 mt-0.5">
+                        {idx + 1}
+                      </span>
+                      <span className="leading-relaxed">{item}</span>
+                    </div>
+                  ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
+
+          {/* If All is selected, also append the Do's & Don'ts Matrix for quick scanning */}
+          {activePhase === 'all' && (
+            <DosAndDontsMatrix
+              dos={currentCategory.dos}
+              donts={currentCategory.donts}
+              hazardTitle={currentCategory.title}
+            />
+          )}
+        </div>
+      )}
+
+      {/* Emergency Helpline Bottom Strip */}
+      <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+        <div className="flex items-center gap-3 text-slate-300">
+          <PhoneCall className="w-4 h-4 text-cyan-400 shrink-0" />
+          <span>
+            National Disaster Helpline: <strong className="text-white font-mono">1078</strong> | Emergency: <strong className="text-white font-mono">112</strong> | Ambulance: <strong className="text-white font-mono">108</strong>
+          </span>
+        </div>
+        <div className="text-slate-400 text-[11px] font-mono flex items-center gap-1">
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+          <span>NDMA Verified Disaster Management Guidelines</span>
+        </div>
       </div>
     </div>
   );
